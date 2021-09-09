@@ -64,6 +64,51 @@ function cadastrar(){
 	
 }
 
+// Função para autopreencher os dados da transportadora nacional
+function autoComplete(str){
+		
+	var nome = document.getElementById('nome');
+	var setor = document.getElementById('setor');
+	var funcao = document.getElementById('funcao');
+	var gestor = document.getElementById('gestor');
+	var matricula = document.getElementById('matricula');
+	var busca = document.getElementById('busca').value;
+		
+	if(busca != ""){
+		nome.value = 'Carregando...';
+		setor.value = 'Carregando...';
+		funcao.value = 'Carregando...';
+		gestor.value = 'Carregando...';
+		matricula.value = 'Carregando...';
+	}
+		
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+				
+			var json = JSON.parse(this.responseText);
+			if(json.nome == undefined){	
+				nome.value = "";
+				setor.value = "";
+				funcao.value = "";
+				gestor.value = "";
+				matricula.value = "";
+			}else{
+				nome.value = json.nome;
+				setor.value = json.setor;
+				funcao.value = json.funcao;
+				gestor.value = json.gestor;
+				matricula.value = json.matricula;
+			}
+				
+		}
+	};
+	xhttp.open("POST", "cadastro_function.php?action=lista&&busca="+busca+"&id="+str, true);
+	xhttp.send();
+						
+}
+
 //Função para deixar a letra maiuscula
 function maiuscula(z){
     v = z.value.toUpperCase();

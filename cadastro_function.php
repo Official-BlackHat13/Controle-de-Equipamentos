@@ -10,7 +10,6 @@ if($action == "equipamento"){
 	$marca  = $_REQUEST['marca'];
 	$modelo = $_REQUEST['modelo'];
 	$partNumber = $_REQUEST['partNumber'];
-	$serviceTag = $_REQUEST['serviceTag'];
 	$patrimonio = $_REQUEST['patrimonio'];
 	$stat = $_REQUEST['stat'];
 	$numNF = $_REQUEST['numNF'];
@@ -31,7 +30,6 @@ if($action == "equipamento"){
 											marca,
 											modelo,
 											part_number,
-											service_tag,
 											patrimonio,
 											status,
 											nf_compra,
@@ -45,13 +43,20 @@ if($action == "equipamento"){
 											'".$marca."',
 											'".$modelo."',
 											'".$partNumber."',
-											'".$serviceTag."',
 											'".$patrimonio."',
 											'".$stat."',
 											'".$numNF."',
 											'".$dateNF."',
 											'".$user."'
-										)")or die(mysqli_error($con));
+										) on duplicate key update
+										tipo = '".$tipo."',
+										marca = '".$marca."',
+										modelo = '".$modelo."',
+										part_number = '".$partNumber."',
+										status = '".$stat."',
+										nf_compra = '".$numNF."',
+										data_nf = '".$dateNF."',
+										user = '".$user."'")or die(mysqli_error($con));
 										
 	if($insert){
 		echo '1';
@@ -75,7 +80,7 @@ if($action == "usuario"){
 	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where matricula = '".$matricula."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	
-	if($resSql['total'] == 0){
+	
 		$insert = mysqli_query($con,"insert into equipamentos.colaborador 
 										(
 											matricula,
@@ -93,15 +98,19 @@ if($action == "usuario"){
 											'".$funcao."',
 											'".$gestor."',
 											'".$user."'
-										)")or die(mysqli_error($con));
+										) on duplicate key update
+										nome = '".$nome."',
+										setor = '".$setor."',
+										funcao = '".$funcao."',
+										gestor = '".$gestor."',
+										user = '".$user."'
+										")or die(mysqli_error($con));
 		if($insert){
 			echo '1';
 		}else{
 			echo '0';
 		}
-	}else{
-		echo '2';
-	}
+	
 	
 	mysqli_close($con);
 }
@@ -160,8 +169,7 @@ if($action == "pesquisa"){
 					<th>TIPO</th>
 					<th>MARCA</th>
 					<th>MODELO</th>
-					<th>PART NUMBER</th>
-					<th>SERVICE TAG</th>
+					<th>PN / SN / Service Tag</th>
 					<th>PATRIMÔNIO</th>
 					<th>STATUS</th>
 					<th>NF COMPRA</th>
@@ -175,7 +183,6 @@ if($action == "pesquisa"){
 					<td>".$marca."</td>
 					<td>".$modelo."</td>
 					<td>".$part_number."</td>
-					<td>".$service_tag."</td>
 					<td>".$patrimonio."</td>
 					<td>".$status."</td>
 					<td>".$nf_compra."</td>
@@ -249,8 +256,7 @@ if($action == "exportar"){
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>TIPO</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MARCA</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MODELO</b></td>';
-	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PART NUMBER</b></td>';
-	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>SERVICE TAG</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN / SN / Service Tag</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PATRIMÔNIO</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>STATUS</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>NF COMPRA</b></td>';
@@ -263,7 +269,6 @@ if($action == "exportar"){
 	$tabela .= '<td class="value">'.$marca.'</td>';
 	$tabela .= '<td class="value">'.$modelo.'</td>';
 	$tabela .= '<td class="value">'.$part_number.'</td>';
-	$tabela .= '<td class="value">'.$service_tag.'</td>';
 	$tabela .= '<td class="value">'.$patrimonio.'</td>';
 	$tabela .= '<td class="value">'.$status.'</td>';
 	$tabela .= '<td class="value">'.$nf_compra.'</td>';
@@ -301,6 +306,157 @@ if($action == "exportar"){
 	 header('Content-Type: application/x-msexcel');
 	 header ("Content-Disposition: attachment; filename=\"{$arquivo}\"");
 	 echo $tabela;
+}
+
+// RETORNA OS DADOS DO COLABORADOR CADASTRADO
+if($action == "lista"){
+	$busca = $_REQUEST['busca'];
+	$id = $_REQUEST['id'];
+	
+	if($id == 1){
+		$arr = array();
+		$sql = mysqli_query($con,"SELECT 
+										tipo,
+										marca,
+										modelo,
+										part_number,
+										patrimonio,
+										status,
+										nf_compra,
+										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
+									FROM
+										equipamentos.equipamentos
+								  where codigo = '".$busca."'")or die(mysqli_error($con));
+		
+		if(mysqli_num_rows($sql)){
+			while($dados = mysqli_fetch_object($sql)){
+				$arr['tipo'] = $dados->tipo; 
+				$arr['marca'] = $dados->marca; 
+				$arr['modelo'] = $dados->modelo; 
+				$arr['partNumber'] = $dados->part_number; 
+				$arr['patrimonio'] = $dados->patrimonio; 
+				$arr['stat'] = $dados->status; 
+				$arr['numNF'] = $dados->nf_compra; 
+				$arr['dateNF'] = $dados->data_nf; 
+			}
+		}else{
+			$arr[] = '';
+		}
+		
+		echo json_encode($arr);
+	}else{
+		$arr = array();
+		$sql = mysqli_query($con,"SELECT 
+									matricula,
+									nome,
+									setor,
+									funcao,
+									gestor
+								  FROM equipamentos.colaborador
+								  where matricula = '".$busca."'")or die(mysqli_error($con));
+		
+		if(mysqli_num_rows($sql)){
+			while($dados = mysqli_fetch_object($sql)){
+				$arr['matricula'] = $dados->matricula; 
+				$arr['nome'] = $dados->nome; 
+				$arr['setor'] = $dados->setor; 
+				$arr['funcao'] = $dados->funcao; 
+				$arr['gestor'] = $dados->gestor; 
+			}
+		}else{
+			$arr[] = '';
+		}
+		
+		echo json_encode($arr);
+	}
+	
+	mysqli_close($con);
+}
+
+// Puxar os dados do vinculo
+if($action == "search"){
+	$codigo = $_REQUEST['codigo'];
+	
+	$sql = mysqli_query($con,"SELECT 
+									*
+								FROM
+									equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
+									on a.codigo = b.codigo inner join
+									equipamentos.colaborador c
+									on c.matricula = b.matricula
+									where a.codigo = '".$codigo."'")or die(mysqli_error($con));
+	$rows = mysqli_num_rows($sql);
+
+	if($rows){
+		$result = mysqli_fetch_array($sql);
+		extract($result);
+		
+		echo "<input type='hidden' id='id' value='".$codigo."' />";
+										
+		echo "<table class='table table-hover table-bordered table-striped text-center' >
+				<thead class='thead'>
+					<tr>
+						<th colspan='12'>
+							INFORMAÇÕES DO EQUIPAMENTO
+						</th>
+					</tr>
+					<tr>
+						<th>PATRIMÔNIO</th>
+						<th>TIPO</th>
+						<th>MARCA</th>
+						<th>MODELO</th>
+						<th>PN / SN / Service Tag</th>
+						<th>MATRICULA</th>
+						<th>NOME</th>
+						<th>SETOR</th>
+						<th>FUNÇÃO</th>
+						<th>GESTOR</th>
+						<th>STATUS</th>
+						<th>AÇÃO</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>".$patrimonio."</td>
+						<td>".$tipo."</td>
+						<td>".$marca."</td>
+						<td>".$modelo."</td>
+						<td>".$part_number."</td>
+						<td>".$matricula."</td>
+						<td>".$nome."</td>
+						<td>".$setor."</td>
+						<td>".$funcao."</td>
+						<td>".$gestor."</td>
+						<td>".$status."</td>
+						<td>
+							<button class='btn btn-danger' onclick='desvicular();'>
+								<i class='fa fa-minus-circle'></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>";
+	}else{
+		echo "<center>
+				<div class='alert alert-warning' role='alert'>
+					<i class='fa fa-exclamation-triangle'></i> <b>NÃO FOI ENCONTRADO VINCULO PARA ESSE EQUIPAMENTO</b>
+				</div>
+			  </center>";
+	}	
+	mysqli_close($con);
+}
+
+// Aqui desvinculo o Equipamento do usuário
+if($action == "desvicular"){
+	$codigo = $_REQUEST['codigo'];
+	
+	$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`equipamentos_usuario` WHERE `codigo`='".$codigo."'")or die(mysqli_error($con));
+	
+	if($delete){
+		echo "1";
+	}else{
+		echo "0";
+	}
 }
 
 

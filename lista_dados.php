@@ -29,17 +29,31 @@ $action = $_REQUEST['action'];
 		<br>
 		<div class="row justify-content-center align-self-center">
 			<div class="col-md-4 text-center consult">
-				 <select class="form-control" id="busca">
+				 <select class="form-control" id="machine" onchange="blocks(1);">
 				  <option value=""> -- Selecione o Equipamento -- </option>
 				  <?php 
 					$sqlMat = mysqli_query($con,"SELECT 
-													a.codigo
+													tipo
 												FROM
-													equipamentos.equipamentos a left join equipamentos.equipamentos_usuario b
-												on a.codigo = b.codigo
-												where b.codigo is not null order by tipo asc")or die(mysqli_error($con));
+													equipamentos.equipamentos group by tipo order by tipo asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['codigo']."'>".$resMat['codigo']."</option>";
+						echo "<option value='".$resMat['tipo']."'>".$resMat['tipo']."</option>";
+					}
+				  ?>
+				  </select>
+			</div>
+			<div class="col-md-4 text-center consult">
+				 <select class="form-control" id="user" onchange="blocks(2);">
+				  <option value=""> -- Selecione o Colaborador -- </option>
+				  <?php 
+					$sqlMat = mysqli_query($con,"SELECT
+													nome,
+													matricula
+												FROM
+													equipamentos.colaborador
+													group by matricula order by nome asc")or die(mysqli_error($con));
+					while($resMat = mysqli_fetch_array($sqlMat)){
+						echo "<option value='".$resMat['matricula']."'>".$resMat['nome']."</option>";
 					}
 				  ?>
 				  </select>

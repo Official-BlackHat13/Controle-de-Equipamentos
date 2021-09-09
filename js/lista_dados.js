@@ -4,11 +4,12 @@ function voltar(){
 
 function pesquisa(){
 	
-	var busca = document.getElementById('busca').value;
+	var machine = document.getElementById('machine').value;
+	var user = document.getElementById('user').value;
 	
-	if(busca == "" || busca == null){
-		alert("SELECIONE UM EQUIPAMENTO");
-		document.getElementById('busca').focus();
+	if(machine == "" || machine == null && user == "" || user == null){
+		alert("NENHUM VALOR FOI SELECIONADO");
+		document.getElementById('machine').focus();
 		return false;
 	}
 	
@@ -35,4 +36,23 @@ function exportar(){
 	}
 	
 	location.href="cadastro_function.php?action="+action+"&busca="+busca, "_blank";	
+}
+
+function blocks(id){
+	var user = document.getElementById('user').value;
+	var machine = document.getElementById('machine').value;
+	
+	if(id == 1){
+		if(machine != ""){
+			document.getElementById('user').disabled = true;
+		}else{
+			document.getElementById('user').disabled = false;
+		}
+	}else{
+		if(user != ""){
+			document.getElementById('machine').disabled = true;
+		}else{
+			document.getElementById('machine').disabled = false;
+		}
+	}
 }

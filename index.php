@@ -21,6 +21,7 @@ include('../controle.php');
 	</div><br><br>
 
 	<div class="row justify-content-around align-self-center">
+		<?php if($id_usuario == "196" || $id_usuario == "158036"){ ?>
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(1);">
@@ -38,6 +39,7 @@ include('../controle.php');
 				</button>
 			</div>
 		</div>
+		<?php } ?>
 	
 		<div class="col-md-3 text-center">
 			<div class="btn-group">

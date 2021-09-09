@@ -1,5 +1,8 @@
 <?php
 include('../controle.php');
+
+$con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipamentos")or die("<h1>FALHA NA CONEXÃO COM BANCO DE DADOS</h1>");
+$action = $_REQUEST['action'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,6 +26,24 @@ include('../controle.php');
 		<br>
 		
 		<input type="hidden" id="user" value="<?=$nome_usuario?>" />
+		
+		<div class="form-row justify-content-around align-self-center">
+			<div class="form-group col-md-4">
+			  <label class="label" for="busca"><b>Lista de Colaboradores:</b> <b class="obrigado">*</b></label>
+			  <select class="form-control" id="busca" onchange="autoComplete(2);">
+			  <option value=""> -- Selecione o Usuário -- </option>
+			  <?php 
+				$sqlMat = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
+				while($resMat = mysqli_fetch_array($sqlMat)){
+					echo "<option value='".$resMat['matricula']."'>".$resMat['nome']."</option>";
+				}
+			  ?>
+			  </select>
+			</div>
+			<div class="form-group col-md-4">
+			</div>
+		</div><br>
+		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">
 			  <label class="label" for="matricula"><b>Número da Matricula:</b> <b class="obrigado">*</b></label>

@@ -21,7 +21,7 @@ function vincular(){
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-		    alert(this.responseText);	
+		    //alert(this.responseText);	
 			if(this.responseText == "1"){
 				alert("VINCULADO COM SUCESSO");
 				location.reload();
@@ -33,4 +33,8 @@ function vincular(){
 	};
 	xhttp.open("POST", "cadastro_function.php?action=vinculo&matricula="+matricula+"&codigo="+codigo, true);
 	xhttp.send();
+}
+
+function proximo(){
+	location.href="desvicular.php";
 }

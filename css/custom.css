@@ -1,0 +1,70 @@
+body{
+  background: #ECECEC;
+}
+
+.btn-group button {
+  background-color: #04AA6D; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+  box-shadow:  0 0 0.5em green;
+  font-size: 12px;
+  font-weight: bold;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1.3rem;
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+
+#title{
+	margin-top: 10px;
+	font-weight: bold;
+	background: green;
+	color: white;
+	padding: 20px;
+	font-size: 25px;
+}
+
+.obrigado{
+	color: red;
+	font-size: 13px;
+}
+
+#back{
+	cursor: pointer;
+}
+
+.voltar{
+	font-size: 13px;
+	margin-left: -3px;
+}
+
+select{
+    text-align-last:center;
+}
+
+.pesq{
+	padding: 10px;
+}
+
+.thead{
+	background: green;
+	color: white;
+}

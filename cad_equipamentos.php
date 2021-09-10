@@ -33,7 +33,7 @@ $action = $_REQUEST['action'];
 			  <?php 
 				$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos order by tipo asc")or die(mysqli_error($con));
 				while($resMat = mysqli_fetch_array($sqlMat)){
-					echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".$resMat['tipo']."</option>";
+					echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
 				}
 			  ?>
 			  </select>
@@ -82,7 +82,7 @@ $action = $_REQUEST['action'];
 			</div>
 			<div class="form-group col-md-4">
 			  <label class="label" for="dateNF"><b>Data NF de compra:</b> </label>
-			  <input type="date" onkeyup="maiuscula(this);" class="form-control field" id="dateNF" value="" placeholder="Digite o Nome Fantasia">
+			  <input type="date"  class="form-control field" id="dateNF"  placeholder="Digite o Nome Fantasia">
 			</div>
 		</div><br>
 				

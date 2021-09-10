@@ -21,7 +21,7 @@ include('../controle.php');
 	</div><br><br>
 
 	<div class="row justify-content-around align-self-center">
-		<?php if($id_usuario == "196" || $id_usuario == "158036"){ ?>
+		<?php if($id_usuario == "196" || $id_usuario == "158036" || $id_usuario == "158129"){ ?>
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(1);">
@@ -44,8 +44,8 @@ include('../controle.php');
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(3);">
-					<i class="fa fa-id-card fa-2x"></i><br><br>
-					EQUIPAMENTOS PARA USUÁRIO
+					<i class="fa fa-link fa-2x"></i><br><br>
+					VINCULAR EQUIPAMENTO
 				</button>
 			</div>
 		</div>
@@ -53,6 +53,16 @@ include('../controle.php');
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(4);">
+					<i class="fa fa-unlock fa-2x" ></i><br><br>
+					DESVINCULAR EQUIPAMENTO
+				</button>
+			</div>
+		</div>
+	</div><br><br>
+	<div class="row justify-content-start align-self-center">	
+		<div class="col-md-3 text-center">
+			<div class="btn-group">
+				<button onclick="redireciona(5);">
 					<i class="fa fa-eye fa-2x"></i><br><br>
 					VISUALIZAR CADASTRO
 				</button>

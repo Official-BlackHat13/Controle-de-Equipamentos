@@ -32,11 +32,14 @@ $action = $_REQUEST['action'];
 			  <option value=""> -- Selecione o Equipamento -- </option>
 			  <?php 
 				$sqlEq = mysqli_query($con,"SELECT 
-												codigo,
-												patrimonio,
-												tipo
+												a.codigo,
+												a.patrimonio,
+												a.tipo
 											FROM
-												equipamentos.equipamentos 
+												equipamentos.equipamentos a left join
+												equipamentos.equipamentos_usuario b
+												on a.codigo = b.codigo
+											where b.codigo is null
 											order by tipo asc")or die(mysqli_error($con));
 				while($resEq = mysqli_fetch_array($sqlEq)){
 					echo "<option value='".$resEq['codigo']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
@@ -65,11 +68,8 @@ $action = $_REQUEST['action'];
 			<div class="form-group col-md-4">
 				  <input id="cadastrar" onclick="voltar();" style="color: white" type="button" class="btn btn-primary btn-lg" value="<< Voltar" />
 			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				  <input id="cadastrar" onclick="vincular();" type="button" class="btn btn-success btn-lg" value="Confirmar Vinculo" />
-			</div>
-			<div class="form-group col-md-4">
-				  <input id="cadastrar" onclick="proximo();" type="button" class="btn btn-danger btn-lg" value="Desvincular >>" />
 			</div>
 		</div>
 		<br>

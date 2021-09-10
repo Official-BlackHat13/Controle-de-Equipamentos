@@ -28,9 +28,24 @@ $action = $_REQUEST['action'];
 		</div>
 		<br>
 		<div class="row justify-content-center align-self-center">
-			<div class="col-md-4 text-center consult">
-				 <select class="form-control" id="machine" onchange="blocks(1);">
+			<div class="col-md-3 text-center consult">
+				 <select class="form-control" id="id" >
 				  <option value=""> -- Selecione o Equipamento -- </option>
+				  <?php 
+					$sqlMat = mysqli_query($con,"SELECT 
+													tipo,
+													patrimonio
+												FROM
+													equipamentos.equipamentos order by tipo asc")or die(mysqli_error($con));
+					while($resMat = mysqli_fetch_array($sqlMat)){
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".$resMat['tipo']."</option>";
+					}
+				  ?>
+				  </select>
+			</div>
+			<div class="col-md-3 text-center consult">
+				 <select class="form-control" id="machine" >
+				  <option value=""> -- Selecione o Tipo -- </option>
 				  <?php 
 					$sqlMat = mysqli_query($con,"SELECT 
 													tipo
@@ -42,8 +57,8 @@ $action = $_REQUEST['action'];
 				  ?>
 				  </select>
 			</div>
-			<div class="col-md-4 text-center consult">
-				 <select class="form-control" id="user" onchange="blocks(2);">
+			<div class="col-md-3 text-center consult">
+				 <select class="form-control" id="user" >
 				  <option value=""> -- Selecione o Colaborador -- </option>
 				  <?php 
 					$sqlMat = mysqli_query($con,"SELECT

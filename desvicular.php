@@ -50,7 +50,7 @@ $action = $_REQUEST['action'];
 		</div>
 		</div>
 		<br>
-		<div style="margin-left: 25px;" id="retorno"></div>
+		<div style="margin-left: 5px;" id="retorno"></div>
 		
 		
 		<div class="row h-25 justify-content-center align-items-center" >
@@ -58,12 +58,6 @@ $action = $_REQUEST['action'];
 				  <input id="cadastrar" onclick="voltar();" style="color: white" type="button" class="btn btn-primary btn-lg" value="<< Voltar" />
 			</div>
 			<div class="form-group col-md-6">
-			</div>
-			<div class="form-group col-md-1">
-				 <button class="btn btn-info" onclick="home();">
-					<i class="fa fa-home"></i><br>
-					<b class="home">Inicial<b>
-				 </button> 
 			</div>
 		</div>
 		<br>

@@ -6,12 +6,14 @@ function pesquisa(){
 	
 	var machine = document.getElementById('machine').value;
 	var user = document.getElementById('user').value;
+	var id = document.getElementById('id').value;
 	
-	if(machine == "" || machine == null && user == "" || user == null){
+	if(machine == ""  && user == "" && id == ""){
 		alert("NENHUM VALOR FOI SELECIONADO");
-		document.getElementById('machine').focus();
+		document.getElementById('id').focus();
 		return false;
 	}
+	
 	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -21,21 +23,23 @@ function pesquisa(){
 			
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=pesquisa&busca="+busca, true);
+	xhttp.open("POST", "cadastro_function.php?action=pesquisa&machine="+machine+"&user="+user+"&id="+id, true);
 	xhttp.send();	
 }
 
 function exportar(){
 	var action = "exportar";
-	var busca = document.getElementById('busca').value;
+	var machine = document.getElementById('machine').value;
+	var user = document.getElementById('user').value;
+	var id = document.getElementById('id').value;
 	
-	if(busca == "" || busca == null){
-		alert("SELECIONE UM EQUIPAMENTO");
-		document.getElementById('busca').focus();
+	if(machine == ""  && user == "" && id == ""){
+		alert("NENHUM VALOR FOI SELECIONADO");
+		document.getElementById('id').focus();
 		return false;
 	}
 	
-	location.href="cadastro_function.php?action="+action+"&busca="+busca, "_blank";	
+	location.href="cadastro_function.php?action="+action+"&machine="+machine+"&user="+user+"&id="+id, "_blank";	
 }
 
 function blocks(id){

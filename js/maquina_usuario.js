@@ -35,6 +35,7 @@ function vincular(){
 	xhttp.send();
 }
 
-function proximo(){
-	location.href="desvicular.php";
+function home(){
+	location.href="index.php";
 }
+

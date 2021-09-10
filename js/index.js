@@ -11,6 +11,9 @@ function redireciona(tela){
 			location.href="maquina_usuario.php";
 		break;
 		case 4:
+			location.href="desvicular.php";
+		break;
+		case 5:
 			location.href="lista_dados.php";
 		break;
 		default:

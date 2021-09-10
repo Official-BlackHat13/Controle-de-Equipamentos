@@ -100,6 +100,7 @@ function autoComplete(str){
 				funcao.value = json.funcao;
 				gestor.value = json.gestor;
 				matricula.value = json.matricula;
+				document.getElementById('matricula').disabled = true;
 			}
 				
 		}

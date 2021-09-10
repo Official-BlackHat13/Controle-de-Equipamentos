@@ -1,5 +1,5 @@
 function voltar(){
-	location.href="maquina_usuario.php";
+	location.href="index.php";
 }
 
 function search(codigo){

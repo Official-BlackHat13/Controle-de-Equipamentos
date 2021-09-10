@@ -35,7 +35,7 @@ $action = $_REQUEST['action'];
 			  <?php 
 				$sqlMat = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
 				while($resMat = mysqli_fetch_array($sqlMat)){
-					echo "<option value='".$resMat['matricula']."'>".$resMat['nome']."</option>";
+					echo "<option value='".$resMat['matricula']."'>".utf8_encode($resMat['nome'])."</option>";
 				}
 			  ?>
 			  </select>

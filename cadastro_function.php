@@ -2,69 +2,152 @@
 $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipamentos")or die("<h1>FALHA NA CONEXÃO COM BANCO DE DADOS</h1>");
 $action = $_REQUEST['action'];
 
+//CARREGA A TELA DE CADASTRO APARTIR DO TIPO SELECIONADO
+if($action == "carregar"){
+	require_once("EquipamentosForm.php");
+	$tipo = $_REQUEST['tipo'];
+	
+	switch($tipo){
+		case "AP/ANTENA":
+		  tipoAntena($con, $tipo);
+		break;
+		case "CELULARES":
+		  tipoCelular($con, $tipo);
+		break;
+		case "COLETOR":
+		  tipoColetor($con, $tipo);
+		break; 
+		case "COMPUTADOR":
+		case "NOTEBOOK":
+		  tipoMaquinas($con, $tipo);
+		break; 
+		case "IMPRESSORA":
+		  tipoImpressora($con, $tipo);
+		break; 
+		case "LINHAS MOVEIS":
+		  tipoLinhasMoveis($con, $tipo);
+		break;
+		case "MODEM":
+		  tipoModem($con, $tipo);
+		break;
+		case "MONITOR":
+		  tipoMonitor($con, $tipo);
+		break;
+		
+		case "PROJETOR":
+		  tipoProjetor($con, $tipo);
+		break;
+		case "SCANNER":
+		  tipoScanner($con, $tipo);
+		break;
+		case "SERVIDORES":
+		  tipoServidores($con, $tipo);
+		break;
+		case "SWITCH":
+		  tipoSwitch($con, $tipo);
+		break;
+		case "TABLET":
+		  tipoTablet($con, $tipo);
+		break;
+		default:
+			echo "<h1>Tipo não inválido</h1>";
+	}	
+}
+
 //CADASTRO DE EQUIPAMENTO
 if($action == "equipamento"){
+	require_once("InsertEquipamento.php");
 	
 	$user   = $_REQUEST['user'];
 	$tipo   = str_replace(" ","",$_REQUEST['tipo']);
-	$marca  = $_REQUEST['marca'];
-	$modelo = $_REQUEST['modelo'];
-	$partNumber = $_REQUEST['partNumber'];
-	$patrimonio = $_REQUEST['patrimonio'];
-	$stat = $_REQUEST['stat'];
-	$numNF = $_REQUEST['numNF'];
-	$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
-	if($dateNF != ""){
-		$dateNF = date_format($dateNF, "d/m/Y");
-	}
+	
 		
-	$sql = mysqli_query($con,"SELECT case when count(*) = 0 then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."'")or die(mysqli_error($con));
-	$resSql = mysqli_fetch_array($sql);
-	$id = $resSql['qtd'];
-	$codigo = substr($tipo, 0, 8).$id;
-	
-	$insert = mysqli_query($con,"insert into equipamentos.equipamentos 
-										(
-											codigo,
-											tipo,
-											marca,
-											modelo,
-											part_number,
-											patrimonio,
-											status,
-											nf_compra,
-											data_nf,
-											user
-										)
-										values 
-										(
-											'".$codigo."',
-											'".$tipo."',
-											'".$marca."',
-											'".$modelo."',
-											'".$partNumber."',
-											'".$patrimonio."',
-											'".$stat."',
-											'".$numNF."',
-											'".$dateNF."',
-											'".$user."'
-										) on duplicate key update
-										tipo = '".$tipo."',
-										marca = '".$marca."',
-										modelo = '".$modelo."',
-										part_number = '".$partNumber."',
-										status = '".$stat."',
-										nf_compra = '".$numNF."',
-										data_nf = '".$dateNF."',
-										user = '".$user."'")or die(mysqli_error($con));
-										
-	if($insert){
-		echo '1';
-	}else{
-		echo '0';
-	}	
-	
-	mysqli_close($con);
+	switch($tipo){
+		case "AP/ANTENA":
+		  cadAntena(
+			$con, 
+			$tipo
+		  );
+		break;
+		case "CELULARES":
+		  cadCelular(
+			$con, 
+			$tipo
+		  );
+		break;
+		case "COLETOR":
+		  cadColetor(
+			$con, 
+			$tipo
+		  );
+		break; 
+		case "COMPUTADOR":
+		case "NOTEBOOK":
+		    $marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$partNumber = $_REQUEST['partNumber'];
+			$patrimonio = $_REQUEST['patrimonio'];
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
+			$obs = $_REQUEST['obs'];
+			$hostname = $_REQUEST['hostname'];
+			$cpu = $_REQUEST['cpu'];
+			$memoria = $_REQUEST['memoria'];
+			$hd = $_REQUEST['hd'];
+			$flag = $_REQUEST['flag'];
+			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
+			if($dateNF != ""){
+				$dateNF = date_format($dateNF, "d/m/Y");
+			}
+			cadMaquina(
+				$con, 
+				$tipo,
+				$marca,
+				$modelo,
+				$partNumber,
+				$patrimonio,
+				$stat,
+				$numNF,
+				$obs,
+				$dateNF,
+				$hostname,
+				$cpu,
+				$memoria,
+				$hd,
+				$flag,
+				$user
+			);
+		break; 
+		case "IMPRESSORA":
+		  cadImpressora($con, $tipo);
+		break; 
+		case "LINHAS MOVEIS":
+		  cadLinhasMoveis($con, $tipo);
+		break;
+		case "MODEM":
+		  cadModem($con, $tipo);
+		break;
+		case "MONITOR":
+		  cadMonitor($con, $tipo);
+		break;
+		case "PROJETOR":
+		  cadProjetor($con, $tipo);
+		break;
+		case "SCANNER":
+		  cadScanner($con, $tipo);
+		break;
+		case "SERVIDORES":
+		  cadServidores($con, $tipo);
+		break;
+		case "SWITCH":
+		  cadSwitch($con, $tipo);
+		break;
+		case "TABLET":
+		  cadTablet($con, $tipo);
+		break;
+		default:
+			echo "<h1>Tipo não inválido</h1>";
+	}
 }
 
 
@@ -298,25 +381,33 @@ if($action == "exportar"){
 	$rows = mysqli_num_rows($sql);
 	
 	$tabela = "<table border='1' width='100%' >";	
+	$tabela .= "<tr>";
+	$tabela .= '<th colspan="18" style="background: #606060; color: white; text-align: center;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
+	$tabela .= '</tr>';
+	$tabela .= "<tr>";
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CÓDIGO</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>TIPO</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MARCA</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MODELO</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN / SN / Service Tag</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PATRIMÔNIO</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>STATUS</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>NF COMPRA</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>DATA NF</b></td>';
+	$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>MATRICULA</b></td>';
+	$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>NOME</b></td>';
+	$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>SETOR</b></td>';
+	$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>FUNÇÃO</b></td>';
+	$tabela .= '<td colspan="1" style="background: #606060; color: white; text-align: center;"><b>GESTOR</b></td>';
+	$tabela .= "</tr>";
+	
 	if($rows > 0){
 		while($result = mysqli_fetch_array($sql)){
 			extract($result);
 			
 			
-			$tabela .= "<tr>";
-			$tabela .= '<th colspan="9" style="background: #606060; color: white; text-align: center;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
-			$tabela .= '</tr>';
-			$tabela .= "<tr>";
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CÓDIGO</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>TIPO</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MARCA</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MODELO</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN / SN / Service Tag</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PATRIMÔNIO</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>STATUS</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>NF COMPRA</b></td>';
-			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>DATA NF</b></td>';
-			$tabela .= "</tr>";
+			
+			
 			
 			$tabela .= '<tr>';
 			$tabela .= '<td class="value">'.$codigo.'</td>';
@@ -328,30 +419,11 @@ if($action == "exportar"){
 			$tabela .= '<td class="value">'.$status.'</td>';
 			$tabela .= '<td class="value">'.$nf_compra.'</td>';
 			$tabela .= '<td class="value">'.$data_nf.'</td>';
-			$tabela .= '</tr>';
-			
-			$tabela .= "<tr>";
-			$tabela .= '<th colspan="9" style="background: #606060; color: white; text-align: center;">INFORMAÇÕES DO COLABORADOR</tr>';
-			$tabela .= '</tr>';
-			$tabela .= "<tr>";
-			$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>MATRICULA</b></td>';
-			$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>NOME</b></td>';
-			$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>SETOR</b></td>';
-			$tabela .= '<td colspan="2" style="background: #606060; color: white; text-align: center;"><b>FUNÇÃO</b></td>';
-			$tabela .= '<td colspan="1" style="background: #606060; color: white; text-align: center;"><b>GESTOR</b></td>';
-			$tabela .= "</tr>";
-			
-			$tabela .= '<tr>';
 			$tabela .= '<td colspan="2" class="value">'.$matricula.'</td>';
 			$tabela .= '<td colspan="2" class="value">'.$nome.'</td>';
 			$tabela .= '<td colspan="2" class="value">'.$setor.'</td>';
 			$tabela .= '<td colspan="2" class="value">'.$funcao.'</td>';
 			$tabela .= '<td colspan="1" class="value">'.$gestor.'</td>';
-			$tabela .= '</tr>';
-			
-			$tabela .= "<tr>";
-			$tabela .= '<th colspan="9" style="background: orange;"></tr>';
-			$tabela .= '<th colspan="9" style="background: orange;"></tr>';
 			$tabela .= '</tr>';
 					
 		}
@@ -388,6 +460,12 @@ if($action == "lista"){
 										patrimonio,
 										status,
 										nf_compra,
+										hostname,
+										cpu,
+										memoria,
+										hd,
+										obs,
+										flag,
 										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
 									FROM
 										equipamentos.equipamentos
@@ -403,6 +481,13 @@ if($action == "lista"){
 				$arr['stat'] = $dados->status; 
 				$arr['numNF'] = $dados->nf_compra; 
 				$arr['dateNF'] = $dados->data_nf; 
+				$arr['obs'] = $dados->obs; 
+				$arr['flag'] = $dados->flag; 
+				$arr['cpu'] = $dados->cpu; 
+				$arr['memoria'] = $dados->memoria; 
+				$arr['hd'] = $dados->hd; 
+				$arr['hostname'] = $dados->hostname; 
+					
 			}
 		}else{
 			$arr[] = '';

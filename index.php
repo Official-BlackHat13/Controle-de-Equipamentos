@@ -39,7 +39,6 @@ include('../controle.php');
 				</button>
 			</div>
 		</div>
-		<?php } ?>
 	
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
@@ -69,7 +68,16 @@ include('../controle.php');
 			</div>
 		</div>
 	</div>
-	
+	<?php }else{ ?>
+		<div class="col-md-12 text-center">
+			<div class="btn-group">
+				<button onclick="redireciona(5);">
+					<i class="fa fa-eye fa-2x"></i><br><br>
+					VISUALIZAR CADASTRO
+				</button>
+			</div>
+		</div>
+	<?php } ?>
 	<br><br>
 </div>
 

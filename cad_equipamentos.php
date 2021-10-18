@@ -29,6 +29,7 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 			<div class="form-group col-md-4">
 				 <label class="label" for="tipo"><b>Tipo:</b></label>
 				 <select class="form-control" id="tipo" onchange="carregar(this.value);" >
+				 <option value=""> -- Selecione o Tipo -- </option>
 				  <?php 
 					$sqlType = mysqli_query($con,"select equipamento from equipamentos.lista_equipamentos order by equipamento asc")or die(mysqli_error($con));
 					while($resType = mysqli_fetch_array($sqlType)){

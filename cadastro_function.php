@@ -17,8 +17,9 @@ if($action == "carregar"){
 		case "COLETOR":
 		  tipoColetor($con, $tipo);
 		break; 
-		case "COMPUTADOR":
+		case "DESKTOP":
 		case "NOTEBOOK":
+		case "AIO":
 		  tipoMaquinas($con, $tipo);
 		break; 
 		case "IMPRESSORA":
@@ -81,8 +82,9 @@ if($action == "equipamento"){
 			$tipo
 		  );
 		break; 
-		case "COMPUTADOR":
+		case "DESKTOP":
 		case "NOTEBOOK":
+		case "AIO":
 		    $marca  = $_REQUEST['marca'];
 			$modelo = $_REQUEST['modelo'];
 			$partNumber = $_REQUEST['partNumber'];
@@ -474,18 +476,18 @@ if($action == "lista"){
 		if(mysqli_num_rows($sql)){
 			while($dados = mysqli_fetch_object($sql)){
 				$arr['tipo'] = $dados->tipo; 
-				$arr['marca'] = $dados->marca; 
-				$arr['modelo'] = $dados->modelo; 
+				$arr['marca'] = utf8_encode($dados->marca); 
+				$arr['modelo'] = utf8_encode($dados->modelo); 
 				$arr['partNumber'] = $dados->part_number; 
 				$arr['patrimonio'] = $dados->patrimonio; 
-				$arr['stat'] = $dados->status; 
+				$arr['stat'] = utf8_encode($dados->status); 
 				$arr['numNF'] = $dados->nf_compra; 
 				$arr['dateNF'] = $dados->data_nf; 
-				$arr['obs'] = $dados->obs; 
+				$arr['obs'] = utf8_encode($dados->obs); 
 				$arr['flag'] = $dados->flag; 
-				$arr['cpu'] = $dados->cpu; 
-				$arr['memoria'] = $dados->memoria; 
-				$arr['hd'] = $dados->hd; 
+				$arr['cpu'] = utf8_encode($dados->cpu); 
+				$arr['memoria'] = utf8_encode($dados->memoria); 
+				$arr['hd'] = utf8_encode($dados->hd); 
 				$arr['hostname'] = $dados->hostname; 
 					
 			}
@@ -499,8 +501,20 @@ if($action == "lista"){
 		$sql = mysqli_query($con,"SELECT 
 									matricula,
 									REPLACE(nome,'ã','a') nome,
-									setor,
-									funcao,
+									REPLACE(REPLACE(REPLACE(REPLACE(setor, 'ç', 'c'),
+											'ã',
+											'a'),
+										'é',
+										'e'),
+									'á',
+									'a') setor,
+							   REPLACE(REPLACE(REPLACE(REPLACE(funcao, 'Ç', 'C'),
+											'Ã',
+											'A'),
+										'Õ',
+										'O'),
+									'É',
+									'E') funcao,
 									gestor
 								  FROM equipamentos.colaborador
 								  where matricula = '".$busca."'")or die(mysqli_error($con));
@@ -510,9 +524,9 @@ if($action == "lista"){
 				
 				$arr['matricula'] = $dados->matricula; 
 				$arr['nome'] = utf8_encode($dados->nome); 
-				$arr['setor'] = $dados->setor; 
-				$arr['funcao'] = $dados->funcao; 
-				$arr['gestor'] = $dados->gestor; 
+				$arr['setor'] = utf8_encode($dados->setor); 
+				$arr['funcao'] = utf8_encode($dados->funcao); 
+				$arr['gestor'] = utf8_encode($dados->gestor); 
 			}
 		}else{
 			$arr[] = '';

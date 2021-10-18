@@ -2,6 +2,17 @@ function voltar(){
 	location.href="index.php";
 }
 
+function tempoUso(){
+	var dtNf = document.getElementById('dateNF').value;
+	var date1 = new Date();
+	var date2 = new Date(dtNf);
+	var timeDiff = Math.abs(date1.getTime() - date2.getTime());
+	var diffDays = (timeDiff / (1000 * 3600 * 24)); 
+	var diffDays = (diffDays / 365); 
+	alert(diffDays);
+	document.getElementById('tempoUso').value = diffDays.toFixed(2);
+}
+
 function carregar(tipo){
 	
 	if(tipo == "" || tipo == null){
@@ -25,6 +36,12 @@ function cadastrar(){
 	
 	var tipo = document.getElementById('tipo').value;
 	
+	if(!tipo){
+		alert('SELECIONE UM TIPO');
+		document.getElementById('tipo').focus();
+		return false;
+	}
+		
 	switch(tipo){
 	/*	
 		case "AP/ANTENA":
@@ -37,8 +54,9 @@ function cadastrar(){
 			cadColetor(tipo);
 		break;
 	*/
-		case "COMPUTADOR":
+		case "DESKTOP":
 		case "NOTEBOOK":
+		case "AIO":
 			cadMaquina(tipo);
 		break;
 	/*	
@@ -75,9 +93,9 @@ function cadastrar(){
 }
 
 
-// CADASTRA DESKTOP E NOTEBOOK
+// CADASTRA DESKTOP, NOTEBOOK E AIO
 function cadMaquina(tipo){
-		
+			
 	var marca = document.getElementById('marca').value;
 	var modelo = document.getElementById('modelo').value;
 	var partNumber = document.getElementById('partNumber').value;
@@ -232,11 +250,12 @@ function autoComplete(str){
 				hd.value = "";
 				
 			}else{
+				
 				marca.value = json.marca;
 				modelo.value = json.modelo;
 				partNumber.value = json.partNumber;
 				patrimonio.value = json.patrimonio;
-				stat.value = json.stat;
+				document.getElementById(json.stat.toUpperCase()).selected = true;
 				numNF.value = json.numNF;
 				dateNF.value = json.dateNF;
 				obs.value = json.obs;

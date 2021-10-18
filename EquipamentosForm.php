@@ -62,10 +62,10 @@ function tipoMaquinas($con, $tipo){
 				  <label class="label" for="status"><b>Status:</b> <b class="obrigado">*</b></label>
 				  <select id="status" class="form-control field">
 					<option value=""> -- Selecione o Status -- </option>
-					<option value="EM USO">EM USO</option>
-					<option value="PARA DOAÇÃO">PARA DOAÇÃO</option>
-					<option value="BACKUP">BACKUP</option>
-					<option value="DESCARTE">DESCARTE</option>
+					<option id="EM USO" value="EM USO">EM USO</option>
+					<option id="PARA DOAÇÃO" value="PARA DOAÇÃO">PARA DOAÇÃO</option>
+					<option id="BACKUP" value="BACKUP">BACKUP</option>
+					<option id="DESCARTE" value="DESCARTE">DESCARTE</option>
 				  </select>
 				</div>
 				<div class="form-group col-md-4">
@@ -81,7 +81,7 @@ function tipoMaquinas($con, $tipo){
 				</div>
 				<div class="form-group col-md-4">
 				  <label class="label" for="dateNF"><b>Data NF de compra:</b> </label>
-				  <input type="date"  class="form-control field" id="dateNF"  placeholder="Digite o Nome Fantasia">
+				  <input type="date"  class="form-control field" id="dateNF" onchange="tempoUso();"  placeholder="Digite o Nome Fantasia">
 				</div>
 			</div><br>
 			
@@ -91,10 +91,18 @@ function tipoMaquinas($con, $tipo){
 				  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="hostname" placeholder="Digite o hostname">
 				</div>
 				<div class="form-group col-md-4">
+				  <label class="label" for="tempoUso"><b>Tempo de Uso:</b> <b class="obrigado">*</b></label>
+				  <input disabled type="text" onkeyup="maiuscula(this);" class="form-control field" id="tempoUso" placeholder="Tempo de Uso">
+				</div>
+			</div><br>
+			
+			<div class="row justify-content-around align-self-center">
+				<div class="form-group col-md-4">
 				  <label class="label" for="hostname"><b>Compartilhado:</b></label>
 				   &emsp;
 				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" onclick="teste();">
 				</div>
+				<div class="form-group col-md-4"></div>
 			</div>
 		</div><br>
 		

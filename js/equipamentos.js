@@ -3,13 +3,14 @@ function voltar(){
 }
 
 function tempoUso(){
+	//Alterar o - pela / para fazer o calculo
 	var dtNf = document.getElementById('dateNF').value;
+	dtNf = dtNf.replaceAll("-","/");
 	var date1 = new Date();
 	var date2 = new Date(dtNf);
 	var timeDiff = Math.abs(date1.getTime() - date2.getTime());
 	var diffDays = (timeDiff / (1000 * 3600 * 24)); 
 	var diffDays = (diffDays / 365); 
-	alert(diffDays);
 	document.getElementById('tempoUso').value = diffDays.toFixed(2);
 }
 
@@ -36,6 +37,8 @@ function cadastrar(){
 	
 	var tipo = document.getElementById('tipo').value;
 	
+	//alert(tempoUso);
+	
 	if(!tipo){
 		alert('SELECIONE UM TIPO');
 		document.getElementById('tipo').focus();
@@ -50,16 +53,16 @@ function cadastrar(){
 		case "CELULARES":
 			cadCelular(tipo);
 		break;
+	*/
 		case "COLETOR":
 			cadColetor(tipo);
 		break;
-	*/
 		case "DESKTOP":
 		case "NOTEBOOK":
 		case "AIO":
 			cadMaquina(tipo);
 		break;
-	/*	
+	/*
 		case "IMPRESSORA":
 			cadImpressora(tipo);
 		break;
@@ -95,7 +98,7 @@ function cadastrar(){
 
 // CADASTRA DESKTOP, NOTEBOOK E AIO
 function cadMaquina(tipo){
-			
+	var tempoUso = document.getElementById('tempoUso').value;		
 	var marca = document.getElementById('marca').value;
 	var modelo = document.getElementById('modelo').value;
 	var partNumber = document.getElementById('partNumber').value;
@@ -186,9 +189,46 @@ function cadMaquina(tipo){
 			}					
 		}
     };
-	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&numNF="+numNF+"&dateNF="+dateNF+"&flag="+flag+"&obs="+obs+"&hostname="+hostname+"&cpu="+cpu+"&memoria="+memoria+"&hd="+hd+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&numNF="+numNF+"&dateNF="+dateNF+"&flag="+flag+"&obs="+obs+"&hostname="+hostname+"&cpu="+cpu+"&memoria="+memoria+"&hd="+hd+"&tempoUso="+tempoUso+"&user="+user, true);
 	xhttp.send();
 	
+}
+
+// Cadastro de Coletores
+function cadColetor(tipo){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var marca = document.getElementById('marca').value;
+	var modelo = document.getElementById('modelo').value;
+	var partNumber = document.getElementById('partNumber').value;
+	var sn = document.getElementById('sn').value;
+	var stat = document.getElementById('status').value;
+	var obs = document.getElementById('obs').value;
+	var numNF = document.getElementById('numNF').value;
+	var dateNF = document.getElementById('dateNF').value;
+	var tempoUso = document.getElementById('tempoUso').value;	
+	var user = document.getElementById('user').value;
+	var value = document.getElementById('flag').checked;
+	let flag;
+	if(value == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}	
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			if(this.responseText == "1"){
+				alert("CADASTRADO COM SUCESSO");
+				location.reload();
+			}else{
+				alert("ERRO AO CADASTRAR");
+			}					
+		}
+    };
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&sn="+sn+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.send();
 }
 
 
@@ -197,6 +237,7 @@ function autoComplete(str){
 	
 	var tipo = document.getElementById('tipo').value;
 	
+	var tempoUso = document.getElementById('tempoUso');
 	var marca = document.getElementById('marca');
 	var modelo = document.getElementById('modelo');
 	var partNumber = document.getElementById('partNumber');
@@ -206,10 +247,12 @@ function autoComplete(str){
 	var dateNF = document.getElementById('dateNF');
 	var obs = document.getElementById('obs');
 	
-	var hostname = document.getElementById('hostname');
-	var cpu = document.getElementById('cpu');
-	var memoria = document.getElementById('memoria');
-	var hd = document.getElementById('hd');
+	if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
+		var hostname = document.getElementById('hostname');
+		var cpu = document.getElementById('cpu');
+		var memoria = document.getElementById('memoria');
+		var hd = document.getElementById('hd');
+	}
 	
 	
 	var busca = document.getElementById('busca').value;
@@ -223,11 +266,14 @@ function autoComplete(str){
 		numNF.value = 'Carregando...';
 		dateNF.value = 'Carregando...';
 		obs.value = 'Carregando...';
-		hostname.value = 'Carregando...';
-		cpu.value = 'Carregando...';
-		memoria.value = 'Carregando...';
-		hd.value = 'Carregando...';
+		tempoUso.value = 'Carregando...';
 		
+		if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
+			hostname.value = 'Carregando...';
+			cpu.value = 'Carregando...';
+			memoria.value = 'Carregando...';
+			hd.value = 'Carregando...';
+		}
 	}
 		
 	var xhttp = new XMLHttpRequest();
@@ -244,13 +290,15 @@ function autoComplete(str){
 				numNF.value = "";
 				dateNF.value = "";
 				obs.value = "";
-				hostname.value = "";
-				cpu.value = "";
-				memoria.value = "";
-				hd.value = "";
-				
+				tempoUso.value = "";
+		
+				if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
+					hostname.value = "";
+					cpu.value = "";
+					memoria.value = "";
+					hd.value = "";
+				}	
 			}else{
-				
 				marca.value = json.marca;
 				modelo.value = json.modelo;
 				partNumber.value = json.partNumber;
@@ -259,15 +307,18 @@ function autoComplete(str){
 				numNF.value = json.numNF;
 				dateNF.value = json.dateNF;
 				obs.value = json.obs;
-				hostname.value = json.hostname;
-				cpu.value = json.cpu;
-				memoria.value = json.memoria;
-				hd.value = json.hd;
+				tempoUso.value = json.tempoUso;
+				
+				if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
+					hostname.value = json.hostname;
+					cpu.value = json.cpu;
+					memoria.value = json.memoria;
+					hd.value = json.hd;
+				}
 				
 				(json.flag == 'Y') ? document.getElementById('flag').checked = true : document.getElementById('flag').checked = false;
 				document.getElementById('patrimonio').disabled = true;
-			}	
-				
+			}		
 		}
 	};
 	xhttp.open("POST", "cadastro_function.php?action=lista&&busca="+busca+"&id="+str, true);

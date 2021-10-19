@@ -77,10 +77,36 @@ if($action == "equipamento"){
 		  );
 		break;
 		case "COLETOR":
-		  cadColetor(
-			$con, 
-			$tipo
-		  );
+		    $marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$partNumber = $_REQUEST['partNumber'];
+			$sn = $_REQUEST['sn'];
+			$patrimonio = $_REQUEST['patrimonio'];
+			$tempoUso = $_REQUEST['tempoUso'];
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
+			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
+			if($dateNF != ""){
+				$dateNF = date_format($dateNF, "d/m/Y");
+			}
+			$obs = $_REQUEST['obs'];
+			$flag = $_REQUEST['flag'];
+			cadColetor(
+				$con, 
+				$tipo,
+				$marca,
+			    $modelo,
+			    $partNumber,
+			    $sn,
+			    $patrimonio,
+				$tempoUso,
+				$stat,
+				$numNF,
+				$dateNF,
+				$obs,
+				$flag,
+				$user
+			);
 		break; 
 		case "DESKTOP":
 		case "NOTEBOOK":
@@ -89,6 +115,7 @@ if($action == "equipamento"){
 			$modelo = $_REQUEST['modelo'];
 			$partNumber = $_REQUEST['partNumber'];
 			$patrimonio = $_REQUEST['patrimonio'];
+			$tempoUso = $_REQUEST['tempoUso'];
 			$stat = $_REQUEST['stat'];
 			$numNF = $_REQUEST['numNF'];
 			$obs = $_REQUEST['obs'];
@@ -117,6 +144,7 @@ if($action == "equipamento"){
 				$memoria,
 				$hd,
 				$flag,
+				$tempoUso,
 				$user
 			);
 		break; 
@@ -468,6 +496,7 @@ if($action == "lista"){
 										hd,
 										obs,
 										flag,
+										tempo_uso,
 										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
 									FROM
 										equipamentos.equipamentos
@@ -480,11 +509,12 @@ if($action == "lista"){
 				$arr['modelo'] = utf8_encode($dados->modelo); 
 				$arr['partNumber'] = $dados->part_number; 
 				$arr['patrimonio'] = $dados->patrimonio; 
-				$arr['stat'] = utf8_encode($dados->status); 
+				$arr['stat'] = $dados->status; 
 				$arr['numNF'] = $dados->nf_compra; 
 				$arr['dateNF'] = $dados->data_nf; 
 				$arr['obs'] = utf8_encode($dados->obs); 
 				$arr['flag'] = $dados->flag; 
+				$arr['tempoUso'] = $dados->tempo_uso; 
 				$arr['cpu'] = utf8_encode($dados->cpu); 
 				$arr['memoria'] = utf8_encode($dados->memoria); 
 				$arr['hd'] = utf8_encode($dados->hd); 

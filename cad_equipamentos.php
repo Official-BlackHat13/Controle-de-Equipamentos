@@ -18,7 +18,11 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 
 	<div class="container">
 		<div class="row justify-content-center align-self-center" id="title">
-			<div class="col-md-12 text-center">
+			<div class="col-md-1 text-left">
+				<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="voltar();"></i>
+				<p class='voltar'>VOLTAR</p>
+			</div>
+			<div class="col-md-11" align="center">
 				Cadastro de Equipamento
 			</div>
 		</div>
@@ -42,8 +46,5 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 		<br>
 		<br>
 		<div id="retorno"></div>
-		
-	</div>
-
 </body>
 </html>

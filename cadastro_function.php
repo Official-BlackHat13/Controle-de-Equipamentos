@@ -34,12 +34,9 @@ if($action == "carregar"){
 		case "MONITOR":
 		  tipoMonitor($con, $tipo);
 		break;
-		
 		case "PROJETOR":
-		  tipoProjetor($con, $tipo);
-		break;
 		case "SCANNER":
-		  tipoScanner($con, $tipo);
+		  tipoProjetor($con, $tipo);
 		break;
 		case "SERVIDORES":
 		  tipoServidores($con, $tipo);
@@ -71,10 +68,36 @@ if($action == "equipamento"){
 		  );
 		break;
 		case "CELULARES":
-		  cadCelular(
-			$con, 
-			$tipo
-		  );
+		    $marca  = $_REQUEST['marca'];
+		    $modelo = $_REQUEST['modelo'];
+		    $patrimonio = $_REQUEST['patrimonio'];
+			$tempoUso = $_REQUEST['tempoUso'];
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
+			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
+			if($dateNF != ""){
+				$dateNF = date_format($dateNF, "d/m/Y");
+			}
+			$imei = $_REQUEST['imei'];
+			$capinha = $_REQUEST['capinha'];
+			$obs = $_REQUEST['obs'];
+			$flag = $_REQUEST['flag'];
+			cadCelular(
+			  $con, 
+			  $tipo,
+			  $marca,
+			  $modelo,
+			  $patrimonio,
+			  $tempoUso,
+			  $stat,
+			  $numNF,
+			  $dateNF,
+			  $imei,
+			  $capinha,
+			  $obs,
+			  $flag,
+			  $user
+			);
 		break;
 		case "COLETOR":
 		    $marca  = $_REQUEST['marca'];
@@ -149,7 +172,38 @@ if($action == "equipamento"){
 			);
 		break; 
 		case "IMPRESSORA":
-		  cadImpressora($con, $tipo);
+			$marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$patrimonio = $_REQUEST['patrimonio'];
+			$tempoUso = $_REQUEST['tempoUso'];
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
+			$obs = $_REQUEST['obs'];
+			$ip = $_REQUEST['ip'];
+			$cartucho = $_REQUEST['cartucho'];
+			$local = $_REQUEST['local'];
+			$flag = $_REQUEST['flag'];
+			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
+			if($dateNF != ""){
+				$dateNF = date_format($dateNF, "d/m/Y");
+			}
+			cadImpressora(
+				$con, 
+				$tipo,
+				$marca,
+				$modelo,
+				$patrimonio,
+				$tempoUso,
+				$stat,
+				$numNF,
+				$obs,
+				$ip,
+				$cartucho,
+				$flag,
+				$dateNF,
+				$local,
+				$user
+			);
 		break; 
 		case "LINHAS MOVEIS":
 		  cadLinhasMoveis($con, $tipo);
@@ -487,6 +541,7 @@ if($action == "lista"){
 										marca,
 										modelo,
 										part_number,
+										service_tag,
 										patrimonio,
 										status,
 										nf_compra,
@@ -497,6 +552,11 @@ if($action == "lista"){
 										obs,
 										flag,
 										tempo_uso,
+										imei,
+										capinha,
+										local,
+										ip,
+										cartucho,
 										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
 									FROM
 										equipamentos.equipamentos
@@ -508,6 +568,7 @@ if($action == "lista"){
 				$arr['marca'] = utf8_encode($dados->marca); 
 				$arr['modelo'] = utf8_encode($dados->modelo); 
 				$arr['partNumber'] = $dados->part_number; 
+				$arr['serviceTag'] = $dados->service_tag; 
 				$arr['patrimonio'] = $dados->patrimonio; 
 				$arr['stat'] = $dados->status; 
 				$arr['numNF'] = $dados->nf_compra; 
@@ -519,6 +580,11 @@ if($action == "lista"){
 				$arr['memoria'] = utf8_encode($dados->memoria); 
 				$arr['hd'] = utf8_encode($dados->hd); 
 				$arr['hostname'] = $dados->hostname; 
+				$arr['imei'] = $dados->imei; 
+				$arr['capinha'] = $dados->capinha; 
+				$arr['local'] = $dados->local; 
+				$arr['ip'] = $dados->ip; 
+				$arr['cartucho'] = $dados->cartucho; 
 					
 			}
 		}else{

@@ -37,7 +37,7 @@ function cadastrar(){
 	
 	var tipo = document.getElementById('tipo').value;
 	
-	//alert(tempoUso);
+	//alert(tipo);
 	
 	if(!tipo){
 		alert('SELECIONE UM TIPO');
@@ -50,10 +50,10 @@ function cadastrar(){
 		case "AP/ANTENA":
 			cadAntena(tipo);
 		break;
+	*/
 		case "CELULARES":
 			cadCelular(tipo);
 		break;
-	*/
 		case "COLETOR":
 			cadColetor(tipo);
 		break;
@@ -62,10 +62,10 @@ function cadastrar(){
 		case "AIO":
 			cadMaquina(tipo);
 		break;
-	/*
 		case "IMPRESSORA":
 			cadImpressora(tipo);
 		break;
+	/*
 		case "LINHAS MOVEIS":
 			cadMoveis(tipo);
 		break;
@@ -215,6 +215,47 @@ function cadColetor(tipo){
 		flag = 'N';
 	}	
 	
+	if(marca == "" || marca == null){
+		alert("PREENCHA UMA MARCA");
+		document.getElementById('marca').focus();
+		return false;
+	}
+			
+	if(modelo == "" || modelo == null){
+		alert("PREENCHA UM MODELO");
+		document.getElementById('modelo').focus();
+		return false;
+	}
+	
+				
+	if(partNumber == "" || partNumber == null){
+		alert("PREENCHA O PN");
+		document.getElementById('partNumber').focus();
+		return false;
+	}
+	
+	if(sn == "" || sn == null){
+		alert("PREENCHA O SN");
+		document.getElementById('sn').focus();
+		return false;
+	}
+	
+	if(stat == "" || stat == null){
+		alert("SELECIONE UM STATUS");
+		document.getElementById('status').focus();
+		return false;
+	}
+			
+	if(patrimonio == "" || patrimonio == null){
+		alert("PREENCHA O NÚMERO DO PATRIMÔNIO");
+		document.getElementById('patrimonio').focus();
+		return false;
+	}
+	
+	
+	
+	
+	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -231,16 +272,168 @@ function cadColetor(tipo){
 	xhttp.send();
 }
 
+// Cadastro de Celulares
+function cadCelular(tipo){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var marca = document.getElementById('marca').value;
+	var modelo = document.getElementById('modelo').value;
+	var capinha = document.getElementById('capinha').value;
+	var imei = document.getElementById('imei').value;
+	var stat = document.getElementById('status').value;
+	var obs = document.getElementById('obs').value;
+	var numNF = document.getElementById('numNF').value;
+	var dateNF = document.getElementById('dateNF').value;
+	var tempoUso = document.getElementById('tempoUso').value;	
+	var user = document.getElementById('user').value;
+	var value = document.getElementById('flag').checked;
+	let flag;
+	if(value == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}
+
+	if(marca == "" || marca == null){
+		alert("PREENCHA UMA MARCA");
+		document.getElementById('marca').focus();
+		return false;
+	}
+			
+	if(modelo == "" || modelo == null){
+		alert("PREENCHA UM MODELO");
+		document.getElementById('modelo').focus();
+		return false;
+	}
+	
+				
+	if(capinha == "" || capinha == null){
+		alert("SELECIONE UMA OPÇÃO");
+		document.getElementById('capinha').focus();
+		return false;
+	}
+	
+	if(imei == "" || imei == null){
+		alert("PREENCHA O NÚMERO DO IMEI");
+		document.getElementById('imei').focus();
+		return false;
+	}
+	
+	if(stat == "" || stat == null){
+		alert("SELECIONE UM STATUS");
+		document.getElementById('status').focus();
+		return false;
+	}
+			
+	if(patrimonio == "" || patrimonio == null){
+		alert("PREENCHA O NÚMERO DO PATRIMÔNIO");
+		document.getElementById('patrimonio').focus();
+		return false;
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			if(this.responseText == "1"){
+				alert("CADASTRADO COM SUCESSO");
+				location.reload();
+			}else{
+				alert("ERRO AO CADASTRAR");
+			}					
+		}
+    };
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&capinha="+capinha+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&imei="+imei+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.send();
+}
+
+// Cadastro de Impressora
+function cadImpressora(tipo){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var marca = document.getElementById('marca').value;
+	var modelo = document.getElementById('modelo').value;
+	var cartucho = document.getElementById('cartucho').value;
+	var ip = document.getElementById('ip').value;
+	var local = document.getElementById('local').value;
+	var stat = document.getElementById('status').value;
+	var obs = document.getElementById('obs').value;
+	var numNF = document.getElementById('numNF').value;
+	var dateNF = document.getElementById('dateNF').value;
+	var tempoUso = document.getElementById('tempoUso').value;	
+	var user = document.getElementById('user').value;
+	var value = document.getElementById('flag').checked;
+	let flag;
+	if(value == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}
+
+	if(marca == "" || marca == null){
+		alert("PREENCHA UMA MARCA");
+		document.getElementById('marca').focus();
+		return false;
+	}
+			
+	if(modelo == "" || modelo == null){
+		alert("PREENCHA UM MODELO");
+		document.getElementById('modelo').focus();
+		return false;
+	}
+				
+	if(cartucho == "" || cartucho == null){
+		alert("PREENCHA UM INFORMAÇÃO DO ITEM");
+		document.getElementById('cartucho').focus();
+		return false;
+	}
+	
+	if(ip == "" || ip == null){
+		alert("PREENCHA O NÚMERO DO IP");
+		document.getElementById('ip').focus();
+		return false;
+	}
+	
+	if(stat == "" || stat == null){
+		alert("SELECIONE UM STATUS");
+		document.getElementById('status').focus();
+		return false;
+	}
+			
+	if(patrimonio == "" || patrimonio == null){
+		alert("PREENCHA O NÚMERO DO PATRIMÔNIO");
+		document.getElementById('patrimonio').focus();
+		return false;
+	}
+	
+	if(local == "" || local == null){
+		alert("PREENCHA O LOCAL");
+		document.getElementById('local').focus();
+		return false;
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			if(this.responseText == "1"){
+				alert("CADASTRADO COM SUCESSO");
+				location.reload();
+			}else{
+				alert("ERRO AO CADASTRAR");
+			}					
+		}
+    };
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&cartucho="+cartucho+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&ip="+ip+"&local="+local+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.send();
+}
+
 
 // Função para autopreencher os dados da transportadora nacional
 function autoComplete(str){
 	
 	var tipo = document.getElementById('tipo').value;
-	
 	var tempoUso = document.getElementById('tempoUso');
 	var marca = document.getElementById('marca');
 	var modelo = document.getElementById('modelo');
-	var partNumber = document.getElementById('partNumber');
 	var patrimonio = document.getElementById('patrimonio');
 	var stat = document.getElementById('status');
 	var numNF = document.getElementById('numNF');
@@ -252,6 +445,23 @@ function autoComplete(str){
 		var cpu = document.getElementById('cpu');
 		var memoria = document.getElementById('memoria');
 		var hd = document.getElementById('hd');
+		var partNumber = document.getElementById('partNumber');
+	}
+	
+	if(tipo == "COLETOR"){
+		var sn = document.getElementById('sn');
+		var partNumber = document.getElementById('partNumber');
+	}
+	
+	if(tipo == "CELULARES"){
+		var imei = document.getElementById('imei');	
+		var capinha = document.getElementById('capinha');	
+	}
+	
+	if(tipo == "IMPRESSORA"){
+		var ip = document.getElementById('ip');	
+		var cartucho = document.getElementById('cartucho');	
+		var local = document.getElementById('local');	
 	}
 	
 	
@@ -260,7 +470,6 @@ function autoComplete(str){
 	if(busca != ""){
 		marca.value = 'Carregando...';
 		modelo.value = 'Carregando...';
-		partNumber.value = 'Carregando...';
 		patrimonio.value = 'Carregando...';
 		stat.value = 'Carregando...';
 		numNF.value = 'Carregando...';
@@ -273,6 +482,23 @@ function autoComplete(str){
 			cpu.value = 'Carregando...';
 			memoria.value = 'Carregando...';
 			hd.value = 'Carregando...';
+			partNumber.value = 'Carregando...';
+		}
+		
+		if(tipo == "COLETOR"){
+			sn.value = 'Carregando...';
+			partNumber.value = 'Carregando...';
+		}
+		
+		if(tipo == "CELULARES"){
+			imei.value = 'Carregando...';
+			capinha.value = 'Carregando...';
+		}
+		
+		if(tipo == "IMPRESSORA"){
+			ip.value = 'Carregando...';
+			cartucho.value = 'Carregando...';
+			local.value = 'Carregando...';
 		}
 	}
 		
@@ -284,7 +510,6 @@ function autoComplete(str){
 			if(json.tipo == undefined){
 				marca.value = "";
 				modelo.value = "";
-				partNumber.value = "";
 				patrimonio.value = "";
 				stat.value = "";
 				numNF.value = "";
@@ -297,11 +522,27 @@ function autoComplete(str){
 					cpu.value = "";
 					memoria.value = "";
 					hd.value = "";
-				}	
+					partNumber.value = "";
+				}
+
+				if(tipo == "COLETOR"){
+					sn.value = "";
+					partNumber.value = "";
+				}
+				
+				if(tipo == "CELULARES"){
+					imei.value = "";
+					capinha.value = "";
+				}
+				
+				if(tipo == "IMPRESSORA"){
+					ip.value = "";
+					cartucho.value = "";
+					local.value = "";
+				}
 			}else{
 				marca.value = json.marca;
 				modelo.value = json.modelo;
-				partNumber.value = json.partNumber;
 				patrimonio.value = json.patrimonio;
 				document.getElementById(json.stat.toUpperCase()).selected = true;
 				numNF.value = json.numNF;
@@ -314,6 +555,23 @@ function autoComplete(str){
 					cpu.value = json.cpu;
 					memoria.value = json.memoria;
 					hd.value = json.hd;
+					partNumber.value = json.partNumber;
+				}
+				
+				if(tipo == "COLETOR"){
+					sn.value = json.serviceTag;
+					partNumber.value = json.partNumber;
+				}
+				
+				if(tipo == "CELULARES"){
+					imei.value = json.imei;
+					document.getElementById(json.capinha.toUpperCase()).selected = true;
+				}
+				
+				if(tipo == "IMPRESSORA"){
+					ip.value = json.ip;
+					cartucho.value = json.cartucho;
+					local.value = json.local;
 				}
 				
 				(json.flag == 'Y') ? document.getElementById('flag').checked = true : document.getElementById('flag').checked = false;

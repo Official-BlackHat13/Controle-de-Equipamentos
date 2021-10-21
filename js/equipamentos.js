@@ -65,6 +65,10 @@ function cadastrar(){
 		case "IMPRESSORA":
 			cadImpressora(tipo);
 		break;
+		case "PROJETOR":
+		case "SCANNER":
+			cadProjetor(tipo);
+		break;
 	/*
 		case "LINHAS MOVEIS":
 			cadMoveis(tipo);
@@ -74,12 +78,6 @@ function cadastrar(){
 		break;
 		case "MONITOR":
 			cadMonitor(tipo);
-		break;
-		case "PROJETOR":
-			cadProjetor(tipo);
-		break;
-		case "SCANNER":
-			cadScanner(tipo);
 		break;
 		case "SERVIDORES":
 			cadServidores(tipo);
@@ -426,6 +424,43 @@ function cadImpressora(tipo){
 	xhttp.send();
 }
 
+// Cadastro de Projetores e Scanners
+function cadProjetor(tipo){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var marca = document.getElementById('marca').value;
+	var modelo = document.getElementById('modelo').value;
+	var sn = document.getElementById('sn').value;
+	var local = document.getElementById('local').value;
+	var stat = document.getElementById('status').value;
+	var obs = document.getElementById('obs').value;
+	var numNF = document.getElementById('numNF').value;
+	var dateNF = document.getElementById('dateNF').value;
+	var tempoUso = document.getElementById('tempoUso').value;	
+	var user = document.getElementById('user').value;
+	var value = document.getElementById('flag').checked;
+	let flag;
+	if(value == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}
+		
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			if(this.responseText == "1"){
+				alert("CADASTRADO COM SUCESSO");
+				location.reload();
+			}else{
+				alert("ERRO AO CADASTRAR");
+			}					
+		}
+    };
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&sn="+sn+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&local="+local+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.send();
+}
+
 
 // Função para autopreencher os dados da transportadora nacional
 function autoComplete(str){
@@ -464,6 +499,11 @@ function autoComplete(str){
 		var local = document.getElementById('local');	
 	}
 	
+	if(tipo == "PROJETOR"){
+		var sn = document.getElementById('sn');	
+		var local = document.getElementById('local');	
+	}
+	
 	
 	var busca = document.getElementById('busca').value;
 		
@@ -499,6 +539,11 @@ function autoComplete(str){
 			ip.value = 'Carregando...';
 			cartucho.value = 'Carregando...';
 			local.value = 'Carregando...';
+		}
+		
+		if(tipo == "PROJETOR"){
+			sn.value = 'Carregando...';	
+			local.value = 'Carregando...';		
 		}
 	}
 		
@@ -540,6 +585,11 @@ function autoComplete(str){
 					cartucho.value = "";
 					local.value = "";
 				}
+				
+				if(tipo == "PROJETOR"){
+					sn.value = "";
+					local.value = "";	
+				}
 			}else{
 				marca.value = json.marca;
 				modelo.value = json.modelo;
@@ -571,6 +621,11 @@ function autoComplete(str){
 				if(tipo == "IMPRESSORA"){
 					ip.value = json.ip;
 					cartucho.value = json.cartucho;
+					local.value = json.local;
+				}
+				
+				if(tipo == "PROJETOR" || tipo == "SCANNER"){
+					sn.value = json.serviceTag;
 					local.value = json.local;
 				}
 				

@@ -40,7 +40,11 @@ $action = $_REQUEST['action'];
 			  ?>
 			  </select>
 			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-4 text-center"><br>
+				<button id="relatorio" onclick="listaUsuarios();" type="button" class="btn btn-primary btn-lg">
+					<i class="fa fa-search"></i> 
+					&nbsp;Listar Usuários
+				</button>
 			</div>
 		</div><br>
 		
@@ -71,7 +75,10 @@ $action = $_REQUEST['action'];
 			  <label class="label" for="gestor"><b>Gestor:</b> </label>
 			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="gestor" placeholder="Digite o gestor">
 			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-4"><br>
+				<label class="label" for="terceiro"><b>Terceiro:</b></label>
+				&emsp;
+				<input type="checkbox" class="flags" id="terceiro" placeholder="Digite o hostname">
 			</div>
 		</div><br>
 				
@@ -83,6 +90,9 @@ $action = $_REQUEST['action'];
 			</div>
 			<div class="form-group col-md-6">
 				  <input id="cadastrar" onclick="cadastrar();" type="button" class="btn btn-success btn-lg" value="Confirmar Cadastro" />
+			</div>
+			<div class="form-group col-md-2">
+				  <input id="cadastrar" onclick="location.reload();" type="button" class="btn btn-info btn-lg" value="Novo Cadastro" />
 			</div>
 		</div>
 		<br>

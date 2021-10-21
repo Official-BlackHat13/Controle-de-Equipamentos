@@ -107,7 +107,7 @@ function tipoCelular($con, $tipo){
 				<div class="form-group col-md-4">
 				  <label class="label" for="hostname"><b>Compartilhado:</b></label>
 				   &emsp;
-				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" onclick="teste();">
+				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" >
 				</div>
 				<div class="col-md-4"></div>
 			</div><br>
@@ -219,7 +219,7 @@ function tipoColetor($con, $tipo){
 				<div class="form-group col-md-4">
 				  <label class="label" for="hostname"><b>Compartilhado:</b></label>
 				   &emsp;
-				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" onclick="teste();">
+				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
 				<div class="col-md-4"></div>
 			</div><br>
@@ -330,7 +330,7 @@ function tipoMaquinas($con, $tipo){
 				<div class="form-group col-md-4">
 				  <label class="label" for="hostname"><b>Compartilhado:</b></label>
 				   &emsp;
-				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" onclick="teste();">
+				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
 				<div class="form-group col-md-4"></div>
 			</div>
@@ -476,7 +476,7 @@ function tipoImpressora($con, $tipo){
 				<div class="form-group col-md-4">
 				  <label class="label" for="hostname"><b>Compartilhado:</b></label>
 				   &emsp;
-				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" onclick="teste();">
+				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
 			</div><br>
 		</div><br>			
@@ -526,7 +526,7 @@ function tipoMonitor($con, $tipo){
 
 /*
 
-	FORMULÁRIOS DE PROJETOR
+	FORMULÁRIOS DE PROJETOR E SCANNER
 
 */
 function tipoProjetor($con, $tipo){
@@ -616,7 +616,7 @@ function tipoProjetor($con, $tipo){
 				<div class="form-group col-md-4">
 				  <label class="label" for="hostname"><b>Compartilhado:</b></label>
 				   &emsp;
-				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" onclick="teste();">
+				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
 				<div class="col-md-4"></div>
 			</div><br>

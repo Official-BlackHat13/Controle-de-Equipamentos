@@ -215,10 +215,37 @@ if($action == "equipamento"){
 		  cadMonitor($con, $tipo);
 		break;
 		case "PROJETOR":
-		  cadProjetor($con, $tipo);
-		break;
 		case "SCANNER":
-		  cadScanner($con, $tipo);
+			$marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$patrimonio = $_REQUEST['patrimonio'];
+			$tempoUso = $_REQUEST['tempoUso'];
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
+			$obs = $_REQUEST['obs'];
+			$local = $_REQUEST['local'];
+			$sn = $_REQUEST['sn'];
+			$flag = $_REQUEST['flag'];
+			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
+			if($dateNF != ""){
+				$dateNF = date_format($dateNF, "d/m/Y");
+			}
+			cadProjetor(
+				$con, 
+				$tipo,
+				$marca,
+				$modelo,
+				$patrimonio,
+				$tempoUso,
+				$stat,
+				$numNF,
+				$obs,
+				$local,
+				$sn,
+				$flag,
+				$dateNF,
+				$user
+			);
 		break;
 		case "SERVIDORES":
 		  cadServidores($con, $tipo);
@@ -242,6 +269,7 @@ if($action == "usuario"){
 	$setor = $_REQUEST['setor'];
 	$funcao = $_REQUEST['funcao'];
 	$gestor = $_REQUEST['gestor'];
+	$flag = $_REQUEST['flag'];
 	$user = $_REQUEST['user'];
 	
 	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where matricula = '".$matricula."'")or die(mysqli_error($con));
@@ -255,6 +283,7 @@ if($action == "usuario"){
 											setor,
 											funcao,
 											gestor,
+											terceiro,
 											user
 										)
 										values
@@ -264,12 +293,14 @@ if($action == "usuario"){
 											'".$setor."',
 											'".$funcao."',
 											'".$gestor."',
+											'".$flag."',
 											'".$user."'
 										) on duplicate key update
 										nome = '".$nome."',
 										setor = '".$setor."',
 										funcao = '".$funcao."',
 										gestor = '".$gestor."',
+										terceiro = '".$flag."',
 										user = '".$user."'
 										")or die(mysqli_error($con));
 		if($insert){
@@ -611,6 +642,7 @@ if($action == "lista"){
 										'O'),
 									'É',
 									'E') funcao,
+									terceiro,
 									gestor
 								  FROM equipamentos.colaborador
 								  where matricula = '".$busca."'")or die(mysqli_error($con));
@@ -622,6 +654,7 @@ if($action == "lista"){
 				$arr['nome'] = utf8_encode($dados->nome); 
 				$arr['setor'] = utf8_encode($dados->setor); 
 				$arr['funcao'] = utf8_encode($dados->funcao); 
+				$arr['terceiro'] = $dados->terceiro; 
 				$arr['gestor'] = utf8_encode($dados->gestor); 
 			}
 		}else{
@@ -720,6 +753,166 @@ if($action == "desvicular"){
 	}
 }
 
+// Aqui lista todos os usuários
+if($action == "todos"){
+	$sql = mysqli_query($con,"select * from equipamentos.colaborador")or die(mysqli_error($con));
+	
+	$linhas = mysqli_num_rows($sql);
+	echo "<center><button class='total'>Total de Funcinários: ".$linhas."</button></center>";
+	
+	echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+	echo "<thead class='th'>
+			<tr>
+				<th>MATRICULA</th>
+				<th>NOME</th>
+				<th>SETOR</th>
+				<th>FUNÇÃO</th>
+				<th>GERTOR</th>
+				<th>TERCEIRO</th>
+			</tr>
+		  </thead>";
+	
+	while($result = mysqli_fetch_array($sql)){
+		extract($result);
+		echo "<tbody class='td'>
+			<tr>
+				<td>".$matricula."</td>
+				<td>".utf8_encode($nome)."</td>
+				<td>".utf8_encode($setor)."</td>
+				<td>".utf8_encode($funcao)."</td>
+				<td>".utf8_encode($gestor)."</td>";
+		if($terceiro == 'Y'){
+			echo "<td>SIM</td>";
+		}else{
+			echo "<td>NÃO</td>";
+		}	
+		
+		echo "</tr>
+		  </tbody>";	
+	}
+	
+	echo "</table>";
+	
+	mysqli_close($con);
+}
 
+// Aqui lista os usuários filtrados
+if($action == "filtrar"){
+	$busca = $_REQUEST['busca'];
+	$setores = utf8_decode($_REQUEST['setor']);
+	if($setores){
+	   $where = "and setor = '$setores'";
+	}else{
+		$where = "";
+	}
+	
+	$sql = mysqli_query($con,"select * from equipamentos.colaborador where (matricula like '%$busca%' or nome like '%$busca%' or funcao like '%$busca%' or gestor like '%$busca%') $where")or die(mysqli_error($con));
+	
+	$linhas = mysqli_num_rows($sql);
+	echo "<center><button class='total'>".$linhas."</button></center>";
+	
+	echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+	echo "<thead class='th'>
+			<tr>
+				<th>MATRICULA</th>
+				<th>NOME</th>
+				<th>SETOR</th>
+				<th>FUNÇÃO</th>
+				<th>GERTOR</th>
+				<th>TERCEIRO</th>
+			</tr>
+		  </thead>";	
+	
+	while($result = mysqli_fetch_array($sql)){
+		extract($result);
+		echo "<tbody class='td'>
+			<tr>
+				<td>".$matricula."</td>
+				<td>".utf8_encode($nome)."</td>
+				<td>".utf8_encode($setor)."</td>
+				<td>".utf8_encode($funcao)."</td>
+				<td>".utf8_encode($gestor)."</td>";
+		if($terceiro == 'Y'){
+			echo "<td>SIM</td>";
+		}else{
+			echo "<td>NÃO</td>";
+		}	
+		
+		echo "</tr>
+		  </tbody>";	
+	}
+	
+	echo "</table>";
+	
+	mysqli_close($con);
+}
+
+// Aqui exporto o relatório dos usuários cadastrado
+if($action == "relatorio"){
+	$busca = $_REQUEST['busca'];
+	$setores = utf8_decode($_REQUEST['setor']);
+	if($setores){
+	   $where = "and setor = '$setores'";
+	}else{
+		$where = "";
+	}
+	
+	// Nome do Arquivo do Excel que será gerado
+	$arquivo = 'ListaDeUsuarios.xls';
+	
+	$sql = mysqli_query($con,"select * from equipamentos.colaborador where (matricula like '%$busca%' or nome like '%$busca%' or funcao like '%$busca%' or gestor like '%$busca%') $where")or die(mysqli_error($con));
+	
+	$tabela = "<table border='1' width='100%'>";
+	$tabela .= "<tr>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>MATRICULA</b></th>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>NOME</b></th>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>SETOR</b></th>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>FUNÇÃO</b></th>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>GERTOR</b></th>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>TERCEIRO</b></th>
+			</tr>";
+	
+	while($result = mysqli_fetch_array($sql)){
+		extract($result);
+		$tabela .= "<tr class='td'>
+						<td style='background: #F5F5F5; 
+	text-align: center;'>".$matricula."</td>
+						<td style='background: #F5F5F5; 
+	text-align: center;'>".utf8_encode($nome)."</td>
+						<td style='background: #F5F5F5; 
+	text-align: center;'>".utf8_encode($setor)."</td>
+						<td style='background: #F5F5F5; 
+	text-align: center;'>".utf8_encode($funcao)."</td>
+						<td style='background: #F5F5F5; 
+	text-align: center;''>".utf8_encode($gestor)."</td>";
+		if($terceiro == 'Y'){
+			$tabela .= "<td>SIM</td>";
+		}else{
+			$tabela .= "<td>NÃO</td>";
+		}	
+		
+		$tabela .= "</tr>";	
+	}
+	
+	$tabela .= "</table>";
+	
+	// Força o Download do Arquivo Gerado
+	 header ('Cache-Control: no-cache, must-revalidate');
+	 header ('Pragma: no-cache');
+	 header('Content-Type: application/x-msexcel');
+	 header ("Content-Disposition: attachment; filename=\"{$arquivo}\"");
+	 echo $tabela;
+	
+	mysqli_close($con);
+}
+
+if($action == "selection"){
+	$valor = $_REQUEST['valor'];
+	
+	$flag = mysqli_query($con,"select flag from equipamentos.equipamentos where codigo = '".$valor."'")or die(mysqli_error($con));
+	
+	$result = mysqli_fetch_array($flag);
+	echo $result['flag'];
+}
 
 ?>

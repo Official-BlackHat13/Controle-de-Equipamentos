@@ -338,13 +338,82 @@ function cadMonitor($con, $tipo){
 }
 
 
-function cadProjetor($con, $tipo){
-
+/*
+***************************************************************
+*                        PROJETOR
+***************************************************************			
+*/
+function cadProjetor($con, $tipo, $marca, $modelo, $patrimonio, $tempoUso, $stat, $numNF, $obs, $local, $sn, $flag, $dateNF, $user){	
+	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."' and patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+	$resSql = mysqli_fetch_array($sql);
+	$id = $resSql['qtd'];
+	$codigo = substr($tipo, 0, 8).$id;
+	
+	$insert = mysqli_query($con,"insert into equipamentos.equipamentos 
+										(
+											codigo,
+											tipo,
+											marca,
+											modelo,
+											patrimonio,
+											status,
+											nf_compra,
+											data_nf,
+											obs,
+											flag,
+											tempo_uso,
+											service_tag,
+											local,
+											user
+										)
+										values 
+										(
+											'".$codigo."',
+											'".$tipo."',
+											'".$marca."',
+											'".$modelo."',
+											'".$patrimonio."',
+											'".$stat."',
+											'".$numNF."',
+											'".$dateNF."',
+											'".$obs."',
+											'".$flag."',
+											'".$tempoUso."',
+											'".$sn."',
+											'".$local."',
+											'".$user."'
+										) on duplicate key update
+										codigo = '".$codigo."',
+										tipo = '".$tipo."',
+										marca = '".$marca."',
+										modelo = '".$modelo."',
+										status = '".$stat."',
+										nf_compra = '".$numNF."',
+										data_nf = '".$dateNF."',
+										obs = '".$obs."',
+										flag = '".$flag."',
+										tempo_uso = '".$tempoUso."',
+										service_tag = '".$sn."',
+										local = '".$local."',
+										imei = null,
+										capinha = null,
+										ip = null,
+										hostname = null,
+										cpu = null,
+										memoria = null,
+										part_number = null,
+										hd = null,
+										user = '".$user."'")or die(mysqli_error($con));
+										
+	if($insert){
+		echo '1';
+	}else{
+		echo '0';
+	}	
+	
+	mysqli_close($con);
 }
 
-function cadScanner($con, $tipo){
-
-}
 
 function cadServidores($con, $tipo){
 

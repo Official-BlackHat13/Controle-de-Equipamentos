@@ -83,3 +83,32 @@ select{
   cursor: pointer;
 }
 
+#filtro {
+	margin-left: 25px;
+}
+
+.th{
+	text-align: center;
+	background: green;
+	color: white;
+}
+
+.td{
+	text-align: center;
+}
+
+.total{
+	text-align: center;
+	background: green;
+	color: white;
+	font-weight: bold;
+}
+
+#dir{
+	margin-bottom: 5px;
+}
+
+#esq{
+	margin-top: 5px;
+}
+

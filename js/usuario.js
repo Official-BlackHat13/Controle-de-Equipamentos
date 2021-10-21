@@ -2,13 +2,20 @@ function voltar(){
 	location.href="index.php";
 }
 
-function cadastrar(){
-	
+// Função para cadastrar o usuário
+function cadastrar(){	
 	var matricula = document.getElementById('matricula').value;
 	var nome = document.getElementById('nome').value;
 	var setor = document.getElementById('setor').value;
 	var funcao = document.getElementById('funcao').value;
 	var gestor = document.getElementById('gestor').value;
+	var terceiro = document.getElementById('terceiro').checked;
+	let flag;
+	if(terceiro == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}
 	var user = document.getElementById('user').value;
 	
 	if(matricula == "" || matricula == null){
@@ -58,10 +65,8 @@ function cadastrar(){
 			
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=usuario&matricula="+matricula+"&nome="+nome+"&setor="+setor+"&funcao="+funcao+"&gestor="+gestor+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=usuario&matricula="+matricula+"&nome="+nome+"&setor="+setor+"&funcao="+funcao+"&gestor="+gestor+"&flag="+flag+"&user="+user, true);
 	xhttp.send();
-	
-	
 }
 
 // Função para autopreencher os dados da transportadora nacional
@@ -72,6 +77,7 @@ function autoComplete(str){
 	var funcao = document.getElementById('funcao');
 	var gestor = document.getElementById('gestor');
 	var matricula = document.getElementById('matricula');
+	var terceiro = document.getElementById('terceiro');
 	var busca = document.getElementById('busca').value;
 		
 	if(busca != ""){
@@ -79,6 +85,7 @@ function autoComplete(str){
 		setor.value = 'Carregando...';
 		funcao.value = 'Carregando...';
 		gestor.value = 'Carregando...';
+		terceiro.value = 'Carregando...';
 		matricula.value = 'Carregando...';
 	}
 		
@@ -93,12 +100,14 @@ function autoComplete(str){
 				setor.value = "";
 				funcao.value = "";
 				gestor.value = "";
+				terceiro.value = "";
 				matricula.value = "";
 			}else{
 				nome.value = json.nome;
 				setor.value = json.setor;
 				funcao.value = json.funcao;
 				gestor.value = json.gestor;
+				(json.terceiro == 'Y') ? document.getElementById('terceiro').checked = true : document.getElementById('terceiro').checked = false;
 				matricula.value = json.matricula;
 				document.getElementById('matricula').disabled = true;
 			}
@@ -106,8 +115,12 @@ function autoComplete(str){
 		}
 	};
 	xhttp.open("POST", "cadastro_function.php?action=lista&&busca="+busca+"&id="+str, true);
-	xhttp.send();
-						
+	xhttp.send();					
+}
+
+// Função para redirecionar para tela de lista de usuários
+function listaUsuarios(){
+	location.href="lista_usuarios.php";
 }
 
 //Função para deixar a letra maiuscula

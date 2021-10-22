@@ -27,8 +27,8 @@ $action = $_REQUEST['action'];
 		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">
-			  <label class="label" for="codigo"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
-			  <select class="form-control" id="codigo" onchange="search(this.value);">
+			  <label class="label" for="patrimonio"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
+			  <select class="form-control" id="patrimonio" onchange="search(this.value);">
 			  <option value=""> -- Selecione o Equipamento -- </option>
 			  <?php 
 				$sqlEq = mysqli_query($con,"SELECT 
@@ -37,12 +37,13 @@ $action = $_REQUEST['action'];
 												a.tipo
 											FROM
 												equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
-												on a.codigo = b.codigo inner join
+												on a.patrimonio = b.patrimonio inner join
 												equipamentos.colaborador c
 												on c.matricula = b.matricula
+												group by patrimonio
 												order by a.tipo asc")or die(mysqli_error($con));
 				while($resEq = mysqli_fetch_array($sqlEq)){
-					echo "<option value='".$resEq['codigo']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
+					echo "<option value='".$resEq['patrimonio']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
 				}
 			  ?>
 			  </select>

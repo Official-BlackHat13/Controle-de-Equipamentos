@@ -315,27 +315,34 @@ if($action == "usuario"){
 
 // VINCULO DO EQUIPAMENTO PARA O USUÁRIO
 if($action == "vinculo"){
-	$codigo = $_REQUEST['codigo'];
-	$matricula = $_REQUEST['matricula'];
+	$patrimonio = $_REQUEST['patrimonio'];
+	$matriculas = $_REQUEST['matricula'];
 	
-	$insert = mysqli_query($con,"insert into equipamentos.equipamentos_usuario 
-									(
-										codigo, 
-										matricula
-									) 
-									values 
-									(
-										'".$codigo."', 
-										'".$matricula."'
-									)")or die(mysqli_error($con));
-									
-	if($insert){
-		echo "1";
-	}else{
-		echo "0";
+	$length = substr_count($matriculas,";");
+	for($i=0; $i <= $length; $i++){
+		$matricula = explode(";",$matriculas);
+		//echo $matricula[$i];
+		$insert = mysqli_query($con,"insert into equipamentos.equipamentos_usuario 
+										(
+											patrimonio, 
+											matricula
+										) 
+										values 
+										(
+											'".$patrimonio."', 
+											'".$matricula[$i]."'
+										)")or die(mysqli_error($con));
+										
 	}
 	
-	mysqli_close($con);
+	if($insert){
+			echo "1";
+		}else{
+			echo "0";
+		}
+		
+		mysqli_close($con);
+	
 }
 
 // RETORNA A LISTA DE EQUIPAMENTOS E USUÁRIOS VINCULADOS
@@ -362,11 +369,37 @@ if($action == "pesquisa"){
 	}
 	
 	$sql = mysqli_query($con,"SELECT 
-								 *
+								  a.codigo,
+								  a.tipo,
+								  a.marca,
+								  a.modelo,
+								  a.part_number,
+								  a.patrimonio,
+								  a.status,
+								  a.nf_compra,
+								  a.data_nf,
+								  
+								  a.service_tag,
+								  a.hostname,
+								  a.cpu,
+								  a.memoria,
+								  a.hd,
+								  a.cartucho,
+								  a.ip,
+								  a.local,
+								  a.imei,
+								  a.capinha,
+								  a.local,
+								  
+								  c.matricula,
+								  c.nome,
+								  c.setor,
+								  c.funcao,
+								  c.gestor
 							  FROM
 									equipamentos.equipamentos a
 										LEFT JOIN
-									equipamentos.equipamentos_usuario b ON a.codigo = b.codigo
+									equipamentos.equipamentos_usuario b ON a.patrimonio = b.patrimonio
 										LEFT JOIN
 									equipamentos.colaborador c ON c.matricula = b.matricula
 								WHERE $where1
@@ -375,10 +408,15 @@ if($action == "pesquisa"){
 
     $rows = mysqli_num_rows($sql);
 									
-	if($rows > 0){								
+	if($rows > 0){
+		$linha = 0;
 		while($result = mysqli_fetch_array($sql)){
-		extract($result);	
-										
+		extract($result);
+        $linha += 1;		
+		
+		echo "<tr>
+				<td><b style='color: #FF4500;'>LINHA $linha</b></td>
+			  </tr>";
 		echo "<table class='table table-hover table-bordered table-striped text-center' >
 				<thead class='thead'>
 					<tr>
@@ -390,9 +428,20 @@ if($action == "pesquisa"){
 						<th>CÓDIGO</th>
 						<th>TIPO</th>
 						<th>MARCA</th>
-						<th>MODELO</th>
-						<th>PN / SN / Service Tag</th>
-						<th>PATRIMÔNIO</th>
+						<th>MODELO</th>";
+						if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
+							echo "<th>PN / SN / Service Tag</th>";
+						}elseif($tipo == "COLETOR"){
+							echo "<th>SN</th>";
+							echo "<th>PN</th>";
+						}elseif($tipo == "PROJETOR" || $tipo == "SCANNER"){
+							echo "<th>SN</th>";
+						}elseif($tipo == "IMPRESSORA"){
+							echo "<th>IP</th>";
+						}elseif($tipo == "CELULARES"){
+							echo "<th>IMEI</th>";
+						}
+				  echo "<th>PATRIMÔNIO</th>
 						<th>STATUS</th>
 						<th>NF COMPRA</th>
 						<th>DATA NF</th>
@@ -403,9 +452,22 @@ if($action == "pesquisa"){
 						<td>".$codigo."</td>
 						<td>".$tipo."</td>
 						<td>".$marca."</td>
-						<td>".$modelo."</td>
-						<td>".$part_number."</td>
-						<td>".$patrimonio."</td>
+						<td>".$modelo."</td>";
+						
+				if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
+				  echo "<td>".$part_number."</td>";
+				}elseif($tipo == "COLETOR"){
+					echo "<td>".$service_tag."</td>";
+					echo "<td>".$part_number."</td>";
+				}elseif($tipo == "PROJETOR" || $tipo == "SCANNER"){
+					echo "<td>".$service_tag."</td>";
+				}elseif($tipo == "IMPRESSORA"){
+					echo "<td>".$ip."</td>";
+				}elseif($tipo == "CELULARES"){
+					echo "<td>".$imei."</td>";
+				}
+				
+				  echo "<td>".$patrimonio."</td>
 						<td>".$status."</td>
 						<td>".$nf_compra."</td>
 						<td>".$data_nf."</td>
@@ -430,13 +492,14 @@ if($action == "pesquisa"){
 				<tbody>
 					<tr>
 						<td>".$matricula."</td>
-						<td>".$nome."</td>
-						<td>".$setor."</td>
-						<td>".$funcao."</td>
-						<td>".$gestor."</td>
+						<td>".utf8_encode($nome)."</td>
+						<td>".utf8_encode($setor)."</td>
+						<td>".utf8_encode($funcao)."</td>
+						<td>".utf8_encode($gestor)."</td>
 					</tr>
 				</tbody>
-			</table><hr style='border-color: orange; border: 5px solid orange;'>";
+			</table><hr style='border-color: orange; border: 5px solid orange;'>
+			</table>";
 		}
 	}else{
 		echo "<center>
@@ -483,11 +546,37 @@ if($action == "exportar"){
 	$arquivo = 'RelatorioEquipamentosTI.xls';
 	
 	$sql = mysqli_query($con,"SELECT 
-								 *
+								  a.codigo,
+								  a.tipo,
+								  a.marca,
+								  a.modelo,
+								  a.part_number,
+								  a.patrimonio,
+								  a.status,
+								  a.nf_compra,
+								  a.data_nf,
+								  
+								  a.service_tag,
+								  a.hostname,
+								  a.cpu,
+								  a.memoria,
+								  a.hd,
+								  a.cartucho,
+								  a.ip,
+								  a.local,
+								  a.imei,
+								  a.capinha,
+								  a.local,
+								  
+								  c.matricula,
+								  c.nome,
+								  c.setor,
+								  c.funcao,
+								  c.gestor
 							  FROM
 									equipamentos.equipamentos a
 										LEFT JOIN
-									equipamentos.equipamentos_usuario b ON a.codigo = b.codigo
+									equipamentos.equipamentos_usuario b ON a.patrimonio = b.patrimonio
 										LEFT JOIN
 									equipamentos.colaborador c ON c.matricula = b.matricula
 								WHERE $where1
@@ -497,14 +586,32 @@ if($action == "exportar"){
 	
 	$tabela = "<table border='1' width='100%' >";	
 	$tabela .= "<tr>";
-	$tabela .= '<th colspan="18" style="background: #606060; color: white; text-align: center;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
+	$tabela .= '<th colspan="18" style="background: #606060; color: white; text-align: center; height: 80px;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
 	$tabela .= '</tr>';
 	$tabela .= "<tr>";
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CÓDIGO</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>TIPO</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MARCA</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MODELO</b></td>';
-	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN / SN / Service Tag</b></td>';
+	
+	
+	if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
+	    $tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN / SN / Service Tag</b></td>';
+	}elseif($tipo == "COLETOR"){
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>SN</b></td>';
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN</b></td>';
+	}elseif($tipo == "PROJETOR" || $tipo == "SCANNER"){
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>SN</b></td>';
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>LOCAL</b></td>';
+	}elseif($tipo == "IMPRESSORA"){
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>IP</b></td>';
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>TONER/CARTUCHO</b></td>';
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>LOCAL</b></td>';
+	}elseif($tipo == "CELULARES"){
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CAPINHA</b></td>';
+		$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>IMEI</b></td>';
+	}
+	
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PATRIMÔNIO</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>STATUS</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>NF COMPRA</b></td>';
@@ -519,26 +626,39 @@ if($action == "exportar"){
 	if($rows > 0){
 		while($result = mysqli_fetch_array($sql)){
 			extract($result);
-			
-			
-			
-			
-			
+				
 			$tabela .= '<tr>';
 			$tabela .= '<td class="value">'.$codigo.'</td>';
 			$tabela .= '<td class="value">'.$tipo.'</td>';
 			$tabela .= '<td class="value">'.$marca.'</td>';
 			$tabela .= '<td class="value">'.$modelo.'</td>';
-			$tabela .= '<td class="value">'.$part_number.'</td>';
+		
+			if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
+				  $tabela .= '<td class="value">'.$part_number.'</td>';
+				}elseif($tipo == "COLETOR"){
+					$tabela .= '<td class="value">'.$service_tag.'</td>';
+					$tabela .= '<td class="value">'.$part_number.'</td>';
+				}elseif($tipo == "PROJETOR" || $tipo == "SCANNER"){
+					$tabela .= '<td class="value">'.$service_tag.'</td>';
+					$tabela .= '<td class="value">'.$local.'</td>';
+				}elseif($tipo == "IMPRESSORA"){
+					$tabela .= '<td class="value">'.$ip.'</td>';
+					$tabela .= '<td class="value">'.$cartucho.'</td>';
+					$tabela .= '<td class="value">'.$local.'</td>';
+				}elseif($tipo == "CELULARES"){
+					$tabela .= '<td class="value">'.$capinha.'</td>';
+					$tabela .= '<td class="value">'.$imei.'</td>';
+				}
+			
 			$tabela .= '<td class="value">'.$patrimonio.'</td>';
 			$tabela .= '<td class="value">'.$status.'</td>';
 			$tabela .= '<td class="value">'.$nf_compra.'</td>';
 			$tabela .= '<td class="value">'.$data_nf.'</td>';
 			$tabela .= '<td colspan="2" class="value">'.$matricula.'</td>';
-			$tabela .= '<td colspan="2" class="value">'.$nome.'</td>';
-			$tabela .= '<td colspan="2" class="value">'.$setor.'</td>';
-			$tabela .= '<td colspan="2" class="value">'.$funcao.'</td>';
-			$tabela .= '<td colspan="1" class="value">'.$gestor.'</td>';
+			$tabela .= '<td colspan="2" class="value">'.utf8_encode($nome).'</td>';
+			$tabela .= '<td colspan="2" class="value">'.utf8_encode($setor).'</td>';
+			$tabela .= '<td colspan="2" class="value">'.utf8_encode($funcao).'</td>';
+			$tabela .= '<td colspan="1" class="value">'.utf8_encode($gestor).'</td>';
 			$tabela .= '</tr>';
 					
 		}
@@ -669,23 +789,20 @@ if($action == "lista"){
 
 // Puxar os dados do vinculo
 if($action == "search"){
-	$codigo = $_REQUEST['codigo'];
+	$patrimonio = $_REQUEST['patrimonio'];
 	
 	$sql = mysqli_query($con,"SELECT 
 									*
 								FROM
 									equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
-									on a.codigo = b.codigo inner join
+									on a.patrimonio = b.patrimonio inner join
 									equipamentos.colaborador c
 									on c.matricula = b.matricula
-									where a.codigo = '".$codigo."'")or die(mysqli_error($con));
+									where a.patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
 	$rows = mysqli_num_rows($sql);
 
 	if($rows){
-		$result = mysqli_fetch_array($sql);
-		extract($result);
-		
-		echo "<input type='hidden' id='id' value='".$codigo."' />";
+		echo "<input type='hidden' id='id' value='".$patrimonio."' />";
 										
 		echo "<table class='table table-hover table-bordered table-striped text-center' >
 				<thead class='thead'>
@@ -703,33 +820,37 @@ if($action == "search"){
 						<th>MATRICULA</th>
 						<th>NOME</th>
 						<th>SETOR</th>
-						<th>FUNÇÃO</th>
 						<th>GESTOR</th>
 						<th>STATUS</th>
 						<th>AÇÃO</th>
 					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>".$patrimonio."</td>
-						<td>".$tipo."</td>
-						<td>".$marca."</td>
-						<td>".$modelo."</td>
-						<td>".$part_number."</td>
-						<td>".$matricula."</td>
-						<td>".$nome."</td>
-						<td>".$setor."</td>
-						<td>".$funcao."</td>
-						<td>".$gestor."</td>
-						<td>".$status."</td>
-						<td>
-							<button class='btn btn-danger' onclick='desvicular();'>
-								<i class='fa fa-minus-circle'></i>
-							</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>";
+				</thead>";
+		$id = 0;
+		while($result = mysqli_fetch_array($sql)){
+			extract($result);
+			$id = $id + 1;
+			echo "<input type='hidden' id='rg_".$id."' value='".$matricula."' />";
+			echo "<tbody>
+				<tr>
+					<td>".$patrimonio."</td>
+					<td>".$tipo."</td>
+					<td>".$marca."</td>
+					<td>".$modelo."</td>
+					<td>".$part_number."</td>
+					<td>".$matricula."</td>
+					<td>".utf8_encode($nome)."</td>
+					<td>".utf8_encode($setor)."</td>
+					<td>".utf8_encode($gestor)."</td>
+					<td>".$status."</td>
+					<td>
+						<button class='btn btn-danger' onclick='desvicular(".$id.");'>
+							<i class='fa fa-minus-circle'></i>
+						</button>
+					</td>
+				</tr>
+			</tbody>";
+		}
+		echo "</table>";
 	}else{
 		echo "<center>
 				<div class='alert alert-warning' role='alert'>
@@ -741,10 +862,11 @@ if($action == "search"){
 }
 
 // Aqui desvinculo o Equipamento do usuário
-if($action == "desvicular"){
-	$codigo = $_REQUEST['codigo'];
+if($action == "desvincular"){
+	$patrimonio = $_REQUEST['patrimonio'];
+	$matricula = $_REQUEST['matricula'];
 	
-	$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`equipamentos_usuario` WHERE `codigo`='".$codigo."'")or die(mysqli_error($con));
+	$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`equipamentos_usuario` WHERE `patrimonio`='".$patrimonio."' and matricula = '".$matricula."'")or die(mysqli_error($con));
 	
 	if($delete){
 		echo "1";
@@ -909,7 +1031,7 @@ if($action == "relatorio"){
 if($action == "selection"){
 	$valor = $_REQUEST['valor'];
 	
-	$flag = mysqli_query($con,"select flag from equipamentos.equipamentos where codigo = '".$valor."'")or die(mysqli_error($con));
+	$flag = mysqli_query($con,"select flag from equipamentos.equipamentos where patrimonio = '".$valor."'")or die(mysqli_error($con));
 	
 	$result = mysqli_fetch_array($flag);
 	echo $result['flag'];

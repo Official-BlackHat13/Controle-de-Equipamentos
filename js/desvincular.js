@@ -2,11 +2,11 @@ function voltar(){
 	location.href="index.php";
 }
 
-function search(codigo){
+function search(patrimonio){
 	
-	if(codigo == "" || codigo == null){
+	if(patrimonio == "" || patrimonio == null){
 		alert('SELECIONE UM EQUIPAMENTO');
-		document.getElementById('codigo').focus();
+		document.getElementById('patrimonio').focus();
 		return false;
 	}
 		
@@ -18,13 +18,14 @@ function search(codigo){
 			
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=search&codigo="+codigo, true);
+	xhttp.open("POST", "cadastro_function.php?action=search&patrimonio="+patrimonio, true);
 	xhttp.send();
 }
 
-function desvicular(){
-	var codigo = document.getElementById('id').value;
-	
+function desvicular(id){
+	var patrimonio = document.getElementById('id').value;
+	var matricula = document.getElementById('rg_'+id).value;
+		
 	var res = confirm("TEM CERTEZA QUE DESEJA DESVINCULAR?");
 	
 	if(res == true){
@@ -42,7 +43,7 @@ function desvicular(){
 				
 			}
 		};
-		xhttp.open("POST", "cadastro_function.php?action=desvicular&codigo="+codigo, true);
+		xhttp.open("POST", "cadastro_function.php?action=desvincular&patrimonio="+patrimonio+"&matricula="+matricula, true);
 		xhttp.send();
 	}else{
 		return false;

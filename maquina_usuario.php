@@ -27,8 +27,8 @@ $action = $_REQUEST['action'];
 		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">
-			  <label class="label" for="codigo"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
-			  <select class="form-control" id="codigo" onchange="selection(this.value);">
+			  <label class="label" for="patrimonio"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
+			  <select class="form-control" id="patrimonio" onchange="selection(this.value);">
 			  <option value=""> -- Selecione o Equipamento -- </option>
 			  <?php 
 				$sqlEq = mysqli_query($con,"SELECT 
@@ -38,15 +38,16 @@ $action = $_REQUEST['action'];
 											FROM
 												equipamentos.equipamentos a left join
 												equipamentos.equipamentos_usuario b
-												on a.codigo = b.codigo
-											where b.codigo is null
+												on a.patrimonio = b.patrimonio
+											where b.patrimonio is null
 											order by tipo asc")or die(mysqli_error($con));
 				while($resEq = mysqli_fetch_array($sqlEq)){
-					echo "<option value='".$resEq['codigo']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
+					echo "<option value='".$resEq['patrimonio']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
 				}
 			  ?>
 			  </select>
 			</div>
+			<input type="hidden" id="status" value="" />
 			<div class="form-group col-md-7">
 				<div id="colab"  style="display: none;">
 				  <label class="label" for="matricula"><b>Colaborador:</b> <b class="obrigado">*</b></label>
@@ -64,14 +65,9 @@ $action = $_REQUEST['action'];
 				<label class="label" for="matricula"><b>Colaborador:</b> <b class="obrigado">*</b></label>
 				<div style="display:flex">
 					<select class="form-control esqect" id="select1" multiple>
-					  
-						 <option value="Equipe Operacional">Equipe Operacional</option>
-						 <option value="Despachantes">Despachantes</option>
-						 <option value="RFB">RFB</option>
-					
 					  <?php 
 						$con = mysqli_connect("localhost","root","","camara_fria")or die("FALHA NA COMUNICAÇÃO COM BANCO");
-						$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
+						$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by FIELD(nome,'Equipe Operacional','Despachantes','RFB') desc, nome asc")or die(mysqli_error($con));
 						while($result = mysqli_fetch_array($sql)){
 							echo "<option value='".$result['matricula']."'>".utf8_encode($result['nome'])."</option>";
 						}
@@ -109,7 +105,7 @@ $action = $_REQUEST['action'];
 				  <input onclick="voltar();" style="color: white" type="button" class="btn btn-primary btn-lg" value="<< Voltar" />
 			</div>
 			<div class="form-group col-md-6">
-				  <input id="cadastrar" onclick="teste();" disabled type="button" class="btn btn-success btn-lg" value="Confirmar Vinculo" />
+				  <input id="cadastrar" onclick="vincular();" disabled type="button" class="btn btn-success btn-lg" value="Confirmar Vinculo" />
 			</div>
 		</div>
 		<br>

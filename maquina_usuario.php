@@ -67,7 +67,7 @@ $action = $_REQUEST['action'];
 					<select class="form-control esqect" id="select1" multiple>
 					  <?php 
 						$con = mysqli_connect("localhost","root","","camara_fria")or die("FALHA NA COMUNICAÇÃO COM BANCO");
-						$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by FIELD(nome,'Equipe Operacional','Despachantes','RFB') desc, nome asc")or die(mysqli_error($con));
+						$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by FIELD(matricula,'OPR', 'EQP', 'DESP','RFB','OPRAG', 'EPP', 'EQB', 'EMOT', 'EPAT', 'EPOR', 'APV', 'MAP', 'ELE') desc, nome asc")or die(mysqli_error($con));
 						while($result = mysqli_fetch_array($sql)){
 							echo "<option value='".$result['matricula']."'>".utf8_encode($result['nome'])."</option>";
 						}

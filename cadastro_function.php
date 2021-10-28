@@ -711,7 +711,7 @@ if($action == "lista"){
 										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
 									FROM
 										equipamentos.equipamentos
-								  where codigo = '".$busca."'")or die(mysqli_error($con));
+								  where patrimonio = '".$busca."'")or die(mysqli_error($con));
 		
 		if(mysqli_num_rows($sql)){
 			while($dados = mysqli_fetch_object($sql)){
@@ -724,7 +724,7 @@ if($action == "lista"){
 				$arr['stat'] = $dados->status; 
 				$arr['numNF'] = $dados->nf_compra; 
 				$arr['dateNF'] = $dados->data_nf; 
-				$arr['obs'] = utf8_encode($dados->obs); 
+				$arr['obs'] = $dados->obs; 
 				$arr['flag'] = $dados->flag; 
 				$arr['tempoUso'] = $dados->tempo_uso; 
 				$arr['cpu'] = utf8_encode($dados->cpu); 

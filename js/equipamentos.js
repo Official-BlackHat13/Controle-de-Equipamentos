@@ -506,7 +506,7 @@ function autoComplete(str){
 	
 	
 	var busca = document.getElementById('busca').value;
-		
+			
 	if(busca != ""){
 		marca.value = 'Carregando...';
 		modelo.value = 'Carregando...';
@@ -591,10 +591,13 @@ function autoComplete(str){
 					local.value = "";	
 				}
 			}else{
+				
 				marca.value = json.marca;
 				modelo.value = json.modelo;
 				patrimonio.value = json.patrimonio;
 				document.getElementById(json.stat.toUpperCase()).selected = true;
+				
+				
 				numNF.value = json.numNF;
 				dateNF.value = json.dateNF;
 				obs.value = json.obs;

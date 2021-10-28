@@ -27,7 +27,7 @@ function tipoCelular($con, $tipo){
 				  
 					$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos where tipo = '".$tipo."' order by tipo asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
 					}
 					
 				  ?>
@@ -144,7 +144,7 @@ function tipoColetor($con, $tipo){
 				  
 					$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos where tipo = '".$tipo."' order by tipo asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
 					}
 					
 				  ?>
@@ -255,7 +255,7 @@ function tipoMaquinas($con, $tipo){
 				  
 					$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos where tipo = '".$tipo."' order by tipo asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
 					}
 					
 				  ?>
@@ -397,7 +397,7 @@ function tipoImpressora($con, $tipo){
 				  
 					$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos where tipo = '".$tipo."' order by tipo asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
 					}
 					
 				  ?>
@@ -541,7 +541,7 @@ function tipoProjetor($con, $tipo){
 				  
 					$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos where tipo = '".$tipo."' order by tipo asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['codigo']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
 					}
 					
 				  ?>

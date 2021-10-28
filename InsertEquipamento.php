@@ -167,7 +167,7 @@ function cadColetor($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio,
 *                         NOTEBOOK E DESKTOP
 ***************************************************************			
 */
-function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio, $stat, $numNF, $obs, $dateNF, $hostname, $cpu, $memoria, $hd, $flag, $tempoUso, $user){
+function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $patrimonio, $stat, $numNF, $obs, $dateNF, $hostname, $cpu, $memoria, $hd, $flag, $tempoUso, $user){
 	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."' and patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	$id = $resSql['qtd'];
@@ -197,14 +197,14 @@ function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio,
 										(
 											'".$codigo."',
 											'".$tipo."',
-											'".$marca."',
-											'".$modelo."',
+											'".utf8_decode($marca)."',
+											'".utf8_decode($modelo)."',
 											'".$partNumber."',
 											'".$patrimonio."',
 											'".$stat."',
 											'".$numNF."',
 											'".$dateNF."',
-											'".$obs."',
+											'".utf8_decode($obs)."',
 											'".$hostname."',
 											'".$cpu."',
 											'".$memoria."',
@@ -213,15 +213,14 @@ function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio,
 											'".$tempoUso."',
 											'".$user."'
 										) on duplicate key update
-										codigo = '".$codigo."',
 										tipo = '".$tipo."',
-										marca = '".$marca."',
-										modelo = '".$modelo."',
+										marca = '".utf8_decode($marca)."',
+										modelo = '".utf8_decode($modelo)."',
 										part_number = '".$partNumber."',
 										status = '".$stat."',
 										nf_compra = '".$numNF."',
 										data_nf = '".$dateNF."',
-										obs = '".$obs."',
+										obs = '".utf8_decode($obs)."',
 										hostname = '".$hostname."',
 										cpu = '".$cpu."',
 										memoria = '".$memoria."',
@@ -239,7 +238,7 @@ function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio,
 	if($insert){
 		echo '1';
 	}else{
-		echo '0';
+		echo mysqli_error($con);
 	}	
 	
 	mysqli_close($con);

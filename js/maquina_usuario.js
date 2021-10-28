@@ -17,7 +17,7 @@ function vincular(){
 
 	if(stat == 'Y'){
 		var users = document.getElementById('select2');
-		var generics = ["OPR","DESP","RFB"];	
+		var generics = ["OPR","DESP","RFB","EQP","OPRAG","EPP","EQB","EMOT","EPAT","EPOR","APV","MAP","ELE"];	
 			
 		for(var i = 0; i < users.options.length; i++){
 		   lista[i] = users.options[i].value;

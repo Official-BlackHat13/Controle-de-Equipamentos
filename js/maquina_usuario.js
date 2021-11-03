@@ -17,7 +17,7 @@ function vincular(){
 
 	if(stat == 'Y'){
 		var users = document.getElementById('select2');
-		var generics = ["OPR","DESP","RFB","EQP","OPRAG","EPP","EQB","EMOT","EPAT","EPOR","APV","MAP","ELE"];	
+		var generics = ["OPR","DESP","RFB","EQP","OPRAG","EPP","EQB","EMOT","EPAT","EPOR","APV","MAP","ELE", "BOMB", "TVAGEND", "TVDOC", "TVEXP", "TVREP", "TVS", "TVSAD","TVSALE", "TVTRS", "RECEP", "EPTI"];	
 			
 		for(var i = 0; i < users.options.length; i++){
 		   lista[i] = users.options[i].value;
@@ -70,6 +70,49 @@ function vincular(){
 		}
 	};
 	xhttp.open("POST", "cadastro_function.php?action=vinculo&matricula="+matricula+"&patrimonio="+patrimonio, true);
+	xhttp.send();
+}
+
+// Função para verificar se o equipamento é compartilhado
+function selectionTipo(valor){
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		    //alert(this.responseText);
+			
+			if(this.responseText != "[]"){
+				document.getElementById('patrimonio').options.length = 0;
+				var json = JSON.parse(this.responseText);
+				
+				document.getElementById('patrimonio').options.add(new Option(' -- Selecione um Equipamento -- '));
+				
+				for (var i=0; i < json.length; ++i) {								
+					document.getElementById('patrimonio').options.add(new Option(json[i].patrimonio+' - '+json[i].tipo, json[i].patrimonio));
+				}
+				
+				document.getElementById('patr').style.display = "block";
+			}else{
+				alert("NÃO HÁ EQUIPAMENTO DESSE TIPO PARA VÍNCULAR");
+				document.getElementById('patr').style.display = "none";
+			}
+			/*
+			
+			document.getElementById('status').value = this.responseText;
+			if(this.responseText == 'Y'){
+				document.getElementById('generic').style.display = "block";
+				document.getElementById('colab').style.display = "none";
+				document.getElementById('cadastrar').disabled = false;
+			}else{
+				document.getElementById('colab').style.display = "block";
+				document.getElementById('generic').style.display = "none";
+				document.getElementById('cadastrar').disabled = false;
+			}
+			
+			*/
+		}
+	};
+	xhttp.open("POST", "cadastro_function.php?action=selectionTipo&valor="+valor, true);
 	xhttp.send();
 }
 

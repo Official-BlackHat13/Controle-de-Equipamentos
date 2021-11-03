@@ -596,8 +596,7 @@ function autoComplete(str){
 				modelo.value = json.modelo;
 				patrimonio.value = json.patrimonio;
 				document.getElementById(json.stat.toUpperCase()).selected = true;
-				
-				
+
 				numNF.value = json.numNF;
 				dateNF.value = json.dateNF;
 				obs.value = json.obs;

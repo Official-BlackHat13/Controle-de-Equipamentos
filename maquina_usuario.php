@@ -27,29 +27,31 @@ $action = $_REQUEST['action'];
 		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">
-			  <label class="label" for="patrimonio"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
-			  <select class="form-control" id="patrimonio" onchange="selection(this.value);">
-			  <option value=""> -- Selecione o Equipamento -- </option>
-			  <?php 
-				$sqlEq = mysqli_query($con,"SELECT 
-												a.codigo,
-												a.patrimonio,
-												a.tipo
-											FROM
-												equipamentos.equipamentos a left join
-												equipamentos.equipamentos_usuario b
-												on a.patrimonio = b.patrimonio
-											where b.patrimonio is null
-											order by tipo asc")or die(mysqli_error($con));
-				while($resEq = mysqli_fetch_array($sqlEq)){
-					echo "<option value='".$resEq['patrimonio']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
+			  <label class="label" for="tipo"><b>Tipo:</b> <b class="obrigado">*</b></label>
+			  <select class="form-control" id="tipo" onchange="selectionTipo(this.value);">
+			  <option value=""> -- Selecione o Tipo -- </option>
+			  <?php
+				$sqlTipo = mysqli_query($con,"select tipo from equipamentos.equipamentos group by tipo order by tipo asc")or die(mysqli_error($con));
+				while($resEq = mysqli_fetch_array($sqlTipo)){
+					echo "<option value='".$resEq['tipo']."'>".$resEq['tipo']."</option>";
 				}
 			  ?>
 			  </select>
 			</div>
 			<input type="hidden" id="status" value="" />
 			<div class="form-group col-md-7">
-				<div id="colab"  style="display: none;">
+				<div id="patr"  style="display: none;">
+					<label class="label" for="patrimonio"><b>Equipamento:</b> <b class="obrigado">*</b></label>
+					<select class="form-control" id="patrimonio" onchange="selection(this.value);">
+						<option value=""> -- Selecione o Equipamento -- </option>
+					</select>
+				</div>
+			</div>
+		</div><br>
+		
+		<div class="form-row justify-content-around align-self-center">
+			<div class="form-group col-md-11">
+				<div id="colab"  style="display: none;">	
 				  <label class="label" for="matricula"><b>Colaborador:</b> <b class="obrigado">*</b></label>
 				   <select class="form-control" id="matricula">
 				  <option value=""> -- Selecione o Usuário -- </option>
@@ -62,43 +64,31 @@ $action = $_REQUEST['action'];
 				  </select>
 				</div>
 				<div id="generic"  style="display: none;">
-				<label class="label" for="matricula"><b>Colaborador:</b> <b class="obrigado">*</b></label>
-				<div style="display:flex">
-					<select class="form-control esqect" id="select1" multiple>
-					  <?php 
-						$con = mysqli_connect("localhost","root","","camara_fria")or die("FALHA NA COMUNICAÇÃO COM BANCO");
-						$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by FIELD(matricula,'OPR', 'EQP', 'DESP','RFB','OPRAG', 'EPP', 'EQB', 'EMOT', 'EPAT', 'EPOR', 'APV', 'MAP', 'ELE') desc, nome asc")or die(mysqli_error($con));
-						while($result = mysqli_fetch_array($sql)){
-							echo "<option value='".$result['matricula']."'>".utf8_encode($result['nome'])."</option>";
-						}
-					  ?>
-					</select>
-					<div style="display:flex;  flex-wrap: wrap; align-content:center;">
-						<button class="btn btn-primary dir" id="dir" onclick="adicionar();">
-							<i class="fa fa-arrow-right" aria-hidden="true"></i>
-						</button>
-						<button class="btn btn-primary esq" id="esq" onclick="remover();">
-							<i class="fa fa-arrow-left" aria-hidden="true"></i>
-						</button>
-					</div>
-					<select class="form-control direct" multiple id="select2" ></select>
-				</div><br>
-				
-				<!--
 					<label class="label" for="matricula"><b>Colaborador:</b> <b class="obrigado">*</b></label>
-					<select class="form-control" id="matricula">
-						<option value=""> -- Selecione o Usuário -- </option>
-						<option value="Equipe Operacional">Equipe Operacional</option>
-						<option value="Despachantes">Despachantes</option>
-						<option value="RFB">RFB</option>
-					</select>
-				-->
+					<div style="display:flex">
+						<select class="form-control esqect" id="select1" multiple>
+						  <?php 
+							$con = mysqli_connect("localhost","root","","camara_fria")or die("FALHA NA COMUNICAÇÃO COM BANCO");
+							$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
+							while($result = mysqli_fetch_array($sql)){
+								echo "<option value='".$result['matricula']."'>".utf8_encode($result['nome'])."</option>";
+							}
+						  ?>
+						</select>
+						<div style="display:flex;  flex-wrap: wrap; align-content:center;">
+							<button class="btn btn-primary dir" id="dir" onclick="adicionar();">
+								<i class="fa fa-arrow-right" aria-hidden="true"></i>
+							</button>
+							<button class="btn btn-primary esq" id="esq" onclick="remover();">
+								<i class="fa fa-arrow-left" aria-hidden="true"></i>
+							</button>
+						</div>
+						<select class="form-control direct" multiple id="select2" ></select>
+					</div><br>
 				</div>
 			</div>
-		</div><br>
-		<br>
-		<br>
-		<br>
+			<div class="form-group col-md-3"></div>
+		</div>
 		<!-- onclick="vincular();" -->
 		<div class="row h-25 justify-content-around align-items-center" >
 			<div class="form-group col-md-4">

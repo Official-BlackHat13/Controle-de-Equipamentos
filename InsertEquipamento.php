@@ -10,7 +10,17 @@ function cadAntena($con, $tipo){
 ***************************************************************			
 */
 function cadCelular($con, $tipo, $marca, $modelo, $patrimonio, $tempoUso, $stat, $numNF, $dateNF, $imei, $capinha, $obs, $flag, $user){
-	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."'")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"SELECT  
+									CASE
+										WHEN (select count(*) from equipamentos.equipamentos where patrimonio = '".$patrimonio."') = 1 then 
+										(select MID(codigo,9) from equipamentos.equipamentos where patrimonio = '".$patrimonio."')
+										WHEN COUNT(*) = 0 THEN  1 
+										ELSE count(*) + 1 
+									END qtd
+								FROM
+									equipamentos.equipamentos
+								WHERE
+									tipo = '".$tipo."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	$id = $resSql['qtd'];
 	$codigo = substr($tipo, 0, 8).$id;
@@ -88,7 +98,17 @@ function cadCelular($con, $tipo, $marca, $modelo, $patrimonio, $tempoUso, $stat,
 ***************************************************************			
 */
 function cadColetor($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio, $tempoUso, $stat, $numNF, $dateNF, $obs, $flag, $user){
-	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."' and patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"SELECT  
+									CASE
+										WHEN (select count(*) from equipamentos.equipamentos where patrimonio = '".$patrimonio."') = 1 then 
+										(select MID(codigo,9) from equipamentos.equipamentos where patrimonio = '".$patrimonio."')
+										WHEN COUNT(*) = 0 THEN  1 
+										ELSE count(*) + 1 
+									END qtd
+								FROM
+									equipamentos.equipamentos
+								WHERE
+									tipo = '".$tipo."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	$id = $resSql['qtd'];
 	$codigo = substr($tipo, 0, 8).$id;
@@ -168,7 +188,19 @@ function cadColetor($con, $tipo, $marca, $modelo, $partNumber, $sn, $patrimonio,
 ***************************************************************			
 */
 function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $patrimonio, $stat, $numNF, $obs, $dateNF, $hostname, $cpu, $memoria, $hd, $flag, $tempoUso, $user){
-	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."' and patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"SELECT  
+									CASE
+										WHEN (select count(*) from equipamentos.equipamentos where patrimonio = '".$patrimonio."') = 1 then 
+										(select MID(codigo,9) from equipamentos.equipamentos where patrimonio = '".$patrimonio."')
+										WHEN COUNT(*) = 0 THEN  1 
+										ELSE count(*) + 1 
+									END qtd
+								FROM
+									equipamentos.equipamentos
+								WHERE
+									tipo = '".$tipo."'")or die(mysqli_error($con));
+	
+	
 	$resSql = mysqli_fetch_array($sql);
 	$id = $resSql['qtd'];
 	$codigo = substr($tipo, 0, 8).$id;
@@ -197,14 +229,14 @@ function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $patrimonio, $sta
 										(
 											'".$codigo."',
 											'".$tipo."',
-											'".utf8_decode($marca)."',
-											'".utf8_decode($modelo)."',
+											'".$marca."',
+											'".$modelo."',
 											'".$partNumber."',
 											'".$patrimonio."',
 											'".$stat."',
 											'".$numNF."',
 											'".$dateNF."',
-											'".utf8_decode($obs)."',
+											'".$obs."',
 											'".$hostname."',
 											'".$cpu."',
 											'".$memoria."',
@@ -214,13 +246,13 @@ function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $patrimonio, $sta
 											'".$user."'
 										) on duplicate key update
 										tipo = '".$tipo."',
-										marca = '".utf8_decode($marca)."',
-										modelo = '".utf8_decode($modelo)."',
+										marca = '".$marca."',
+										modelo = '".$modelo."',
 										part_number = '".$partNumber."',
 										status = '".$stat."',
 										nf_compra = '".$numNF."',
 										data_nf = '".$dateNF."',
-										obs = '".utf8_decode($obs)."',
+										obs = '".$obs."',
 										hostname = '".$hostname."',
 										cpu = '".$cpu."',
 										memoria = '".$memoria."',
@@ -251,7 +283,17 @@ function cadMaquina($con, $tipo, $marca, $modelo, $partNumber, $patrimonio, $sta
 ***************************************************************			
 */
 function cadImpressora($con, $tipo, $marca, $modelo, $patrimonio, $tempoUso, $stat, $numNF, $obs, $ip, $cartucho, $flag, $dateNF, $local, $user){
-	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."' and patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"SELECT  
+									CASE
+										WHEN (select count(*) from equipamentos.equipamentos where patrimonio = '".$patrimonio."') = 1 then 
+										(select MID(codigo,9) from equipamentos.equipamentos where patrimonio = '".$patrimonio."')
+										WHEN COUNT(*) = 0 THEN  1 
+										ELSE count(*) + 1 
+									END qtd
+								FROM
+									equipamentos.equipamentos
+								WHERE
+									tipo = '".$tipo."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	$id = $resSql['qtd'];
 	$codigo = substr($tipo, 0, 8).$id;
@@ -343,7 +385,17 @@ function cadMonitor($con, $tipo){
 ***************************************************************			
 */
 function cadProjetor($con, $tipo, $marca, $modelo, $patrimonio, $tempoUso, $stat, $numNF, $obs, $local, $sn, $flag, $dateNF, $user){	
-	$sql = mysqli_query($con,"SELECT case when count(*) = 0 or patrimonio = '".$patrimonio."' then 1 else count(*) + 1 end qtd FROM equipamentos.equipamentos where tipo = '".$tipo."' and patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"SELECT  
+									CASE
+										WHEN (select count(*) from equipamentos.equipamentos where patrimonio = '".$patrimonio."') = 1 then 
+										(select MID(codigo,9) from equipamentos.equipamentos where patrimonio = '".$patrimonio."')
+										WHEN COUNT(*) = 0 THEN  1 
+										ELSE count(*) + 1 
+									END qtd
+								FROM
+									equipamentos.equipamentos
+								WHERE
+									tipo = '".$tipo."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	$id = $resSql['qtd'];
 	$codigo = substr($tipo, 0, 8).$id;

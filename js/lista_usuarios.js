@@ -34,6 +34,29 @@ function filtrar(){
 	xhttp.send();
 }
 
+function excluir(id){
+	var matricula = document.getElementById('matricula_'+id).value;
+	
+	var res = confirm("DEJESA CONFIRMAR A EXCLUSÃO?");
+	
+	if(res == true){
+			var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//alert(this.responseText);
+				if(this.responseText == '1'){
+					alert("EXCLUÍDO COM SUCESSO");
+					location.reload();
+				}else{
+					alert("ERRO AO EXCLUÍR");
+				}
+			}
+		};
+		xhttp.open("POST", "cadastro_function.php?action=excluir&matricula="+matricula, true);
+		xhttp.send();
+	}
+}
+
 function voltar(){
 	location.href="cad_usuario.php";
 }

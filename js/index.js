@@ -16,6 +16,9 @@ function redireciona(tela){
 		case 5:
 			location.href="lista_dados.php";
 		break;
+		case 6:
+			location.href="lista_usuarios.php";
+		break;
 		default:
 			alert("OPÇÃO INVÁLIDA!");
 	}

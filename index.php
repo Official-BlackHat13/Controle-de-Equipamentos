@@ -1,5 +1,6 @@
 <?php
 include('../controle.php');
+
 ?>
 <!Doctype html>
 <html>
@@ -21,7 +22,7 @@ include('../controle.php');
 	</div><br><br>
 
 	<div class="row justify-content-around align-self-center">
-		<?php if($id_usuario == "196" || $id_usuario == "158036" || $id_usuario == "158129"){ ?>
+		<?php if($id_usuario == 158036 || $id_usuario == 107 || $id_usuario == 196  || $perfil == "TI_INFRA"){ ?>
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(1);">
@@ -33,10 +34,17 @@ include('../controle.php');
 		
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
+				<?php if($perfil == "TI"){ ?>
 				<button onclick="redireciona(2);">
 					<i class="fa fa-users fa-2x"></i><br><br>
 					COLABORADORES
 				</button>
+				<?php }else{ ?>
+				<button onclick="redireciona(6);">
+					<i class="fa fa-users fa-2x"></i><br><br>
+					COLABORADORES
+				</button>
+				<?php } ?>
 			</div>
 		</div>
 	
@@ -68,7 +76,16 @@ include('../controle.php');
 			</div>
 		</div>
 	</div>
-	<?php }else{ ?>
+	<?php }elseif($id_usuario == 158106 ){ ?>
+		<div class="col-md-12 text-center">
+			<div class="btn-group">
+				<button onclick="redireciona(6);">
+					<i class="fa fa-users fa-2x"></i><br><br>
+					COLABORADORES
+				</button>
+			</div>
+		</div>
+	<?php }elseif($id_usuario == 158054 || $id_usuario == 158137  ){ ?>
 		<div class="col-md-12 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(5);">
@@ -77,7 +94,17 @@ include('../controle.php');
 				</button>
 			</div>
 		</div>
-	<?php } ?>
+	<?php }else{
+		echo "<br><br>
+		      <div class='col-md-12 text-center'>
+				<div class='btn-group'>
+					<div class='alert alert-warning'>
+						
+						<h1><i class='fa fa-exclamation-triangle'></i> Você não tem acesso a essa tela</h1>
+					</div>
+				</div>
+			</div>";
+	    } ?>
 	<br><br>
 </div>
 

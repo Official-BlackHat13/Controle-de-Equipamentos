@@ -1,4 +1,6 @@
 <?php 
+include('../controle.php');
+
 $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipamentos")or die("<h1>FALHA NA CONEXÃO COM BANCO DE DADOS</h1>");
 ?>
 <!DOCTYPE html>
@@ -17,10 +19,17 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 
 	<div class="container">
 		<div class="row justify-content-center align-self-center" id="title">
-			<div class="col-md-1 text-left">
-				<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="voltar();"></i>
-				<p class='voltar'>VOLTAR</p>
-			</div>
+			<?php if($id_usuario == 158106 || $perfil == "TI_INFRA"){ ?>
+				<div class="col-md-1 text-left">
+					<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="inicio();"></i>
+					<p class='voltar'>VOLTAR</p>
+				</div>
+			<?php }else{ ?>
+				<div class="col-md-1 text-left">
+					<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="voltar();"></i>
+					<p class='voltar'>VOLTAR</p>
+				</div>
+			<?php } ?>
 			<div class="col-md-11" align="center">
 				LISTA DE USUÁRIOS
 			</div>
@@ -28,6 +37,8 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 		<br>
 		
 		<div class="row justify-content-center align-self-center">
+			<input type="hidden" id="perfil" value="<?=$perfil?>" />
+			<input type="hidden" id="id_user" value="<?=$id_usuario?>" />
 		    <label><b>Setor:</b></label>
 			<div class="col-md-3">
 				<select class="form-control" id="setor">
@@ -46,9 +57,9 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 				<input type="text" onkeyup="maiuscula(this);" id="filtro" placeholder="Faça sua pesquisa..." class="form-control" />
 			</div>
 			<div class="col-md-2">
-				<button class='btn btn-primary' onclick='filtrar();'><i class='fa fa-search'></i></button>
+				<button class='btn btn-primary botoes' onclick='filtrar();'><i class='fa fa-search'></i></button>
 				&nbsp;
-				<button class='btn btn-success' onclick='relatorio();'><i class="fa fa-file-excel-o"></i></button>
+				<button class='btn btn-success botoes' onclick='relatorio();'><i class="fa fa-file-excel-o"></i></button>
 			</div>
 		</div>
 		<br>

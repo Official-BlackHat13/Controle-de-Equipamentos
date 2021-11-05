@@ -53,10 +53,10 @@ $action = $_REQUEST['action'];
 			<div class="form-group col-md-11">
 				<div id="colab"  style="display: none;">	
 				  <label class="label" for="matricula"><b>Colaborador:</b> <b class="obrigado">*</b></label>
-				   <select class="form-control" id="matricula">
+				   <select class="form-control" id="matricula" >
 				  <option value=""> -- Selecione o Usuário -- </option>
 				  <?php 
-					$sqlCo = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
+					$sqlCo = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador where matricula not in ('OPR','DESP','RFB','EQP','OPRAG','EPP','EQB','EMOT','EPAT','EPOR','APV','MAP','ELE','BOMB','TVAGEND','TVDOC','TVEXP','TVREP','TVS','TVSAD','TVSALE','TVTRS','RECEP','EPTI')order by nome asc")or die(mysqli_error($con));
 					while($resCo = mysqli_fetch_array($sqlCo)){
 						echo "<option value='".$resCo['matricula']."'>".utf8_encode($resCo['nome'])."</option>";
 					}
@@ -95,7 +95,7 @@ $action = $_REQUEST['action'];
 				  <input onclick="voltar();" style="color: white" type="button" class="btn btn-primary btn-lg" value="<< Voltar" />
 			</div>
 			<div class="form-group col-md-6">
-				  <input id="cadastrar" onclick="vincular();" disabled type="button" class="btn btn-success btn-lg" value="Confirmar Vinculo" />
+				  <input id="cadastrar" onclick="notify();" disabled type="button" class="btn btn-success btn-lg" value="Confirmar Vinculo" />
 			</div>
 		</div>
 		<br>

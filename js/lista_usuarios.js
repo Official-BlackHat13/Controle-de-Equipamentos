@@ -1,5 +1,7 @@
 // Função para listar todos os usuários
 function listar(){
+	var perfil = document.getElementById('perfil').value;
+	var id_user = document.getElementById('id_user').value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -7,7 +9,7 @@ function listar(){
 			document.getElementById('retorno').innerHTML = this.responseText;
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=todos", true);
+	xhttp.open("POST", "cadastro_function.php?action=todos&perfil="+perfil+"&id_user="+id_user, true);
 	xhttp.send();
 }
 
@@ -22,6 +24,8 @@ function relatorio(){
 function filtrar(){
 	var busca = document.getElementById('filtro').value;
 	var setor = document.getElementById('setor').value;
+	var perfil = document.getElementById('perfil').value;
+	var id_user = document.getElementById('id_user').value;
 	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -30,7 +34,7 @@ function filtrar(){
 			document.getElementById('retorno').innerHTML = this.responseText;
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=filtrar&busca="+busca+"&setor="+setor, true);
+	xhttp.open("POST", "cadastro_function.php?action=filtrar&busca="+busca+"&setor="+setor+"&perfil="+perfil+"&id_user="+id_user, true);
 	xhttp.send();
 }
 
@@ -47,6 +51,8 @@ function excluir(id){
 				if(this.responseText == '1'){
 					alert("EXCLUÍDO COM SUCESSO");
 					location.reload();
+				}else if(this.responseText == '2'){
+					alert("USUÁRIO NÃO PODE SER EXCLUÍDO, POIS TEM  EQUIPAMENTO(S) VÍNCULADOS A ELE");
 				}else{
 					alert("ERRO AO EXCLUÍR");
 				}
@@ -59,6 +65,10 @@ function excluir(id){
 
 function voltar(){
 	location.href="cad_usuario.php";
+}
+
+function inicio(){
+	location.href="index.php";
 }
 
 //Função para deixar a letra maiuscula

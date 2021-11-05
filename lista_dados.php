@@ -28,6 +28,7 @@ $action = $_REQUEST['action'];
 		</div>
 		<br>
 		<div class="row justify-content-center align-self-center">
+			<?php  if($perfil == "TI" || $perfil == "TI_INFRA"){ ?>
 			<div class="col-md-3 text-center consult">
 				 <select class="form-control" id="id" >
 				  <option value=""> -- Selecione o Equipamento -- </option>
@@ -73,6 +74,24 @@ $action = $_REQUEST['action'];
 				  ?>
 				  </select>
 			</div>
+			<?php }else{ ?>
+				<div class="col-md-6 text-center consult">
+				 <select class="form-control" id="user" >
+				  <option value=""> -- Selecione o Colaborador -- </option>
+				  <?php 
+					$sqlMat = mysqli_query($con,"SELECT
+													nome,
+													matricula
+												FROM
+													equipamentos.colaborador
+													group by matricula order by nome asc")or die(mysqli_error($con));
+					while($resMat = mysqli_fetch_array($sqlMat)){
+						echo "<option value='".$resMat['matricula']."'>".utf8_encode($resMat['nome'])."</option>";
+					}
+				  ?>
+				  </select>
+			</div>
+			<?php } ?>
 			<div class="consult">
 				<button class="btn btn-primary pesq" onclick="pesquisa();"><i class="fa fa-search" aria-hidden="true"></i></button>
 				&emsp;

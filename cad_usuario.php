@@ -61,12 +61,12 @@ $action = $_REQUEST['action'];
 		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">
-			  <label class="label" for="setor"><b>Setor:</b> <b class="obrigado">*</b></label>
-			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="setor" placeholder="Digite o setor">
+			  <label class="label" for="cpf"><b>CPF:</b> <b class="obrigado">*</b> </label>
+			  <input type="text" onkeyup="maiuscula(this);" onchange="verificarCPF(this.value);" class="form-control field" id="cpf" placeholder="Digite o CPF">
 			</div>
 			<div class="form-group col-md-4">
-			  <label class="label" for="funcao"><b>Função:</b> <b class="obrigado">*</b> </label>
-			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="funcao" placeholder="Digite a função">
+			  <label class="label" for="setor"><b>Setor:</b> <b class="obrigado">*</b></label>
+			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="setor" placeholder="Digite o setor">
 			</div>
 		</div><br>
 		
@@ -75,11 +75,19 @@ $action = $_REQUEST['action'];
 			  <label class="label" for="gestor"><b>Gestor:</b> </label>
 			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="gestor" placeholder="Digite o gestor">
 			</div>
+			<div class="form-group col-md-4">
+			  <label class="label" for="funcao"><b>Função:</b> <b class="obrigado">*</b> </label>
+			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="funcao" placeholder="Digite a função">
+			</div>
+		</div><br>
+		
+		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4"><br>
 				<label class="label" for="terceiro"><b>Terceiro:</b></label>
 				&emsp;
 				<input type="checkbox" class="flags" id="terceiro" placeholder="Digite o hostname">
 			</div>
+			<div class="form-group col-md-4"></div>
 		</div><br>
 				
 		<br>

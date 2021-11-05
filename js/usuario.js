@@ -6,6 +6,7 @@ function voltar(){
 function cadastrar(){	
 	var matricula = document.getElementById('matricula').value;
 	var nome = document.getElementById('nome').value;
+	var cpf = document.getElementById('cpf').value;
 	var setor = document.getElementById('setor').value;
 	var funcao = document.getElementById('funcao').value;
 	var gestor = document.getElementById('gestor').value;
@@ -27,6 +28,12 @@ function cadastrar(){
 	if(nome == "" || nome == null){
 		alert("PREENCHA UM NOME");
 		document.getElementById('nome').focus();
+		return false;
+	}
+	
+	if(cpf == "" || cpf == null){
+		alert("PREENCHA UM CPF");
+		document.getElementById('cpf').focus();
 		return false;
 	}
 	
@@ -57,7 +64,8 @@ function cadastrar(){
 				alert("CADASTRADO COM SUCESSO");
 				location.reload();
 			}else if(this.responseText == "2"){
-				alert("USUÁRIO JÁ CADASTRADO");
+				alert("CPF JÁ CADASTRADO");
+				document.getElementById('cpf').focus();
 			}else{
 				alert("ERRO AO CADASTRAR");
 			}
@@ -65,7 +73,7 @@ function cadastrar(){
 			
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=usuario&matricula="+matricula+"&nome="+nome+"&setor="+setor+"&funcao="+funcao+"&gestor="+gestor+"&flag="+flag+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=usuario&matricula="+matricula+"&nome="+nome+"&setor="+setor+"&funcao="+funcao+"&gestor="+gestor+"&flag="+flag+"&user="+user+"&cpf="+cpf, true);
 	xhttp.send();
 }
 
@@ -73,6 +81,7 @@ function cadastrar(){
 function autoComplete(str){
 		
 	var nome = document.getElementById('nome');
+	var cpf = document.getElementById('cpf');
 	var setor = document.getElementById('setor');
 	var funcao = document.getElementById('funcao');
 	var gestor = document.getElementById('gestor');
@@ -82,6 +91,7 @@ function autoComplete(str){
 		
 	if(busca != ""){
 		nome.value = 'Carregando...';
+		cpf.value = 'Carregando...';
 		setor.value = 'Carregando...';
 		funcao.value = 'Carregando...';
 		gestor.value = 'Carregando...';
@@ -97,6 +107,7 @@ function autoComplete(str){
 			var json = JSON.parse(this.responseText);
 			if(json.nome == undefined){	
 				nome.value = "";
+				cpf.value = "";
 				setor.value = "";
 				funcao.value = "";
 				gestor.value = "";
@@ -104,18 +115,67 @@ function autoComplete(str){
 				matricula.value = "";
 			}else{
 				nome.value = json.nome;
+				cpf.value = json.cpf;
 				setor.value = json.setor;
 				funcao.value = json.funcao;
 				gestor.value = json.gestor;
 				(json.terceiro == 'Y') ? document.getElementById('terceiro').checked = true : document.getElementById('terceiro').checked = false;
 				matricula.value = json.matricula;
 				document.getElementById('matricula').disabled = true;
+				document.getElementById('cpf').disabled = true;
 			}
 				
 		}
 	};
 	xhttp.open("POST", "cadastro_function.php?action=lista&&busca="+busca+"&id="+str, true);
 	xhttp.send();					
+}
+
+//valida o CPF
+function verificarCPF(c){
+	var i;
+	s = c.replace(/[.-]/g, "");
+	var c = s.substr(0,9);
+	var dv = s.substr(9,2);
+	var d1 = 0;
+	var v = false;
+ 
+	for (i = 0; i < 9; i++){
+		d1 += c.charAt(i)*(10-i);
+	}
+	if (d1 == 0){
+		alert("CPF INVÁLIDO")
+		v = true;
+		document.getElementById("cpf").value = '';
+		document.getElementById("cpf").focus();
+		return false;
+	}
+	d1 = 11 - (d1 % 11);
+	if (d1 > 9) d1 = 0;
+	if (dv.charAt(0) != d1){
+		alert("CPF INVÁLIDO")
+		v = true;
+		document.getElementById("cpf").value = '';
+		document.getElementById("cpf").focus();
+		return false;
+	}
+	 
+	d1 *= 2;
+	for (i = 0; i < 9; i++){
+		d1 += c.charAt(i)*(11-i);
+	}
+	d1 = 11 - (d1 % 11);
+	if (d1 > 9) d1 = 0;
+	if (dv.charAt(1) != d1){
+		alert("CPF INVÁLIDO")
+		v = true;
+		document.getElementById("cpf").value = '';
+		document.getElementById("cpf").focus();
+		return false;
+	}
+	if (!v) {
+		//alert(c + "nCPF Válido")
+	}
 }
 
 // Função para redirecionar para tela de lista de usuários

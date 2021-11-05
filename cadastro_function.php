@@ -266,20 +266,21 @@ if($action == "equipamento"){
 if($action == "usuario"){
 	$matricula = trim($_REQUEST['matricula']);
 	$nome = utf8_decode($_REQUEST['nome']);
+	$cpf = utf8_decode($_REQUEST['cpf']);
 	$setor = utf8_decode($_REQUEST['setor']);
 	$funcao = utf8_decode($_REQUEST['funcao']);
 	$gestor = utf8_decode($_REQUEST['gestor']);
 	$flag = $_REQUEST['flag'];
 	$user = $_REQUEST['user'];
 	
-	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where matricula = '".$matricula."'")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where cpf = '".$cpf."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
-	
-	
+	if($resSql['total'] == 0){
 		$insert = mysqli_query($con,"insert into equipamentos.colaborador 
 										(
 											matricula,
 											nome,
+											cpf,
 											setor,
 											funcao,
 											gestor,
@@ -290,6 +291,7 @@ if($action == "usuario"){
 										(
 											'".$matricula."',
 											'".$nome."',
+											'".$cpf."',
 											'".$setor."',
 											'".$funcao."',
 											'".$gestor."',
@@ -297,6 +299,7 @@ if($action == "usuario"){
 											'".$user."'
 										) on duplicate key update
 										nome = '".$nome."',
+										cpf = '".$cpf."',
 										setor = '".$setor."',
 										funcao = '".$funcao."',
 										gestor = '".$gestor."',
@@ -308,9 +311,34 @@ if($action == "usuario"){
 		}else{
 			echo '0';
 		}
-	
+	}else{
+		echo '2';
+	}
 	
 	mysqli_close($con);
+}
+
+// NOTIFICAR O USUÁRIO QUE O COLABORADOR TEM VÍNCULO COM O TIPO DO ITEM
+if($action == "notify"){
+	$matricula = $_REQUEST['matricula'];
+	$tipo = $_REQUEST['tipo'];
+	
+	$sql = mysqli_query($con,"SELECT 
+									*
+								FROM
+									equipamentos.equipamentos_usuario a
+									inner join
+									equipamentos.equipamentos b
+									on a.patrimonio = b.patrimonio
+								WHERE
+									a.matricula = '".$matricula."' 
+									and b.tipo = '".$tipo."'")or die(mysqli_error($con));
+									
+	$rows = mysqli_num_rows($sql);
+	echo $rows;
+	
+	mysqli_close($con);
+	
 }
 
 // VINCULO DO EQUIPAMENTO PARA O USUÁRIO
@@ -450,9 +478,9 @@ if($action == "pesquisa"){
 				<tbody>
 					<tr>
 						<td>".$codigo."</td>
-						<td>".$tipo."</td>
-						<td>".$marca."</td>
-						<td>".$modelo."</td>";
+						<td>".utf8_encode($tipo)."</td>
+						<td>".utf8_encode($marca)."</td>
+						<td>".utf8_encode($modelo)."</td>";
 						
 				if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
 				  echo "<td>".$part_number."</td>";
@@ -468,7 +496,7 @@ if($action == "pesquisa"){
 				}
 				
 				  echo "<td>".$patrimonio."</td>
-						<td>".$status."</td>
+						<td>".utf8_encode($status)."</td>
 						<td>".$nf_compra."</td>
 						<td>".$data_nf."</td>
 					</tr>
@@ -583,7 +611,7 @@ if($action == "exportar"){
 									  ";	
 	$tabela = "<table border='1' width='100%' >";	
 	$tabela .= "<tr>";
-	$tabela .= '<th colspan="18" style="background: #606060; color: white; text-align: center; height: 80px;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
+	$tabela .= '<th colspan="22" style="background: #606060; color: white; text-align: center; height: 80px;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
 	$tabela .= '</tr>';
 	$tabela .= "<tr>";
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CÓDIGO</b></td>';
@@ -592,9 +620,13 @@ if($action == "exportar"){
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MODELO</b></td>';
 	
 	$query1 = mysqli_query($con, $sql)or die(mysqli_error($con));
-	while($resp1 = mysqli_fetch_array($query1)){
+	$resp1 = mysqli_fetch_array($query1);
 		extract($resp1);
-		if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
+		if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){
+			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>HOSTNAME</b></td>';
+			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>MEMÓRIA</b></td>';
+			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PROCESSADOR</b></td>';
+			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>HD</b></td>';
 			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PN / SN / Service Tag</b></td>';
 		}elseif($tipo == "COLETOR"){
 			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>SN</b></td>';
@@ -610,7 +642,7 @@ if($action == "exportar"){
 			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CAPINHA</b></td>';
 			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>IMEI</b></td>';
 		}
-	}
+	
 	
 	
 	$rows = mysqli_num_rows($query1);
@@ -634,11 +666,15 @@ if($action == "exportar"){
 				
 			$tabela .= '<tr>';
 			$tabela .= '<td class="value">'.$codigo.'</td>';
-			$tabela .= '<td class="value">'.$tipo.'</td>';
-			$tabela .= '<td class="value">'.$marca.'</td>';
-			$tabela .= '<td class="value">'.$modelo.'</td>';
+			$tabela .= '<td class="value">'.utf8_encode($tipo).'</td>';
+			$tabela .= '<td class="value">'.utf8_encode($marca).'</td>';
+			$tabela .= '<td class="value">'.utf8_encode($modelo).'</td>';
 		
-			if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
+			if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){
+				  $tabela .= '<td class="value">'.utf8_encode($hostname).'</td>';				
+				  $tabela .= '<td class="value">'.utf8_encode($memoria).'</td>';				
+				  $tabela .= '<td class="value">'.utf8_encode($cpu).'</td>';				
+				  $tabela .= '<td class="value">'.utf8_encode($hd).'</td>';				
 				  $tabela .= '<td class="value">'.$part_number.'</td>';
 				}elseif($tipo == "COLETOR"){
 					$tabela .= '<td class="value">'.$service_tag.'</td>';
@@ -667,15 +703,17 @@ if($action == "exportar"){
 			$tabela .= '</tr>';
 					
 		}
+		$tabela .= "</table>";
 	}else{
 		
 		$tabela .= "<tr>";
 		$tabela .= '<th colspan="9">NÃO HÁ INFORMAÇÕES PARA ESSA CONSULTA</tr>';
 		$tabela .= '</tr>';
+		$tabela .= "</table>";
 		
 	}
 	
-	$tabela .= "</table>";
+	
 	
 	 // Força o Download do Arquivo Gerado
 	 header ('Cache-Control: no-cache, must-revalidate');
@@ -713,6 +751,7 @@ if($action == "lista"){
 										local,
 										ip,
 										cartucho,
+										(select count(*) from equipamentos.equipamentos_usuario a where a.patrimonio = '".$busca."') vinculo,
 										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
 									FROM
 										equipamentos.equipamentos
@@ -740,6 +779,7 @@ if($action == "lista"){
 				$arr['capinha'] = utf8_encode($dados->capinha); 
 				$arr['local'] = utf8_encode($dados->local); 
 				$arr['ip'] = utf8_encode($dados->ip); 
+				$arr['vinculo'] = utf8_encode($dados->vinculo); 
 				$arr['cartucho'] = utf8_encode($dados->cartucho); 
 					
 			}
@@ -752,6 +792,7 @@ if($action == "lista"){
 		$arr = array();
 		$sql = mysqli_query($con,"SELECT 
 									matricula,
+									cpf,
 									REPLACE(nome,'ã','a') nome,
 									REPLACE(REPLACE(REPLACE(REPLACE(setor, 'ç', 'c'),
 											'ã',
@@ -777,6 +818,7 @@ if($action == "lista"){
 				
 				$arr['matricula'] = $dados->matricula; 
 				$arr['nome'] = utf8_encode($dados->nome); 
+				$arr['cpf'] = utf8_encode($dados->cpf); 
 				$arr['setor'] = utf8_encode($dados->setor); 
 				$arr['funcao'] = utf8_encode($dados->funcao); 
 				$arr['terceiro'] = $dados->terceiro; 
@@ -882,6 +924,9 @@ if($action == "desvincular"){
 
 // Aqui lista todos os usuários
 if($action == "todos"){
+	$perfil = $_REQUEST['perfil'];
+	$id_user = $_REQUEST['id_user'];
+	
 	$sql = mysqli_query($con,"select * from equipamentos.colaborador")or die(mysqli_error($con));
 	
 	$linhas = mysqli_num_rows($sql);
@@ -894,10 +939,12 @@ if($action == "todos"){
 				<th>NOME</th>
 				<th>SETOR</th>
 				<th>FUNÇÃO</th>
-				<th>GERTOR</th>
-				<th>TERCEIRO</th>
-				<th>REMOVER</th>
-			</tr>
+				<th>GESTOR</th>
+				<th>TERCEIRO</th>";
+				if($perfil == 'TI' && $id_user != 158106){
+					echo "<th>REMOVER</th>";
+				}
+		echo "</tr>
 		  </thead>";
 	$id = 0;
 	while($result = mysqli_fetch_array($sql)){
@@ -917,13 +964,13 @@ if($action == "todos"){
 		}else{
 			echo "<td>NÃO</td>";
 		}
-				
+		if($perfil == 'TI' && $id_user != 158106){		
 			    echo "<td>
 						<button class='btn btn-danger' onclick='excluir(".$id.");'>
 							<i class='fa fa-trash' aria-hidden='true'></i>
 						</button>
 					  </td>";
-		
+		}
 		echo "</tr>
 		  </tbody>";	
 	}
@@ -936,6 +983,8 @@ if($action == "todos"){
 // Aqui lista os usuários filtrados
 if($action == "filtrar"){
 	$busca = $_REQUEST['busca'];
+	$perfil = $_REQUEST['perfil'];
+	$id_user = $_REQUEST['id_user'];
 	$setores = utf8_decode($_REQUEST['setor']);
 	if($setores){
 	   $where = "and setor = '$setores'";
@@ -955,10 +1004,12 @@ if($action == "filtrar"){
 				<th>NOME</th>
 				<th>SETOR</th>
 				<th>FUNÇÃO</th>
-				<th>GERTOR</th>
-				<th>TERCEIRO</th>
-				<th>REMOVER</th>
-			</tr>
+				<th>GESTOR</th>
+				<th>TERCEIRO</th>";
+				if($perfil == "TI" && $id_user != 158106){
+					echo "<th>REMOVER</th>";
+				}
+		echo "</tr>
 		  </thead>";	
 	$id = 0;
 	while($result = mysqli_fetch_array($sql)){
@@ -978,12 +1029,13 @@ if($action == "filtrar"){
 		}else{
 			echo "<td>NÃO</td>";
 		}	
-		
+		if($perfil == "TI" && $id_user != 158106){
 			 echo "<td>
 						<button class='btn btn-danger' onclick='excluir(".$id.");'>
 							<i class='fa fa-trash' aria-hidden='true'></i>
 						</button>
 					  </td>";
+		}
 		echo "</tr>
 		  </tbody>";	
 	}
@@ -1055,14 +1107,22 @@ if($action == "relatorio"){
 // Excluir usuário cadastrado
 if($action == "excluir"){
 	$matricula = $_REQUEST['matricula'];
-	
-	$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`colaborador` WHERE `matricula`='".$matricula."'")or die(mysqli_error($con));
-	
-	if($delete){
-		echo "1";
+	$verify = mysqli_query($con,"select count(*) linhas from equipamentos.equipamentos_usuario where matricula = '".$matricula."'")or die(mysqli_error($con));
+	$result = mysqli_fetch_array($verify);
+	extract($result);
+		
+	if($linhas == 0){
+		$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`colaborador` WHERE `matricula`='".$matricula."'")or die(mysqli_error($con));
+		
+		if($delete){
+			echo "1";
+		}else{
+			echo "0";
+		}
 	}else{
-		echo "0";
+		echo "2";
 	}
+		
 }
 
 if($action == "selectionTipo"){

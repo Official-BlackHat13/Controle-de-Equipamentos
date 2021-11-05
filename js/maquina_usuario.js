@@ -7,6 +7,31 @@ function home(){
 	location.href="index.php";
 }
 
+function notify(){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var matricula = document.getElementById('matricula').value;
+	var tipo = document.getElementById('tipo').value;
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		    //alert(this.responseText);
+			if(this.responseText > 0){
+				var res = confirm("USUÁRIO JÁ TEM ESSE TIPO DE EQUIPAMENTO VINCULADO DESEJA CONTINUAR?");
+				if(res == true){
+					vincular();
+				}
+			}else{
+				vincular();
+			}
+		}
+	};
+	xhttp.open("POST", "cadastro_function.php?action=notify&matricula="+matricula+"&tipo="+tipo, true);
+	xhttp.send();
+	
+	//vincular()
+}
+
 // Função para vincular os equipamento com o usuário
 function vincular(){
 	var patrimonio = document.getElementById('patrimonio').value;
@@ -93,23 +118,9 @@ function selectionTipo(valor){
 				
 				document.getElementById('patr').style.display = "block";
 			}else{
-				alert("NÃO HÁ EQUIPAMENTO DESSE TIPO PARA VÍNCULAR");
+				alert("NÃO HÁ EQUIPAMENTO DESSE TIPO PARA VINCULAR");
 				document.getElementById('patr').style.display = "none";
 			}
-			/*
-			
-			document.getElementById('status').value = this.responseText;
-			if(this.responseText == 'Y'){
-				document.getElementById('generic').style.display = "block";
-				document.getElementById('colab').style.display = "none";
-				document.getElementById('cadastrar').disabled = false;
-			}else{
-				document.getElementById('colab').style.display = "block";
-				document.getElementById('generic').style.display = "none";
-				document.getElementById('cadastrar').disabled = false;
-			}
-			
-			*/
 		}
 	};
 	xhttp.open("POST", "cadastro_function.php?action=selectionTipo&valor="+valor, true);
@@ -138,6 +149,7 @@ function selection(valor){
 	xhttp.open("POST", "cadastro_function.php?action=selection&valor="+valor, true);
 	xhttp.send();
 }
+
 
 function mover(fonte, destino) {
 	var selecionados = fonte.querySelectorAll("option:checked");

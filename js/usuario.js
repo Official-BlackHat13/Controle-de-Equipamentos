@@ -10,6 +10,7 @@ function cadastrar(){
 	var setor = document.getElementById('setor').value;
 	var funcao = document.getElementById('funcao').value;
 	var gestor = document.getElementById('gestor').value;
+	var check = document.getElementById('generico').checked;
 	var terceiro = document.getElementById('terceiro').checked;
 	let flag;
 	if(terceiro == true){
@@ -31,11 +32,18 @@ function cadastrar(){
 		return false;
 	}
 	
-	if(cpf == "" || cpf == null){
-		alert("PREENCHA UM CPF");
-		document.getElementById('cpf').focus();
-		return false;
+	if(check == false){
+		if(cpf == "" || cpf == null){
+			alert("PREENCHA UM CPF");
+			document.getElementById('cpf').focus();
+			return false;
+		}
+	}else{
+		cpf = document.getElementById('id').value;
 	}
+	
+	alert(cpf);
+		
 	
 	if(setor == "" || setor == null){
 		alert("PREENCHA UM SETOR");
@@ -122,7 +130,7 @@ function autoComplete(str){
 				(json.terceiro == 'Y') ? document.getElementById('terceiro').checked = true : document.getElementById('terceiro').checked = false;
 				matricula.value = json.matricula;
 				document.getElementById('matricula').disabled = true;
-				document.getElementById('cpf').disabled = true;
+				//document.getElementById('cpf').disabled = true;
 			}
 				
 		}
@@ -177,6 +185,20 @@ function verificarCPF(c){
 		//alert(c + "nCPF Válido")
 	}
 }
+
+function checar(){
+	var check = document.getElementById('generico').checked;
+	
+	if(check == true){
+		document.getElementById('cult2').style.display = "block";
+		document.getElementById('cult1').style.display = "none";
+	}else{
+		document.getElementById('cult1').style.display = "block";
+		document.getElementById('cult2').style.display = "none";
+	}
+}
+
+
 
 // Função para redirecionar para tela de lista de usuários
 function listaUsuarios(){

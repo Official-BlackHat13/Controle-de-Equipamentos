@@ -2,44 +2,83 @@ function voltar(){
 	location.href="index.php";
 }
 
-function pesquisa(){
+function pesquisa(str){
 	
-	var machine = document.getElementById('machine').value;
-	var user = document.getElementById('user').value;
-	var id = document.getElementById('id').value;
-	
-	if(machine == ""  && user == "" && id == ""){
-		alert("NENHUM VALOR FOI SELECIONADO");
-		document.getElementById('id').focus();
-		return false;
-	}
-	
-	
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-		    //alert(this.responseText);	
-			document.getElementById('lista').innerHTML = this.responseText;
-			
+	if(str == 1){
+		var user = document.getElementById('user').value;
+		var machine = document.getElementById('machine').value;
+		var id = document.getElementById('id').value;
+		
+		if(machine == ""  && user == "" && id == ""){
+			alert("NENHUM VALOR FOI SELECIONADO");
+			document.getElementById('id').focus();
+			return false;
 		}
-	};
-	xhttp.open("POST", "cadastro_function.php?action=pesquisa&machine="+machine+"&user="+user+"&id="+id, true);
-	xhttp.send();	
+		
+		
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//alert(this.responseText);	
+				document.getElementById('lista').innerHTML = this.responseText;
+				
+			}
+		};
+		xhttp.open("POST", "cadastro_function.php?action=pesquisa&machine="+machine+"&user="+user+"&id="+id+"&str="+str, true);
+		xhttp.send();
+	}else{
+		var user = document.getElementById('user').value;
+		
+		if(user == ""){
+			alert("NENHUM VALOR FOI SELECIONADO");
+			document.getElementById('user').focus();
+			return false;
+		}
+		
+		
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//alert(this.responseText);	
+				document.getElementById('lista').innerHTML = this.responseText;
+				
+			}
+		};
+		xhttp.open("POST", "cadastro_function.php?action=pesquisa&user="+user+"&str="+str, true);
+		xhttp.send();
+	}
+		
+	
+		
 }
 
-function exportar(){
+function exportar(str){
 	var action = "exportar";
-	var machine = document.getElementById('machine').value;
-	var user = document.getElementById('user').value;
-	var id = document.getElementById('id').value;
 	
-	if(machine == ""  && user == "" && id == ""){
-		alert("NENHUM VALOR FOI SELECIONADO");
-		document.getElementById('id').focus();
-		return false;
+	if(str == 1){
+		var machine = document.getElementById('machine').value;
+		var user = document.getElementById('user').value;
+		var id = document.getElementById('id').value;
+		
+		if(machine == ""  && user == "" && id == ""){
+			alert("NENHUM VALOR FOI SELECIONADO");
+			document.getElementById('id').focus();
+			return false;
+		}
+		
+		location.href="cadastro_function.php?action="+action+"&machine="+machine+"&user="+user+"&id="+id+"&str="+str, "_blank";	
+	}else{
+		var user = document.getElementById('user').value;
+		
+		if(user == ""){
+			alert("NENHUM VALOR FOI SELECIONADO");
+			document.getElementById('user').focus();
+			return false;
+		}
+		
+		location.href="cadastro_function.php?action="+action+"&user="+user+"&str="+str, "_blank";	
 	}
-	
-	location.href="cadastro_function.php?action="+action+"&machine="+machine+"&user="+user+"&id="+id, "_blank";	
+		
 }
 
 function blocks(id){

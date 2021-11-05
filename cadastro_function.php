@@ -275,7 +275,7 @@ if($action == "usuario"){
 	
 	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where cpf = '".$cpf."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
-	if($resSql['total'] == 0){
+	if($resSql['total'] == 0 || $cpf == ""){
 		$insert = mysqli_query($con,"insert into equipamentos.colaborador 
 										(
 											matricula,
@@ -376,25 +376,32 @@ if($action == "vinculo"){
 // RETORNA A LISTA DE EQUIPAMENTOS E USUÁRIOS VINCULADOS
 if($action == "pesquisa"){
 	
-	$machine = $_REQUEST['machine'];
+	$str = $_REQUEST['str'];
 	$user = $_REQUEST['user'];
-	$id = $_REQUEST['id'];
 	
-	if($machine && $user && $id){
-		$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-	}elseif(!$user && $id && $machine){
-		$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."'";
-	}elseif($user && !$id && $machine){
-		$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."'";
-	}elseif($user && $id && !$machine){
-		$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-	}elseif($user && !$id && !$machine){
-		$where1 = "c.matricula = '".$user."'";
-	}elseif(!$user && $id && !$machine){
-		$where1 = "a.patrimonio = '".$id."'";
+	if($str == '1'){
+		$machine = $_REQUEST['machine'];
+		$id = $_REQUEST['id'];
+		
+		if($machine && $user && $id){
+			$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."'";
+		}elseif(!$user && $id && $machine){
+			$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."'";
+		}elseif($user && !$id && $machine){
+			$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."'";
+		}elseif($user && $id && !$machine){
+			$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."'";
+		}elseif($user && !$id && !$machine){
+			$where1 = "c.matricula = '".$user."'";
+		}elseif(!$user && $id && !$machine){
+			$where1 = "a.patrimonio = '".$id."'";
+		}else{
+			$where1 = "a.tipo = '".$machine."'";	
+		}
 	}else{
-		$where1 = "a.tipo = '".$machine."'";	
+		$where1 = "c.matricula = '".$user."'";
 	}
+	
 	
 	$sql = mysqli_query($con,"SELECT 
 								  a.codigo,
@@ -549,26 +556,35 @@ if($action == "exportar"){
 				text-align: center;
 			}
 		  </style>";
-	
-	$machine = $_REQUEST['machine'];
+		  
+	$str = $_REQUEST['str'];
 	$user = $_REQUEST['user'];
-	$id = $_REQUEST['id'];
 	
-	if($machine && $user && $id){
-		$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-	}elseif(!$user && $id && $machine){
-		$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."'";
-	}elseif($user && !$id && $machine){
-		$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."'";
-	}elseif($user && $id && !$machine){
-		$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-	}elseif($user && !$id && !$machine){
-		$where1 = "c.matricula = '".$user."'";
-	}elseif(!$user && $id && !$machine){
-		$where1 = "a.patrimonio = '".$id."'";
+	if($str == 1){
+		$machine = $_REQUEST['machine'];
+	
+		$id = $_REQUEST['id'];
+		
+		if($machine && $user && $id){
+			$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."'";
+		}elseif(!$user && $id && $machine){
+			$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."'";
+		}elseif($user && !$id && $machine){
+			$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."'";
+		}elseif($user && $id && !$machine){
+			$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."'";
+		}elseif($user && !$id && !$machine){
+			$where1 = "c.matricula = '".$user."'";
+		}elseif(!$user && $id && !$machine){
+			$where1 = "a.patrimonio = '".$id."'";
+		}else{
+			$where1 = "a.tipo = '".$machine."'";	
+		}
 	}else{
-		$where1 = "a.tipo = '".$machine."'";	
+		$where1 = "c.matricula = '".$user."'";
 	}
+	
+	
 	
 	// Nome do Arquivo do Excel que será gerado
 	$arquivo = 'RelatorioEquipamentosTI.xls';
@@ -908,6 +924,33 @@ if($action == "search"){
 	mysqli_close($con);
 }
 
+// Aqui filtro os itens vinculados pelo tipo de equipamento
+if($action == "listDesviculo"){
+	
+	$buscar = $_REQUEST['busca'];
+	
+	$arr = array();
+	$sqlEq = mysqli_query($con,"SELECT 
+													a.codigo,
+													a.patrimonio,
+													a.tipo
+												FROM
+													equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
+													on a.patrimonio = b.patrimonio inner join
+													equipamentos.colaborador c
+													on c.matricula = b.matricula
+													where a.tipo = '".$buscar."'
+													group by patrimonio
+													order by a.tipo asc")or die(mysqli_error($con));
+					while($resEq = mysqli_fetch_array($sqlEq)){
+						
+						$arr[] = $resEq;
+						//echo "<option value='".$resEq['patrimonio']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
+					}
+					
+					echo json_encode($arr);
+}
+
 // Aqui desvinculo o Equipamento do usuário
 if($action == "desvincular"){
 	$patrimonio = $_REQUEST['patrimonio'];
@@ -937,6 +980,7 @@ if($action == "todos"){
 			<tr>
 				<th>MATRICULA</th>
 				<th>NOME</th>
+				<th>CPF</th>
 				<th>SETOR</th>
 				<th>FUNÇÃO</th>
 				<th>GESTOR</th>
@@ -956,6 +1000,7 @@ if($action == "todos"){
 			<tr>
 				<td>".$matricula."</td>
 				<td>".utf8_encode($nome)."</td>
+				<td>".utf8_encode($cpf)."</td>
 				<td>".utf8_encode($setor)."</td>
 				<td>".utf8_encode($funcao)."</td>
 				<td>".utf8_encode($gestor)."</td>";
@@ -992,7 +1037,7 @@ if($action == "filtrar"){
 		$where = "";
 	}
 	
-	$sql = mysqli_query($con,"select * from equipamentos.colaborador where (matricula like '%$busca%' or nome like '%$busca%' or funcao like '%$busca%' or gestor like '%$busca%') $where")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"select * from equipamentos.colaborador where (matricula like '%$busca%' or nome like '%$busca%' or funcao like '%$busca%' or gestor like '%$busca%' or cpf like '%$busca%') $where")or die(mysqli_error($con));
 	
 	$linhas = mysqli_num_rows($sql);
 	echo "<center><button class='total'>Total de Funcionários: ".$linhas."</button></center>";
@@ -1002,6 +1047,7 @@ if($action == "filtrar"){
 			<tr>
 				<th>MATRICULA</th>
 				<th>NOME</th>
+				<th>CPF</th>
 				<th>SETOR</th>
 				<th>FUNÇÃO</th>
 				<th>GESTOR</th>
@@ -1021,6 +1067,7 @@ if($action == "filtrar"){
 			<tr>
 				<td>".$matricula."</td>
 				<td>".utf8_encode($nome)."</td>
+				<td>".utf8_encode($cpf)."</td>
 				<td>".utf8_encode($setor)."</td>
 				<td>".utf8_encode($funcao)."</td>
 				<td>".utf8_encode($gestor)."</td>";

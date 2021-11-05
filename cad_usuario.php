@@ -60,9 +60,22 @@ $action = $_REQUEST['action'];
 		</div><br>
 		
 		<div class="form-row justify-content-around align-self-center">
-			<div class="form-group col-md-4">
+		    <div class="form-group col-md-2">
+				<label class="label" for="generico"><b>Genérico:</b></label>
+				&emsp;
+				<input type="checkbox" class="flags" id="generico" onclick="checar();">
+			</div>
+			<div class="col-md-6"></div>
+		</div><br>
+		
+		<div class="form-row justify-content-around align-self-center">
+			<div class="form-group col-md-4" id="cult1">
 			  <label class="label" for="cpf"><b>CPF:</b> <b class="obrigado">*</b> </label>
 			  <input type="text" onkeyup="maiuscula(this);" onchange="verificarCPF(this.value);" class="form-control field" id="cpf" placeholder="Digite o CPF">
+			</div>
+			<div class="form-group col-md-4" id="cult2" style="display: none;">
+			  <label class="label" for="id"><b>ID:</b> </label>
+			  <input type="text" onkeyup="maiuscula(this);"  class="form-control field" id="id" placeholder="Digite uma Identificação">
 			</div>
 			<div class="form-group col-md-4">
 			  <label class="label" for="setor"><b>Setor:</b> <b class="obrigado">*</b></label>

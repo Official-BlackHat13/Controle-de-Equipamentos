@@ -24,31 +24,34 @@ $action = $_REQUEST['action'];
 			</div>
 		</div>
 		<br>
+			<div class="form-row justify-content-around align-self-center">
+				<div class="col-md-4">
+				  <label class="label" for="tipo"><b>Tipo:</b> <b class="obrigado">*</b></label>
+				  <select class="form-control" id="tipo" onchange="selection(this.value);">
+				  <option value=""> -- Selecione o Tipo -- </option>
+				  <?php 
+					$sqlEq = mysqli_query($con,"SELECT 
+													tipo
+												FROM
+													equipamentos.equipamentos
+												GROUP BY tipo
+												ORDER BY tipo ASC")or die(mysqli_error($con));
+					while($resEq = mysqli_fetch_array($sqlEq)){
+						echo "<option value='".$resEq['tipo']."'>".$resEq['tipo']."</option>";
+					}
+				  ?>
+				  </select>
+				</div>
+			</div><br>
+
 		
-		<div class="form-row justify-content-around align-self-center">
-			<div class="form-group col-md-4">
-			  <label class="label" for="patrimonio"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
-			  <select class="form-control" id="patrimonio" onchange="search(this.value);">
-			  <option value=""> -- Selecione o Equipamento -- </option>
-			  <?php 
-				$sqlEq = mysqli_query($con,"SELECT 
-												a.codigo,
-												a.patrimonio,
-												a.tipo
-											FROM
-												equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
-												on a.patrimonio = b.patrimonio inner join
-												equipamentos.colaborador c
-												on c.matricula = b.matricula
-												group by patrimonio
-												order by a.tipo asc")or die(mysqli_error($con));
-				while($resEq = mysqli_fetch_array($sqlEq)){
-					echo "<option value='".$resEq['patrimonio']."'>".$resEq['patrimonio']." - ".$resEq['tipo']."</option>";
-				}
-			  ?>
-			  </select>
+			<div class="form-row justify-content-center align-self-center"  id="patr2" style="display: none;" align="center">
+				<div class="col-md-4 text-center">
+				  <label class="label" for="patrimonio"><b>Equipamentos:</b> <b class="obrigado">*</b></label>
+				  <select class="form-control" id="patrimonio" onchange="search(this.value);">
+				  </select>
+				</div>
 			</div>
-		</div>
 		</div>
 		<br>
 		<div style="margin-left: 5px;" id="retorno"></div>

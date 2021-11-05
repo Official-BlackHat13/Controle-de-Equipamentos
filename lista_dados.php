@@ -74,6 +74,11 @@ $action = $_REQUEST['action'];
 				  ?>
 				  </select>
 			</div>
+			<div class="consult">
+				<button class="btn btn-primary pesq" onclick="pesquisa(1);"><i class="fa fa-search" aria-hidden="true"></i></button>
+				&emsp;
+				<button class="btn btn-success pesq" onclick="exportar(1);"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
+			</div>
 			<?php }else{ ?>
 				<div class="col-md-6 text-center consult">
 				 <select class="form-control" id="user" >
@@ -91,12 +96,13 @@ $action = $_REQUEST['action'];
 				  ?>
 				  </select>
 			</div>
-			<?php } ?>
 			<div class="consult">
-				<button class="btn btn-primary pesq" onclick="pesquisa();"><i class="fa fa-search" aria-hidden="true"></i></button>
+				<button class="btn btn-primary pesq" onclick="pesquisa(2);"><i class="fa fa-search" aria-hidden="true"></i></button>
 				&emsp;
-				<button class="btn btn-success pesq" onclick="exportar();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
+				<button class="btn btn-success pesq" onclick="exportar(2);"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
 			</div>
+			<?php } ?>
+			
 		</div><br>
 		
 		

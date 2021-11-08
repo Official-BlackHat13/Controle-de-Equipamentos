@@ -271,6 +271,7 @@ if($action == "usuario"){
 	$funcao = utf8_decode($_REQUEST['funcao']);
 	$gestor = utf8_decode($_REQUEST['gestor']);
 	$flag = $_REQUEST['flag'];
+	$generic = $_REQUEST['generic'];
 	$user = $_REQUEST['user'];
 	
 	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where cpf = '".$cpf."'")or die(mysqli_error($con));
@@ -285,6 +286,7 @@ if($action == "usuario"){
 											funcao,
 											gestor,
 											terceiro,
+											generico,
 											user
 										)
 										values
@@ -296,6 +298,7 @@ if($action == "usuario"){
 											'".$funcao."',
 											'".$gestor."',
 											'".$flag."',
+											'".$generic."',
 											'".$user."'
 										) on duplicate key update
 										nome = '".$nome."',
@@ -304,6 +307,7 @@ if($action == "usuario"){
 										funcao = '".$funcao."',
 										gestor = '".$gestor."',
 										terceiro = '".$flag."',
+										generico = '".$generic."',
 										user = '".$user."'
 										")or die(mysqli_error($con));
 		if($insert){
@@ -584,8 +588,6 @@ if($action == "exportar"){
 		$where1 = "c.matricula = '".$user."'";
 	}
 	
-	
-	
 	// Nome do Arquivo do Excel que será gerado
 	$arquivo = 'RelatorioEquipamentosTI.xls';
 	
@@ -825,6 +827,7 @@ if($action == "lista"){
 									'É',
 									'E') funcao,
 									terceiro,
+									generico,
 									gestor
 								  FROM equipamentos.colaborador
 								  where matricula = '".$busca."'")or die(mysqli_error($con));
@@ -838,6 +841,7 @@ if($action == "lista"){
 				$arr['setor'] = utf8_encode($dados->setor); 
 				$arr['funcao'] = utf8_encode($dados->funcao); 
 				$arr['terceiro'] = $dados->terceiro; 
+				$arr['generico'] = $dados->generico; 
 				$arr['gestor'] = utf8_encode($dados->gestor); 
 			}
 		}else{

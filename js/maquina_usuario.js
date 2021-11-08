@@ -36,13 +36,14 @@ function notify(){
 function vincular(){
 	var patrimonio = document.getElementById('patrimonio').value;
 	var matricula = document.getElementById('matricula').value;
+	var listaGenerica = document.getElementById('listaGenerica').value;
 	var stat = document.getElementById('status').value;
 	var lista = [];
 	var grupo = [];
-
+	
 	if(stat == 'Y'){
 		var users = document.getElementById('select2');
-		var generics = ["OPR","DESP","RFB","EQP","OPRAG","EPP","EQB","EMOT","EPAT","EPOR","APV","MAP","ELE", "BOMB", "TVAGEND", "TVDOC", "TVEXP", "TVREP", "TVS", "TVSAD","TVSALE", "TVTRS", "RECEP", "EPTI"];	
+		var generics = [listaGenerica];	
 			
 		for(var i = 0; i < users.options.length; i++){
 		   lista[i] = users.options[i].value;
@@ -68,6 +69,7 @@ function vincular(){
 		
 		matricula = grupo;
 	}
+	
 		
 	if(patrimonio == "" || patrimonio == null){
 		alert("SELECIONE UM EQUIPAMENTO");
@@ -96,6 +98,7 @@ function vincular(){
 	};
 	xhttp.open("POST", "cadastro_function.php?action=vinculo&matricula="+matricula+"&patrimonio="+patrimonio, true);
 	xhttp.send();
+	
 }
 
 // Função para verificar se o equipamento é compartilhado

@@ -33,16 +33,18 @@ function cadastrar(){
 	}
 	
 	if(check == false){
+		var generic = 'N';
 		if(cpf == "" || cpf == null){
 			alert("PREENCHA UM CPF");
 			document.getElementById('cpf').focus();
 			return false;
 		}
 	}else{
+		var generic = 'Y';
 		cpf = document.getElementById('id').value;
 	}
 	
-	alert(cpf);
+	alert(generic);
 		
 	
 	if(setor == "" || setor == null){
@@ -81,7 +83,7 @@ function cadastrar(){
 			
 		}
 	};
-	xhttp.open("POST", "cadastro_function.php?action=usuario&matricula="+matricula+"&nome="+nome+"&setor="+setor+"&funcao="+funcao+"&gestor="+gestor+"&flag="+flag+"&user="+user+"&cpf="+cpf, true);
+	xhttp.open("POST", "cadastro_function.php?action=usuario&matricula="+matricula+"&nome="+nome+"&setor="+setor+"&funcao="+funcao+"&gestor="+gestor+"&flag="+flag+"&user="+user+"&cpf="+cpf+"&generic="+generic, true);
 	xhttp.send();
 }
 
@@ -95,6 +97,7 @@ function autoComplete(str){
 	var gestor = document.getElementById('gestor');
 	var matricula = document.getElementById('matricula');
 	var terceiro = document.getElementById('terceiro');
+	var generico = document.getElementById('generico');
 	var busca = document.getElementById('busca').value;
 		
 	if(busca != ""){
@@ -104,6 +107,7 @@ function autoComplete(str){
 		funcao.value = 'Carregando...';
 		gestor.value = 'Carregando...';
 		terceiro.value = 'Carregando...';
+		generico.value = 'Carregando...';
 		matricula.value = 'Carregando...';
 	}
 		
@@ -120,6 +124,7 @@ function autoComplete(str){
 				funcao.value = "";
 				gestor.value = "";
 				terceiro.value = "";
+				generico.value = "";
 				matricula.value = "";
 			}else{
 				nome.value = json.nome;
@@ -128,8 +133,17 @@ function autoComplete(str){
 				funcao.value = json.funcao;
 				gestor.value = json.gestor;
 				(json.terceiro == 'Y') ? document.getElementById('terceiro').checked = true : document.getElementById('terceiro').checked = false;
+				(json.generico == 'Y') ? document.getElementById('generico').checked = true : document.getElementById('generico').checked = false;
 				matricula.value = json.matricula;
 				document.getElementById('matricula').disabled = true;
+				
+				if(json.generico == 'Y'){
+					document.getElementById('cult2').style.display = "block";
+					document.getElementById('cult1').style.display = "none";
+				}else{
+					document.getElementById('cult1').style.display = "block";
+					document.getElementById('cult2').style.display = "none";
+				}
 				//document.getElementById('cpf').disabled = true;
 			}
 				

@@ -62,7 +62,7 @@ $action = $_REQUEST['action'];
 				   <select class="form-control" id="matricula" >
 				  <option value=""> -- Selecione o Usuário -- </option>
 				  <?php 
-					$sqlCo = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador where matricula not in ('OPR','DESP','RFB','EQP','OPRAG','EPP','EQB','EMOT','EPAT','EPOR','APV','MAP','ELE','BOMB','TVAGEND','TVDOC','TVEXP','TVREP','TVS','TVSAD','TVSALE','TVTRS','RECEP','EPTI')order by nome asc")or die(mysqli_error($con));
+					$sqlCo = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador where generico <> 'Y' order by nome asc")or die(mysqli_error($con));
 					while($resCo = mysqli_fetch_array($sqlCo)){
 						echo "<option value='".$resCo['matricula']."'>".utf8_encode($resCo['nome'])."</option>";
 					}

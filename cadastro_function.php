@@ -274,9 +274,11 @@ if($action == "usuario"){
 	$generic = $_REQUEST['generic'];
 	$user = $_REQUEST['user'];
 	
+	/*
 	$sql = mysqli_query($con,"SELECT count(*) total FROM equipamentos.colaborador where cpf = '".$cpf."'")or die(mysqli_error($con));
 	$resSql = mysqli_fetch_array($sql);
 	if($resSql['total'] == 0 || $cpf == ""){
+	*/	
 		$insert = mysqli_query($con,"insert into equipamentos.colaborador 
 										(
 											matricula,
@@ -315,9 +317,11 @@ if($action == "usuario"){
 		}else{
 			echo '0';
 		}
+	/*
 	}else{
 		echo '2';
 	}
+	*/
 	
 	mysqli_close($con);
 }
@@ -365,15 +369,16 @@ if($action == "vinculo"){
 											'".$matricula[$i]."'
 										)")or die(mysqli_error($con));
 										
+		$update = mysqli_query($con,"UPDATE `equipamentos`.`equipamentos` SET `status`='Em uso' WHERE `patrimonio`='".$patrimonio."'")or die(mysqli_error($con));
 	}
 	
-	if($insert){
-			echo "1";
-		}else{
-			echo "0";
-		}
+	if($insert){		
+		echo "1";
+	}else{
+		echo "0";
+	}
 		
-		mysqli_close($con);
+	mysqli_close($con);
 	
 }
 
@@ -908,7 +913,15 @@ if($action == "search"){
 					<td>".utf8_encode($nome)."</td>
 					<td>".utf8_encode($setor)."</td>
 					<td>".utf8_encode($gestor)."</td>
-					<td>".$status."</td>
+					<td>
+					    <select class='form-control' id='status_$id' style='width: 100%'>
+							<option value=''>".strtoupper($status)."</option>
+							<option value='PARA DOAÇÃO'>PARA DOAÇÃO</option>
+							<option value='BACKUP'>BACKUP</option>
+							<option value='DESCARTE'>DESCARTE</option>
+						</select>
+						
+					</td>
 					<td>
 						<button class='btn btn-danger' onclick='desvicular(".$id.");'>
 							<i class='fa fa-minus-circle'></i>
@@ -959,10 +972,12 @@ if($action == "listDesviculo"){
 if($action == "desvincular"){
 	$patrimonio = $_REQUEST['patrimonio'];
 	$matricula = $_REQUEST['matricula'];
+	$status = $_REQUEST['status'];
 	
 	$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`equipamentos_usuario` WHERE `patrimonio`='".$patrimonio."' and matricula = '".$matricula."'")or die(mysqli_error($con));
 	
 	if($delete){
+		$update = mysqli_query($con,"UPDATE `equipamentos`.`equipamentos` SET `status`='".$status."' WHERE `patrimonio`='".$patrimonio."'")or die(mysqli_error($con));
 		echo "1";
 	}else{
 		echo "0";

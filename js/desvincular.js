@@ -25,6 +25,13 @@ function search(patrimonio){
 function desvicular(id){
 	var patrimonio = document.getElementById('id').value;
 	var matricula = document.getElementById('rg_'+id).value;
+	var stat = document.getElementById('status_'+id).value;
+	
+	if(stat == "" || stat == null){
+		alert('SELECIONE OUTRA OPÇÃO DE STATUS');
+		document.getElementById('status_'+id).focus();
+		return false;
+	}
 		
 	var res = confirm("TEM CERTEZA QUE DESEJA DESVINCULAR?");
 	
@@ -43,7 +50,7 @@ function desvicular(id){
 				
 			}
 		};
-		xhttp.open("POST", "cadastro_function.php?action=desvincular&patrimonio="+patrimonio+"&matricula="+matricula, true);
+		xhttp.open("POST", "cadastro_function.php?action=desvincular&patrimonio="+patrimonio+"&matricula="+matricula+"&status="+stat, true);
 		xhttp.send();
 	}else{
 		return false;

@@ -37,7 +37,7 @@ $action = $_REQUEST['action'];
 													tipo,
 													patrimonio
 												FROM
-													equipamentos.equipamentos order by tipo asc")or die(mysqli_error($con));
+													equipamentos.equipamentos order by patrimonio asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
 						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".$resMat['tipo']."</option>";
 					}

@@ -44,9 +44,6 @@ function cadastrar(){
 		cpf = document.getElementById('id').value;
 	}
 	
-	alert(generic);
-		
-	
 	if(setor == "" || setor == null){
 		alert("PREENCHA UM SETOR");
 		document.getElementById('setor').focus();

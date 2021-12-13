@@ -630,12 +630,14 @@ function autoComplete(str){
 					sn.value = json.serviceTag;
 					local.value = json.local;
 				}
-				
+			
+			
 				if(json.vinculo != 0){
 					document.getElementById('status').disabled = true;
 				}else{
 					document.getElementById('status').disabled = false;
 				}
+			
 				
 				(json.flag == 'Y') ? document.getElementById('flag').checked = true : document.getElementById('flag').checked = false;
 				document.getElementById('patrimonio').disabled = true;

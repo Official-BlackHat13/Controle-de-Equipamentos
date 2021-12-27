@@ -5,7 +5,7 @@ $action = $_REQUEST['action'];
 //CARREGA A TELA DE CADASTRO APARTIR DO TIPO SELECIONADO
 if($action == "carregar"){
 	require_once("EquipamentosForm.php");
-	$tipo = $_REQUEST['tipo'];
+	$tipo = str_replace(" ","",$_REQUEST['tipo']);
 	
 	switch($tipo){
 		case "AP/ANTENA":
@@ -25,7 +25,8 @@ if($action == "carregar"){
 		case "IMPRESSORA":
 		  tipoImpressora($con, $tipo);
 		break; 
-		case "LINHAS MOVEIS":
+		case "LINHASMOVEIS":
+		  $tipo = $_REQUEST['tipo'];
 		  tipoLinhasMoveis($con, $tipo);
 		break;
 		case "MODEM":
@@ -72,6 +73,7 @@ if($action == "equipamento"){
 		    $modelo = utf8_decode($_REQUEST['modelo']);
 		    $patrimonio = utf8_decode($_REQUEST['patrimonio']);
 			$tempoUso = $_REQUEST['tempoUso'];
+			$valor = $_REQUEST['valor'];
 			$stat = utf8_decode($_REQUEST['stat']);
 			$numNF = utf8_decode($_REQUEST['numNF']);
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
@@ -94,6 +96,7 @@ if($action == "equipamento"){
 			  $dateNF,
 			  $imei,
 			  $capinha,
+			  $valor,
 			  $obs,
 			  $flag,
 			  $user
@@ -106,6 +109,7 @@ if($action == "equipamento"){
 			$sn = utf8_decode($_REQUEST['sn']);
 			$patrimonio = utf8_decode($_REQUEST['patrimonio']);
 			$tempoUso = $_REQUEST['tempoUso'];
+			$valor = $_REQUEST['valor'];
 			$stat = utf8_decode($_REQUEST['stat']);
 			$numNF = utf8_decode($_REQUEST['numNF']);
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
@@ -126,6 +130,7 @@ if($action == "equipamento"){
 				$stat,
 				$numNF,
 				$dateNF,
+				$valor,
 				$obs,
 				$flag,
 				$user
@@ -139,6 +144,7 @@ if($action == "equipamento"){
 			$partNumber = utf8_decode($_REQUEST['partNumber']);
 			$patrimonio = utf8_decode($_REQUEST['patrimonio']);
 			$tempoUso = $_REQUEST['tempoUso'];
+			$valor = $_REQUEST['valor'];
 			$stat = utf8_decode($_REQUEST['stat']);
 			$numNF = utf8_decode($_REQUEST['numNF']);
 			$obs = utf8_decode($_REQUEST['obs']);
@@ -166,6 +172,7 @@ if($action == "equipamento"){
 				$cpu,
 				$memoria,
 				$hd,
+				$valor,
 				$flag,
 				$tempoUso,
 				$user
@@ -178,6 +185,7 @@ if($action == "equipamento"){
 			$tempoUso = $_REQUEST['tempoUso'];
 			$stat = utf8_decode($_REQUEST['stat']);
 			$numNF = utf8_decode($_REQUEST['numNF']);
+			$valor = $_REQUEST['valor'];
 			$obs = utf8_decode($_REQUEST['obs']);
 			$ip = utf8_decode($_REQUEST['ip']);
 			$cartucho = utf8_decode($_REQUEST['cartucho']);
@@ -201,12 +209,30 @@ if($action == "equipamento"){
 				$cartucho,
 				$flag,
 				$dateNF,
+				$valor,
 				$local,
 				$user
 			);
 		break; 
-		case "LINHAS MOVEIS":
-		  cadLinhasMoveis($con, $tipo);
+		case "LINHASMOVEIS":
+		   $patrimonio = $_REQUEST['patrimonio'];
+		   $stat = $_REQUEST['stat'];
+		   $valor = $_REQUEST['valor'];
+		   $plano = utf8_decode($_REQUEST['plano']);
+		   $obs = $_REQUEST['obs'];
+		   $flag = $_REQUEST['flag'];
+		   $tipo = $_REQUEST['tipo'];
+		   cadLinhasMoveis(
+					$con, 
+					$tipo,
+					$patrimonio,
+					$stat,
+					$valor,
+					$plano,
+					$flag,
+					$obs,
+					$user
+			);
 		break;
 		case "MODEM":
 		  cadModem($con, $tipo);
@@ -222,6 +248,7 @@ if($action == "equipamento"){
 			$tempoUso = $_REQUEST['tempoUso'];
 			$stat = utf8_decode($_REQUEST['stat']);
 			$numNF = utf8_decode($_REQUEST['numNF']);
+			$valor = $_REQUEST['valor'];
 			$obs = utf8_decode($_REQUEST['obs']);
 			$local = utf8_decode($_REQUEST['local']);
 			$sn = utf8_decode($_REQUEST['sn']);
@@ -242,6 +269,7 @@ if($action == "equipamento"){
 				$obs,
 				$local,
 				$sn,
+				$valor,
 				$flag,
 				$dateNF,
 				$user
@@ -390,20 +418,25 @@ if($action == "pesquisa"){
 	
 	if($str == '1'){
 		$machine = $_REQUEST['machine'];
+		$hostname = $_REQUEST['hostname'];
 		$id = $_REQUEST['id'];
 		
-		if($machine && $user && $id){
-			$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-		}elseif(!$user && $id && $machine){
-			$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."'";
-		}elseif($user && !$id && $machine){
-			$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."'";
-		}elseif($user && $id && !$machine){
+		if($machine && $user && $id && $hostname){
+			$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."' and a.hostname = '".$hostname."'";
+		}elseif(!$user && $hostname && $id && $machine){
+			$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."' and a.hostname = '".$hostname."'";
+		}elseif($user && !$id && $hostname && $machine){
+			$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."' and a.hostname = '".$hostname."'";
+		}elseif($user && $id && $hostname && !$machine){
+			$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."' and a.hostname = '".$hostname."'";
+		}elseif($user && $id && !$hostname && $machine){
 			$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-		}elseif($user && !$id && !$machine){
+		}elseif($user && !$id && !$machine && !$hostname){
 			$where1 = "c.matricula = '".$user."'";
-		}elseif(!$user && $id && !$machine){
+		}elseif(!$user && $id && !$machine && !$hostname){
 			$where1 = "a.patrimonio = '".$id."'";
+		}elseif(!$user && !$id && !$machine && $hostname){
+			$where1 = "a.hostname = '".$hostname."'";
 		}else{
 			$where1 = "a.tipo = '".$machine."'";	
 		}
@@ -434,6 +467,8 @@ if($action == "pesquisa"){
 								  a.imei,
 								  a.capinha,
 								  a.local,
+								  a.plano,
+								  a.valor,
 								  
 								  c.matricula,
 								  c.nome,
@@ -470,9 +505,12 @@ if($action == "pesquisa"){
 					</tr>
 					<tr>
 						<th>CÓDIGO</th>
-						<th>TIPO</th>
-						<th>MARCA</th>
-						<th>MODELO</th>";
+						<th>TIPO</th>";
+						if($tipo != "LINHAS MOVEIS"){
+							echo "<th>MARCA</th>
+							      <th>MODELO</th>";
+						}
+						
 						if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
 							echo "<th>PN / SN / Service Tag</th>";
 						}elseif($tipo == "COLETOR"){
@@ -485,18 +523,30 @@ if($action == "pesquisa"){
 						}elseif($tipo == "CELULARES"){
 							echo "<th>IMEI</th>";
 						}
-				  echo "<th>PATRIMÔNIO</th>
-						<th>STATUS</th>
-						<th>NF COMPRA</th>
-						<th>DATA NF</th>
-					</tr>
+						
+						if($tipo != "LINHAS MOVEIS"){
+							echo "<th>PATRIMÔNIO</th>
+								  <th>STATUS</th>
+							      <th>NF COMPRA</th>
+							      <th>DATA NF</th>";
+						}else{
+							echo "<th>NÚMERO</th>
+								  <th>STATUS</th>
+								  <th>VALOR</th>
+								  <th>PLANO</th>";
+						}
+							
+				echo "</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>".$codigo."</td>
-						<td>".utf8_encode($tipo)."</td>
-						<td>".utf8_encode($marca)."</td>
-						<td>".utf8_encode($modelo)."</td>";
+						<td>".utf8_encode($tipo)."</td>";
+				if($tipo != "LINHAS MOVEIS"){
+					echo "<td>".utf8_encode($marca)."</td>
+						  <td>".utf8_encode($modelo)."</td>";
+				}		
+				   
 						
 				if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){	
 				  echo "<td>".$part_number."</td>";
@@ -511,11 +561,19 @@ if($action == "pesquisa"){
 					echo "<td>".$imei."</td>";
 				}
 				
-				  echo "<td>".$patrimonio."</td>
+				if($tipo != "LINHAS MOVEIS"){
+				    echo "<td>".$patrimonio."</td>
 						<td>".utf8_encode($status)."</td>
 						<td>".$nf_compra."</td>
-						<td>".$data_nf."</td>
-					</tr>
+						<td>".$data_nf."</td>";
+				}else{
+					echo "<td>".$patrimonio."</td>
+						  <td>".utf8_encode($status)."</td>
+						  <td>".$valor."</td>
+						  <td>".utf8_encode($plano)."</td>";
+				}
+				
+				echo "</tr>
 				</tbody>
 				</table>
 				<table class='table table-hover table-bordered table-striped text-center' >
@@ -571,21 +629,25 @@ if($action == "exportar"){
 	
 	if($str == 1){
 		$machine = $_REQUEST['machine'];
-	
+		$hostname = $_REQUEST['hostname'];
 		$id = $_REQUEST['id'];
 		
-		if($machine && $user && $id){
-			$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-		}elseif(!$user && $id && $machine){
-			$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."'";
-		}elseif($user && !$id && $machine){
-			$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."'";
-		}elseif($user && $id && !$machine){
+		if($machine && $user && $id && $hostname){
+			$where1 = "a.tipo = '".$machine."' and c.matricula = '".$user."' and a.patrimonio = '".$id."' and a.hostname = '".$hostname."'";
+		}elseif(!$user && $hostname && $id && $machine){
+			$where1 = "a.tipo = '".$machine."' and a.patrimonio = '".$id."' and a.hostname = '".$hostname."'";
+		}elseif($user && !$id && $hostname && $machine){
+			$where1 = "c.matricula = '".$user."' and a.tipo = '".$machine."' and a.hostname = '".$hostname."'";
+		}elseif($user && $id && $hostname && !$machine){
+			$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."' and a.hostname = '".$hostname."'";
+		}elseif($user && $id && !$hostname && $machine){
 			$where1 = "c.matricula = '".$user."' and a.patrimonio = '".$id."'";
-		}elseif($user && !$id && !$machine){
+		}elseif($user && !$id && !$machine && !$hostname){
 			$where1 = "c.matricula = '".$user."'";
-		}elseif(!$user && $id && !$machine){
+		}elseif(!$user && $id && !$machine && !$hostname){
 			$where1 = "a.patrimonio = '".$id."'";
+		}elseif(!$user && !$id && !$machine && $hostname){
+			$where1 = "a.hostname = '".$hostname."'";
 		}else{
 			$where1 = "a.tipo = '".$machine."'";	
 		}
@@ -618,6 +680,8 @@ if($action == "exportar"){
 								  a.imei,
 								  a.capinha,
 								  a.local,
+								  a.plano,
+								  a.valor,
 								  
 								  c.matricula,
 								  c.nome,
@@ -664,6 +728,8 @@ if($action == "exportar"){
 		}elseif($tipo == "CELULARES"){
 			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CAPINHA</b></td>';
 			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>IMEI</b></td>';
+		}elseif($tipo == "LINHAS MOVEIS"){
+			$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PLANO</b></td>';
 		}
 	
 	
@@ -672,6 +738,7 @@ if($action == "exportar"){
 	
 	
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>PATRIMÔNIO</b></td>';
+	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>VALOR</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>STATUS</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>NF COMPRA</b></td>';
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>DATA NF</b></td>';
@@ -712,9 +779,12 @@ if($action == "exportar"){
 				}elseif($tipo == "CELULARES"){
 					$tabela .= '<td class="value">'.$capinha.'</td>';
 					$tabela .= '<td class="value">'.$imei.'</td>';
-				}
+				}elseif($tipo == "LINHAS MOVEIS"){
+					$tabela .= '<td class="value">'.utf8_encode($plano).'</td></td>';
+				}	
 			
 			$tabela .= '<td class="value">'.$patrimonio.'</td>';
+			$tabela .= '<td class="value">'.$valor.'</td>';
 			$tabela .= '<td class="value">'.$status.'</td>';
 			$tabela .= '<td class="value">'.$nf_compra.'</td>';
 			$tabela .= '<td class="value">'.$data_nf.'</td>';
@@ -774,6 +844,8 @@ if($action == "lista"){
 										local,
 										ip,
 										cartucho,
+										valor,
+										plano,
 										(select count(*) from equipamentos.equipamentos_usuario a where a.patrimonio = '".$busca."') vinculo,
 										DATE_FORMAT(STR_TO_DATE(data_nf, '%d/%m/%Y'),'%Y-%m-%d') data_nf
 									FROM
@@ -793,6 +865,7 @@ if($action == "lista"){
 				$arr['dateNF'] = $dados->data_nf; 
 				$arr['obs'] = utf8_encode($dados->obs); 
 				$arr['flag'] = $dados->flag; 
+				$arr['valor'] = $dados->valor; 
 				$arr['tempoUso'] = $dados->tempo_uso; 
 				$arr['cpu'] = utf8_encode($dados->cpu); 
 				$arr['memoria'] = utf8_encode($dados->memoria); 
@@ -801,6 +874,7 @@ if($action == "lista"){
 				$arr['imei'] = utf8_encode($dados->imei); 
 				$arr['capinha'] = utf8_encode($dados->capinha); 
 				$arr['local'] = utf8_encode($dados->local); 
+				$arr['plano'] = utf8_encode($dados->plano); 
 				$arr['ip'] = utf8_encode($dados->ip); 
 				$arr['vinculo'] = utf8_encode($dados->vinculo); 
 				$arr['cartucho'] = utf8_encode($dados->cartucho); 

@@ -51,7 +51,7 @@ function vincular(){
 		   
 		}
 		
-		if(!generics.includes(users.value)){
+		if(!listaGenerica.includes(users.value)){	
 			if(users.options.length <= 1){
 				alert("SELECIONE MAIS DE UM COLABORADOR NA LISTA");
 				document.getElementById('select1').focus();
@@ -59,7 +59,8 @@ function vincular(){
 			}
 		}
 		
-		if(generics.includes(users.value)){
+		
+		if(listaGenerica.includes(users.value)){
 			if(users.options.length > 1){
 				alert("PARA AS OPÇÕES EQUIPE OPERACIONAL, DESPACHANTES E RFB APENAS SELECIONE UMA OPÇÃO");
 				document.getElementById('select1').focus();
@@ -83,6 +84,7 @@ function vincular(){
 		return false;
 	}
 	
+	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -98,6 +100,7 @@ function vincular(){
 	};
 	xhttp.open("POST", "cadastro_function.php?action=vinculo&matricula="+matricula+"&patrimonio="+patrimonio, true);
 	xhttp.send();
+	
 	
 }
 

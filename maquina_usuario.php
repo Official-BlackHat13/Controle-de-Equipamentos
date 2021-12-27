@@ -29,7 +29,7 @@ $action = $_REQUEST['action'];
 			$buscaListaG = mysqli_query($con,"select group_concat('\"',matricula,'\"') listaGenerica from equipamentos.colaborador where generico = 'Y'")or die(mysqli_error($con));
 			$resultListaG = mysqli_fetch_array($buscaListaG);
 		?>
-		<input type="hidden" id="listaGenerica" value='<?=$resultListaG['listaGenerica']?>' />
+		<input type="hidden" id="listaGenerica" value='<?php echo $resultListaG['listaGenerica']; ?>' />
 		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">

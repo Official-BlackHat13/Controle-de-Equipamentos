@@ -109,7 +109,10 @@ function tipoCelular($con, $tipo){
 				   &emsp;
 				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" >
 				</div>
-				<div class="col-md-4"></div>
+				<div class="col-md-4">
+				  <label class="label" for="valor"><b>Valor:</b> </label>
+				  <input type="text" class="form-control field" id="valor" placeholder="Digite o valor">
+				</div>
 			</div><br>
 		</div><br>			
 		<br>
@@ -221,7 +224,10 @@ function tipoColetor($con, $tipo){
 				   &emsp;
 				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
-				<div class="col-md-4"></div>
+				<div class="col-md-4">
+				  <label class="label" for="valor"><b>Valor:</b> </label>
+				  <input type="text" class="form-control field" id="valor" placeholder="Digite o valor">
+				</div>
 			</div><br>
 		</div><br>			
 		<br>
@@ -332,7 +338,10 @@ function tipoMaquinas($con, $tipo){
 				   &emsp;
 				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
-				<div class="form-group col-md-4"></div>
+				<div class="form-group col-md-4">
+					 <label class="label" for="valor"><b>Valor:</b> </label>
+				   <input type="text" class="form-control field" id="valor" placeholder="Digite o valor">
+				</div>
 			</div>
 		</div><br>
 		
@@ -362,7 +371,8 @@ function tipoMaquinas($con, $tipo){
 				  <label class="label" for="hd"><b>HD:</b> <b class="obrigado">*</b></label>
 				  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="hd" placeholder="Digite a configuração">
 				</div>
-				<div class="form-group col-md-4"></div>
+				<div class="form-group col-md-4">
+				</div>
 			</div><br>
 		
 				
@@ -479,6 +489,18 @@ function tipoImpressora($con, $tipo){
 				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
 			</div><br>
+			
+			
+			<div class="row justify-content-around align-self-center">
+				<div class="col-md-4">
+				   
+				</div>
+				<div class="form-group col-md-4">
+					<label class="label" for="valor"><b>Valor:</b> </label>
+				    <input type="text" class="form-control field" id="valor" placeholder="Digite o valor">
+				</div>
+			</div><br>
+			
 		</div><br>			
 		<br>
 		
@@ -501,7 +523,77 @@ function tipoImpressora($con, $tipo){
 
 */
 function tipoLinhasMoveis($con, $tipo){
-	
+?>
+	<div class="col-md-12">
+		<div class="row justify-content-around align-self-center">	
+			<div class="form-group col-md-4">
+				<label class="label" for="busca"><b>Lista de Equipamentos:</b> <b class="obrigado">*</b></label>
+				<select class="form-control" id="busca" onchange="autoComplete(1);" >
+				<option value=""> -- Selecione o Equipamento -- </option>
+				<?php 
+					$sqlMat = mysqli_query($con,"SELECT codigo, patrimonio, tipo FROM equipamentos.equipamentos where tipo = '".$tipo."' order by tipo asc")or die(mysqli_error($con));
+					while($resMat = mysqli_fetch_array($sqlMat)){
+						echo "<option value='".$resMat['patrimonio']."'>".$resMat['patrimonio']." - ".utf8_encode($resMat['tipo'])."</option>";
+					}	
+				?>
+				</select>
+			</div>
+		    <div class="form-group col-md-4">
+			</div>
+		</div><br>
+			
+		<div class="row justify-content-around align-self-center">
+			<div class="form-group col-md-4">
+				<label class="label" for="patrimonio"><b>Número da Linha:</b> <b class="obrigado">*</b></label>
+				<input type="text" onkeyup="maiuscula(this);" class="form-control field" id="patrimonio" placeholder="Digite o patrimonio">
+			</div>
+			<div class="form-group col-md-4">
+		 	    <label class="label" for="valor"><b>Valor:</b> </label>
+				<input type="text" class="form-control field" id="valor" placeholder="Digite o valor">
+			</div>
+		</div><br>
+						
+		<div class="row justify-content-around align-self-center">
+			<div class="form-group col-md-4">
+			  <label class="label" for="status"><b>Status:</b> <b class="obrigado">*</b></label>
+				  <select id="status" class="form-control field">
+					<option value=""> -- Selecione o Status -- </option>
+					<option id="EM USO" value="EM USO">EM USO</option>
+					<option id="BACKUP" value="BACKUP">BACKUP</option>
+					<option id="COM PROBLEMA" value="COM PROBLEMA">COM PROBLEMA</option>
+				  </select>
+			</div>
+			<div class="form-group col-md-4">
+				  <label class="label" for="plano"><b>Plano:</b> <b class="obrigado">*</b></label>
+				  <input type="text" class="form-control" onkeyup="maiuscula(this);" id="plano" value="" placeholder="Digite o plano" />
+			</div>
+		</div><br>
+		
+		<div class="row justify-content-around align-self-center">
+			<div class="form-group col-md-4">
+			    <label class="label" for="hostname"><b>Compartilhado:</b></label>
+				   &emsp;
+				<input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname" >
+			</div>
+			<div class="form-group col-md-4">
+				<label class="label" for="obs"><b>Observações:</b> </label>
+			    <textarea class="form-control" id="obs" placeholder="Digite aqui..." ></textarea>
+			</div>
+		</div><br>
+		
+		</div><br>			
+		<br>
+		
+		<div class="row justify-content-center align-self-center">
+			<div class="form-group col-md-4">
+				  <input id="cadastrar" onclick="voltar();" style="color: white" type="button" class="btn btn-primary btn-lg" value="<< Voltar" />
+			</div>
+			<div class="form-group col-md-6">
+				  <input id="cadastrar" onclick="cadastrar();" type="button" class="btn btn-success btn-lg" value="Confirmar Cadastro" />
+			</div>
+		</div>
+		<br>
+<?php	
 }
 
 
@@ -618,7 +710,10 @@ function tipoProjetor($con, $tipo){
 				   &emsp;
 				  <input type="checkbox" class="flags" id="flag" placeholder="Digite o hostname">
 				</div>
-				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<label class="label" for="valor"><b>Valor:</b> </label>
+				    <input type="text" class="form-control field" id="valor" placeholder="Digite o valor">
+				</div>
 			</div><br>
 		</div><br>			
 		<br>

@@ -6,10 +6,11 @@ function pesquisa(str){
 	
 	if(str == 1){
 		var user = document.getElementById('user').value;
+		var hostname = document.getElementById('hostname').value;
 		var machine = document.getElementById('machine').value;
 		var id = document.getElementById('id').value;
 		
-		if(machine == ""  && user == "" && id == ""){
+		if(machine == ""  && user == "" && id == "" && hostname == ""){
 			alert("NENHUM VALOR FOI SELECIONADO");
 			document.getElementById('id').focus();
 			return false;
@@ -24,7 +25,7 @@ function pesquisa(str){
 				
 			}
 		};
-		xhttp.open("POST", "cadastro_function.php?action=pesquisa&machine="+machine+"&user="+user+"&id="+id+"&str="+str, true);
+		xhttp.open("POST", "cadastro_function.php?action=pesquisa&machine="+machine+"&hostname="+hostname+"&user="+user+"&id="+id+"&str="+str, true);
 		xhttp.send();
 	}else{
 		var user = document.getElementById('user').value;
@@ -57,16 +58,17 @@ function exportar(str){
 	
 	if(str == 1){
 		var machine = document.getElementById('machine').value;
+		var hostname = document.getElementById('hostname').value;
 		var user = document.getElementById('user').value;
 		var id = document.getElementById('id').value;
 		
-		if(machine == ""  && user == "" && id == ""){
+		if(machine == ""  && user == "" && id == "" && hostname == ""){
 			alert("NENHUM VALOR FOI SELECIONADO");
 			document.getElementById('id').focus();
 			return false;
 		}
 		
-		location.href="cadastro_function.php?action="+action+"&machine="+machine+"&user="+user+"&id="+id+"&str="+str, "_blank";	
+		location.href="cadastro_function.php?action="+action+"&hostname="+hostname+"&machine="+machine+"&user="+user+"&id="+id+"&str="+str, "_blank";	
 	}else{
 		var user = document.getElementById('user').value;
 		

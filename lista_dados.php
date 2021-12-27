@@ -16,7 +16,7 @@ $action = $_REQUEST['action'];
 </head>
 <body>
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row justify-content-between align-self-center" id="title">
 			<div class="col-md-2 text-left">
 				<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="voltar();"></i>
@@ -29,6 +29,9 @@ $action = $_REQUEST['action'];
 		<br>
 		<div class="row justify-content-center align-self-center">
 			<?php  if($perfil == "TI" || $perfil == "TI_INFRA"){ ?>
+			<div class="col-md-2">
+				<input type="text" class="form-control" id="hostname" value="" placeholder="Digite o hostname" />
+			</div>
 			<div class="col-md-3 text-center consult">
 				 <select class="form-control" id="id" >
 				  <option value=""> -- Selecione o Equipamento -- </option>
@@ -44,7 +47,7 @@ $action = $_REQUEST['action'];
 				  ?>
 				  </select>
 			</div>
-			<div class="col-md-3 text-center consult">
+			<div class="col-md-2 text-center consult">
 				 <select class="form-control" id="machine" >
 				  <option value=""> -- Selecione o Tipo -- </option>
 				  <?php 
@@ -80,7 +83,7 @@ $action = $_REQUEST['action'];
 				<button class="btn btn-success pesq" onclick="exportar(1);"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
 			</div>
 			<?php }else{ ?>
-				<div class="col-md-6 text-center consult">
+			<div class="col-md-6 text-center consult">
 				 <select class="form-control" id="user" >
 				  <option value=""> -- Selecione o Colaborador -- </option>
 				  <?php 
@@ -98,7 +101,7 @@ $action = $_REQUEST['action'];
 			</div>
 			<div class="consult">
 				<button class="btn btn-primary pesq" onclick="pesquisa(2);"><i class="fa fa-search" aria-hidden="true"></i></button>
-				&emsp;
+				&nbsp;
 				<button class="btn btn-success pesq" onclick="exportar(2);"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
 			</div>
 			<?php } ?>

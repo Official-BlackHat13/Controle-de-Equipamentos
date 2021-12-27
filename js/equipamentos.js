@@ -69,10 +69,10 @@ function cadastrar(){
 		case "SCANNER":
 			cadProjetor(tipo);
 		break;
-	/*
 		case "LINHAS MOVEIS":
 			cadMoveis(tipo);
 		break;
+    /*
 		case "MODEM":
 			cadModem(tipo);
 		break;
@@ -93,6 +93,65 @@ function cadastrar(){
 	
 }
 
+function cadMoveis(tipo){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var valor = document.getElementById('valor').value;
+	var stat = document.getElementById('status').value;
+	var obs = document.getElementById('obs').value;
+	var plano = document.getElementById('plano').value;
+	var user = document.getElementById('user').value;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
+	var value = document.getElementById('flag').checked;
+	let flag;
+	if(value == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}
+	
+	if(patrimonio == "" || patrimonio == null){
+		alert("PREENCHA O NÚMERO DO PATRIMÔNIO");
+		document.getElementById('patrimonio').focus();
+		return false;
+	}
+	
+	if(stat == "" || stat == null){
+		alert("SELECIONE UM STATUS");
+		document.getElementById('status').focus();
+		return false;
+	}
+	
+	if(plano == "" || plano == null){
+		alert("PREENCHA O CAMPO PLANO");
+		document.getElementById('plano').focus();
+		return false;
+	}
+	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			if(this.responseText == "1"){
+				alert("CADASTRADO COM SUCESSO");
+				location.reload();
+			}else{
+				alert("ERRO AO CADASTRAR");
+			}					
+		}
+    };
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&valor="+valor+"&flag="+flag+"&plano="+plano+"&user="+user, true);
+	xhttp.send();
+	
+	
+}
+
 
 // CADASTRA DESKTOP, NOTEBOOK E AIO
 function cadMaquina(tipo){
@@ -107,12 +166,15 @@ function cadMaquina(tipo){
 	var user = document.getElementById('user').value;
 	var obs = document.getElementById('obs').value;
 	var hostname = document.getElementById('hostname').value;
+	var valor = document.getElementById('valor').value;
 	//Configurações
 	var cpu = document.getElementById('cpu').value;
 	var memoria = document.getElementById('memoria').value;
 	var hd = document.getElementById('hd').value;
 	var value = document.getElementById('flag').checked;
 	let flag;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
 	if(value == true){
 		flag = 'Y';
 	}else{
@@ -173,6 +235,12 @@ function cadMaquina(tipo){
 		return false;
 	}
 	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
+	
 			
 			
 	var xhttp = new XMLHttpRequest();
@@ -187,7 +255,7 @@ function cadMaquina(tipo){
 			}					
 		}
     };
-	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&numNF="+numNF+"&dateNF="+dateNF+"&flag="+flag+"&obs="+obs+"&hostname="+hostname+"&cpu="+cpu+"&memoria="+memoria+"&hd="+hd+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&numNF="+numNF+"&dateNF="+dateNF+"&flag="+flag+"&obs="+obs+"&hostname="+hostname+"&cpu="+cpu+"&memoria="+memoria+"&hd="+hd+"&tempoUso="+tempoUso+"&valor="+valor+"&user="+user, true);
 	xhttp.send();
 	
 }
@@ -203,9 +271,12 @@ function cadColetor(tipo){
 	var obs = document.getElementById('obs').value;
 	var numNF = document.getElementById('numNF').value;
 	var dateNF = document.getElementById('dateNF').value;
-	var tempoUso = document.getElementById('tempoUso').value;	
+	var tempoUso = document.getElementById('tempoUso').value;
+	var valor = document.getElementById('valor').value;	
 	var user = document.getElementById('user').value;
 	var value = document.getElementById('flag').checked;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
 	let flag;
 	if(value == true){
 		flag = 'Y';
@@ -250,8 +321,11 @@ function cadColetor(tipo){
 		return false;
 	}
 	
-	
-	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
 	
 	
 	var xhttp = new XMLHttpRequest();
@@ -266,7 +340,7 @@ function cadColetor(tipo){
 			}					
 		}
     };
-	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&sn="+sn+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&partNumber="+partNumber+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&sn="+sn+"&tempoUso="+tempoUso+"&valor="+valor+"&user="+user, true);
 	xhttp.send();
 }
 
@@ -278,6 +352,7 @@ function cadCelular(tipo){
 	var capinha = document.getElementById('capinha').value;
 	var imei = document.getElementById('imei').value;
 	var stat = document.getElementById('status').value;
+	var valor = document.getElementById('valor').value;
 	var obs = document.getElementById('obs').value;
 	var numNF = document.getElementById('numNF').value;
 	var dateNF = document.getElementById('dateNF').value;
@@ -285,6 +360,8 @@ function cadCelular(tipo){
 	var user = document.getElementById('user').value;
 	var value = document.getElementById('flag').checked;
 	let flag;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
 	if(value == true){
 		flag = 'Y';
 	}else{
@@ -328,6 +405,12 @@ function cadCelular(tipo){
 		return false;
 	}
 	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
+	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -340,7 +423,7 @@ function cadCelular(tipo){
 			}					
 		}
     };
-	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&capinha="+capinha+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&imei="+imei+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&capinha="+capinha+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&imei="+imei+"&tempoUso="+tempoUso+"&valor="+valor+"&user="+user, true);
 	xhttp.send();
 }
 
@@ -351,6 +434,7 @@ function cadImpressora(tipo){
 	var modelo = document.getElementById('modelo').value;
 	var cartucho = document.getElementById('cartucho').value;
 	var ip = document.getElementById('ip').value;
+	var valor = document.getElementById('valor').value;
 	var local = document.getElementById('local').value;
 	var stat = document.getElementById('status').value;
 	var obs = document.getElementById('obs').value;
@@ -360,6 +444,8 @@ function cadImpressora(tipo){
 	var user = document.getElementById('user').value;
 	var value = document.getElementById('flag').checked;
 	let flag;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
 	if(value == true){
 		flag = 'Y';
 	}else{
@@ -408,6 +494,12 @@ function cadImpressora(tipo){
 		return false;
 	}
 	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
+	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -420,7 +512,7 @@ function cadImpressora(tipo){
 			}					
 		}
     };
-	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&cartucho="+cartucho+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&ip="+ip+"&local="+local+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&cartucho="+cartucho+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&ip="+ip+"&local="+local+"&tempoUso="+tempoUso+"&valor="+valor+"&user="+user, true);
 	xhttp.send();
 }
 
@@ -433,22 +525,67 @@ function cadProjetor(tipo){
 	var local = document.getElementById('local').value;
 	var stat = document.getElementById('status').value;
 	var obs = document.getElementById('obs').value;
+	var valor = document.getElementById('valor').value;
 	var numNF = document.getElementById('numNF').value;
 	var dateNF = document.getElementById('dateNF').value;
 	var tempoUso = document.getElementById('tempoUso').value;	
 	var user = document.getElementById('user').value;
 	var value = document.getElementById('flag').checked;
 	let flag;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
 	if(value == true){
 		flag = 'Y';
 	}else{
 		flag = 'N';
 	}
+	
+	if(patrimonio == "" || patrimonio == null){
+		alert("PREENCHA O NÚMERO DO PATRIMÔNIO");
+		document.getElementById('patrimonio').focus();
+		return false;
+	}
+	
+	if(marca == "" || marca == null){
+		alert("PREENCHA UMA MARCA");
+		document.getElementById('marca').focus();
+		return false;
+	}
+	
+	if(modelo == "" || modelo == null){
+		alert("PREENCHA UM MODELO");
+		document.getElementById('modelo').focus();
+		return false;
+	}
+	
+	if(sn == "" || sn == null){
+		alert("PREENCHA O SN");
+		document.getElementById('sn').focus();
+		return false;
+	}
+	
+	if(local == "" || local == null){
+		alert("PREENCHA O LOCAL");
+		document.getElementById('local').focus();
+		return false;
+	}
+	
+	if(stat == "" || stat == null){
+		alert("SELECIONE UM STATUS");
+		document.getElementById('status').focus();
+		return false;
+	}
+	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
 		
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			//alert(this.responseText);
+			alert(this.responseText);
 			if(this.responseText == "1"){
 				alert("CADASTRADO COM SUCESSO");
 				location.reload();
@@ -457,7 +594,7 @@ function cadProjetor(tipo){
 			}					
 		}
     };
-	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&sn="+sn+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&local="+local+"&tempoUso="+tempoUso+"&user="+user, true);
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&sn="+sn+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&local="+local+"&tempoUso="+tempoUso+"&valor="+valor+"&user="+user, true);
 	xhttp.send();
 }
 
@@ -466,15 +603,20 @@ function cadProjetor(tipo){
 function autoComplete(str){
 	
 	var tipo = document.getElementById('tipo').value;
-	var tempoUso = document.getElementById('tempoUso');
-	var marca = document.getElementById('marca');
-	var modelo = document.getElementById('modelo');
 	var patrimonio = document.getElementById('patrimonio');
 	var stat = document.getElementById('status');
-	var numNF = document.getElementById('numNF');
-	var dateNF = document.getElementById('dateNF');
+	var valor = document.getElementById('valor');
 	var obs = document.getElementById('obs');
-	
+	if(tipo != "LINHAS MOVEIS"){
+		var tempoUso = document.getElementById('tempoUso');
+		var marca = document.getElementById('marca');
+		var modelo = document.getElementById('modelo');
+		var numNF = document.getElementById('numNF');
+		var dateNF = document.getElementById('dateNF');
+	}else{
+		var plano = document.getElementById('plano');
+	}
+			
 	if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
 		var hostname = document.getElementById('hostname');
 		var cpu = document.getElementById('cpu');
@@ -508,14 +650,21 @@ function autoComplete(str){
 	var busca = document.getElementById('busca').value;
 			
 	if(busca != ""){
-		marca.value = 'Carregando...';
-		modelo.value = 'Carregando...';
 		patrimonio.value = 'Carregando...';
 		stat.value = 'Carregando...';
-		numNF.value = 'Carregando...';
-		dateNF.value = 'Carregando...';
 		obs.value = 'Carregando...';
-		tempoUso.value = 'Carregando...';
+		valor.value = 'Carregando...';
+		
+		if(tipo != "LINHAS MOVEIS"){
+			marca.value = 'Carregando...';
+			modelo.value = 'Carregando...';
+			numNF.value = 'Carregando...';
+			dateNF.value = 'Carregando...';
+			tempoUso.value = 'Carregando...';
+		}else{
+			plano.value = 'Carregando...';
+		}
+			
 		
 		if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
 			hostname.value = 'Carregando...';
@@ -553,14 +702,20 @@ function autoComplete(str){
 			//alert(this.responseText);		
 			var json = JSON.parse(this.responseText);
 			if(json.tipo == undefined){
-				marca.value = "";
-				modelo.value = "";
 				patrimonio.value = "";
 				stat.value = "";
-				numNF.value = "";
-				dateNF.value = "";
 				obs.value = "";
-				tempoUso.value = "";
+				valor.value = "";
+				
+				if(tipo != "LINHAS MOVEIS"){
+					marca.value = "";
+					modelo.value = "";
+					numNF.value = "";
+					dateNF.value = "";
+					tempoUso.value = "";
+				}else{
+					plano.value = "";
+				}
 		
 				if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
 					hostname.value = "";
@@ -592,15 +747,21 @@ function autoComplete(str){
 				}
 			}else{
 				
-				marca.value = json.marca;
-				modelo.value = json.modelo;
+				
 				patrimonio.value = json.patrimonio;
 				document.getElementById(json.stat.toUpperCase()).selected = true;
-
-				numNF.value = json.numNF;
-				dateNF.value = json.dateNF;
 				obs.value = json.obs;
-				tempoUso.value = json.tempoUso;
+				valor.value = json.valor;
+
+				if(tipo != "LINHAS MOVEIS"){
+					marca.value = json.marca;
+					modelo.value = json.modelo;
+					numNF.value = json.numNF;
+					dateNF.value = json.dateNF;
+					tempoUso.value = json.tempoUso;
+				}else{
+					plano.value = json.plano;
+				}
 				
 				if(tipo == "DESKTOP" || tipo == "AIO" || tipo == "NOTEBOOK"){
 					hostname.value = json.hostname;

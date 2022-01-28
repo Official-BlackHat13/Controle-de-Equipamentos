@@ -50,7 +50,7 @@ function tipoCelular($con, $tipo){
 			
 			<div class="row justify-content-around align-self-center">	
 				<div class="form-group col-md-4">
-				  <label class="label" for="capinha"><b>Capinha / Película:</b> <b class="obrigado">*</b> </label>
+				  <label class="label" for="capinha"><b>Capinha / Película:</b></label>
 				  <select class="form-control" id="capinha">
 					 <option value=""> -- Selecione a Opção -- </option>
 					 <option id="OK" value="OK">OK</option>

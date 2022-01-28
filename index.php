@@ -76,7 +76,7 @@ include('../controle.php');
 			</div>
 		</div>
 	</div>
-	<?php }elseif($id_usuario == 158106 ){ ?>
+	<?php }elseif($id_usuario == 158058 ){ ?>
 		<div class="col-md-12 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(6);">
@@ -85,7 +85,7 @@ include('../controle.php');
 				</button>
 			</div>
 		</div>
-	<?php }elseif($id_usuario == 158054 || $id_usuario == 158137  ){ ?>
+	<?php }elseif($perfil == "DP" || $perfil == "DP_ASSIST"){ //158151  ?>
 		<div class="col-md-12 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(5);">

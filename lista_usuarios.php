@@ -19,7 +19,7 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 
 	<div class="container">
 		<div class="row justify-content-center align-self-center" id="title">
-			<?php if($id_usuario == 158106 || $perfil == "TI_INFRA"){ ?>
+			<?php if($id_usuario == 158058 || $perfil == "TI_INFRA"){ ?>
 				<div class="col-md-1 text-left">
 					<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="inicio();"></i>
 					<p class='voltar'>VOLTAR</p>

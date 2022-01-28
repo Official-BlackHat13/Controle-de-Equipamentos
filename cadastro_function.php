@@ -504,8 +504,11 @@ if($action == "pesquisa"){
 						</th>
 					</tr>
 					<tr>
-						<th>CÓDIGO</th>
-						<th>TIPO</th>";
+						<th>CÓDIGO</th>";
+					if($hostname){
+						echo "<th>HOSTNAME</th>";
+					}		
+				  echo "<th>TIPO</th>";
 						if($tipo != "LINHAS MOVEIS"){
 							echo "<th>MARCA</th>
 							      <th>MODELO</th>";
@@ -540,8 +543,11 @@ if($action == "pesquisa"){
 				</thead>
 				<tbody>
 					<tr>
-						<td>".$codigo."</td>
-						<td>".utf8_encode($tipo)."</td>";
+						<td>".$codigo."</td>";
+					if($hostname){
+						echo "<td>".$hostname."</td>";
+					}
+					echo "<td>".utf8_encode($tipo)."</td>";
 				if($tipo != "LINHAS MOVEIS"){
 					echo "<td>".utf8_encode($marca)."</td>
 						  <td>".utf8_encode($modelo)."</td>";
@@ -937,9 +943,7 @@ if($action == "lista"){
 if($action == "search"){
 	$patrimonio = $_REQUEST['patrimonio'];
 	
-	$sql = mysqli_query($con,"SELECT 
-									*
-								FROM
+	$sql = mysqli_query($con,"SELECT * FROM
 									equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
 									on a.patrimonio = b.patrimonio inner join
 									equipamentos.colaborador c
@@ -1051,7 +1055,15 @@ if($action == "desvincular"){
 	$delete = mysqli_query($con,"DELETE FROM `equipamentos`.`equipamentos_usuario` WHERE `patrimonio`='".$patrimonio."' and matricula = '".$matricula."'")or die(mysqli_error($con));
 	
 	if($delete){
-		$update = mysqli_query($con,"UPDATE `equipamentos`.`equipamentos` SET `status`='".$status."' WHERE `patrimonio`='".$patrimonio."'")or die(mysqli_error($con));
+		
+		$select = mysqli_query($con,"select count(*) linhas from equipamentos.equipamentos_usuario where patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+		$result = mysqli_fetch_array($select);
+		extract($result);
+		if($linhas == 0){
+			$update = mysqli_query($con,"update equipamentos.equipamentos 
+											set status = '".$status."'
+											where patrimonio = '".$patrimonio."'")or die(mysqli_error($con));
+		}
 		echo "1";
 	}else{
 		echo "0";
@@ -1078,7 +1090,7 @@ if($action == "todos"){
 				<th>FUNÇÃO</th>
 				<th>GESTOR</th>
 				<th>TERCEIRO</th>";
-				if($perfil == 'TI' && $id_user != 158106){
+				if($perfil == 'TI' && $id_user != 158058){
 					echo "<th>REMOVER</th>";
 				}
 		echo "</tr>
@@ -1102,7 +1114,7 @@ if($action == "todos"){
 		}else{
 			echo "<td>NÃO</td>";
 		}
-		if($perfil == 'TI' && $id_user != 158106){		
+		if($perfil == 'TI' && $id_user != 158058){		
 			    echo "<td>
 						<button class='btn btn-danger' onclick='excluir(".$id.");'>
 							<i class='fa fa-trash' aria-hidden='true'></i>
@@ -1145,7 +1157,7 @@ if($action == "filtrar"){
 				<th>FUNÇÃO</th>
 				<th>GESTOR</th>
 				<th>TERCEIRO</th>";
-				if($perfil == "TI" && $id_user != 158106){
+				if($perfil == "TI" && $id_user != 158058){
 					echo "<th>REMOVER</th>";
 				}
 		echo "</tr>
@@ -1169,7 +1181,7 @@ if($action == "filtrar"){
 		}else{
 			echo "<td>NÃO</td>";
 		}	
-		if($perfil == "TI" && $id_user != 158106){
+		if($perfil == "TI" && $id_user != 158058){
 			 echo "<td>
 						<button class='btn btn-danger' onclick='excluir(".$id.");'>
 							<i class='fa fa-trash' aria-hidden='true'></i>

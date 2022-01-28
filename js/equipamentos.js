@@ -379,14 +379,7 @@ function cadCelular(tipo){
 		document.getElementById('modelo').focus();
 		return false;
 	}
-	
-				
-	if(capinha == "" || capinha == null){
-		alert("SELECIONE UMA OPÇÃO");
-		document.getElementById('capinha').focus();
-		return false;
-	}
-	
+		
 	if(imei == "" || imei == null){
 		alert("PREENCHA O NÚMERO DO IMEI");
 		document.getElementById('imei').focus();

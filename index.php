@@ -22,7 +22,7 @@ include('../controle.php');
 	</div><br><br>
 
 	<div class="row justify-content-around align-self-center">
-		<?php if($id_usuario == 158036 || $id_usuario == 107 || $id_usuario == 196  || $perfil == "TI_INFRA"){ ?>
+		<?php if($perfil == "COORDENAÇÃO_TI" || $perfil == "TI_DESENV" || $perfil == "TI_INFRA"){ ?>
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(1);">
@@ -34,7 +34,7 @@ include('../controle.php');
 		
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
-				<?php if($perfil == "TI"){ ?>
+				<?php if($perfil == "TI_DESENV" || $perfil == "COORDENAÇÃO_TI"){ ?>
 				<button onclick="redireciona(2);">
 					<i class="fa fa-users fa-2x"></i><br><br>
 					COLABORADORES
@@ -75,8 +75,39 @@ include('../controle.php');
 				</button>
 			</div>
 		</div>
+	
+		
+		<?php if($perfil == "TI_DESENV"){ ?>
+			<div class="col-md-3 text-center">
+				<div class="btn-group">
+					<button onclick="redireciona(7);">
+						<i class="fa fa-cart-arrow-down fa-2x"></i><br><br>
+						SOLICITAR EQUIPAMENTO
+					</button>
+				</div>
+			</div>
+		
+			<div class="col-md-3 text-center">
+				<div class="btn-group">
+					<button onclick="redireciona(8);">
+						<i class="fa fa-list-alt fa-2x"></i><br><br>
+						LISTA DE SOLICITAÇÕES
+					</button>
+				</div>
+			</div>
+			<!--
+			<div class="col-md-3 text-center">
+				<div class="btn-group">
+					<button onclick="redireciona(8);">
+						<i class="fa fa-eye fa-2x"></i><br><br>
+						VISUALIZAR CADASTRO TESTE
+					</button>
+				</div>
+			</div>
+			-->
+		<?php } ?>
 	</div>
-	<?php }elseif($id_usuario == 158058 ){ ?>
+	<?php }elseif($perfil == "TI_SISTEMAS" ){ ?>
 		<div class="col-md-12 text-center">
 			<div class="btn-group">
 				<button onclick="redireciona(6);">
@@ -100,7 +131,7 @@ include('../controle.php');
 				<div class='btn-group'>
 					<div class='alert alert-warning'>
 						
-						<h1><i class='fa fa-exclamation-triangle'></i> Você não tem acesso a essa tela</h1>
+						<h1><i class='fa fa-exclamation-triangle'></i> Você não tem acesso a essa tela!!!!!</h1>
 					</div>
 				</div>
 			</div>";

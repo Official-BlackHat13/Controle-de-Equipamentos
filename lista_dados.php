@@ -28,9 +28,15 @@ $action = $_REQUEST['action'];
 		</div>
 		<br>
 		<div class="row justify-content-center align-self-center">
-			<?php  if($perfil == "TI" || $perfil == "TI_INFRA"){ ?>
+			<?php  if($perfil == "COORDENAÇÃO_TI" || $perfil == "TI" || $perfil == "TI_INFRA"){ ?>
 			<div class="col-md-2">
-				<input type="text" class="form-control" id="hostname" value="" placeholder="Digite o hostname" />
+				<form autocomplete="off" >
+				  <div class="autocomplete" style="width:200px;">
+					<input class="form-control" id="hostname" type="text" name="hostname" placeholder="Hostname ou IMEI" onkeyup="maiuscula(this);filtrar(this.value);" value="">
+					<input type="hidden" id="chave" name="chave" value="" />
+					<span id="search_result"></span>
+				  </div>
+				</form>
 			</div>
 			<div class="col-md-3 text-center consult">
 				 <select class="form-control" id="id" >
@@ -72,7 +78,7 @@ $action = $_REQUEST['action'];
 													equipamentos.colaborador
 													group by matricula order by nome asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['matricula']."'>".utf8_encode($resMat['nome'])."</option>";
+						echo "<option value='".$resMat['matricula']."'>".$resMat['nome']."</option>";
 					}
 				  ?>
 				  </select>
@@ -94,7 +100,7 @@ $action = $_REQUEST['action'];
 													equipamentos.colaborador
 													group by matricula order by nome asc")or die(mysqli_error($con));
 					while($resMat = mysqli_fetch_array($sqlMat)){
-						echo "<option value='".$resMat['matricula']."'>".utf8_encode($resMat['nome'])."</option>";
+						echo "<option value='".$resMat['matricula']."'>".$resMat['nome']."</option>";
 					}
 				  ?>
 				  </select>
@@ -113,6 +119,6 @@ $action = $_REQUEST['action'];
 		<br>
 		<br>
 	</div>
-
+<script src="js/autocomplete.js"></script>
 </body>
 </html>

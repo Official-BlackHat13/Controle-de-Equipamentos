@@ -3,7 +3,6 @@ function voltar(){
 }
 
 function pesquisa(str){
-	
 	if(str == 1){
 		var user = document.getElementById('user').value;
 		var hostname = document.getElementById('hostname').value;
@@ -21,6 +20,7 @@ function pesquisa(str){
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				//alert(this.responseText);	
+				document.getElementById('hostname').value = '';
 				document.getElementById('lista').innerHTML = this.responseText;
 				
 			}
@@ -42,7 +42,6 @@ function pesquisa(str){
 			if (this.readyState == 4 && this.status == 200) {
 				//alert(this.responseText);	
 				document.getElementById('lista').innerHTML = this.responseText;
-				
 			}
 		};
 		xhttp.open("POST", "cadastro_function.php?action=pesquisa&user="+user+"&str="+str, true);
@@ -100,4 +99,10 @@ function blocks(id){
 			document.getElementById('machine').disabled = false;
 		}
 	}
+}
+
+//Função para deixar a letra maiuscula
+function maiuscula(z){
+    v = z.value.toUpperCase();
+    z.value = v;
 }

@@ -1,6 +1,18 @@
 <?php 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require ("../PHPMailer6/src/Exception.php");
+require ("../PHPMailer6/src/PHPMailer.php");
+require ("../PHPMailer6/src/SMTP.php");
+
 $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipamentos")or die("<h1>FALHA NA CONEXÃO COM BANCO DE DADOS</h1>");
 $action = $_REQUEST['action'];
+
+$paths = 'http://www.eadiaurora.com.br/assinatura.jpg';
+$types = pathinfo($paths, PATHINFO_EXTENSION);
+$datas = file_get_contents($paths);
+$base64 = 'data:image/' . $types . ';base64,' . base64_encode($datas);
 
 //CARREGA A TELA DE CADASTRO APARTIR DO TIPO SELECIONADO
 if($action == "carregar"){
@@ -69,20 +81,20 @@ if($action == "equipamento"){
 		  );
 		break;
 		case "CELULARES":
-		    $marca  = utf8_decode($_REQUEST['marca']);
-		    $modelo = utf8_decode($_REQUEST['modelo']);
-		    $patrimonio = utf8_decode($_REQUEST['patrimonio']);
+		    $marca  = $_REQUEST['marca'];
+		    $modelo = $_REQUEST['modelo'];
+		    $patrimonio = $_REQUEST['patrimonio'];
 			$tempoUso = $_REQUEST['tempoUso'];
 			$valor = $_REQUEST['valor'];
-			$stat = utf8_decode($_REQUEST['stat']);
-			$numNF = utf8_decode($_REQUEST['numNF']);
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
 			if($dateNF != ""){
 				$dateNF = date_format($dateNF, "d/m/Y");
 			}
-			$imei = utf8_decode($_REQUEST['imei']);
-			$capinha = utf8_decode($_REQUEST['capinha']);
-			$obs = utf8_decode($_REQUEST['obs']);
+			$imei = $_REQUEST['imei'];
+			$capinha = $_REQUEST['capinha'];
+			$obs = $_REQUEST['obs'];
 			$flag = $_REQUEST['flag'];
 			cadCelular(
 			  $con, 
@@ -103,20 +115,20 @@ if($action == "equipamento"){
 			);
 		break;
 		case "COLETOR":
-		    $marca  = utf8_decode($_REQUEST['marca']);
-			$modelo = utf8_decode($_REQUEST['modelo']);
-			$partNumber = utf8_decode($_REQUEST['partNumber']);
-			$sn = utf8_decode($_REQUEST['sn']);
-			$patrimonio = utf8_decode($_REQUEST['patrimonio']);
+		    $marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$partNumber = $_REQUEST['partNumber'];
+			$sn = $_REQUEST['sn'];
+			$patrimonio = $_REQUEST['patrimonio'];
 			$tempoUso = $_REQUEST['tempoUso'];
 			$valor = $_REQUEST['valor'];
-			$stat = utf8_decode($_REQUEST['stat']);
-			$numNF = utf8_decode($_REQUEST['numNF']);
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
 			if($dateNF != ""){
 				$dateNF = date_format($dateNF, "d/m/Y");
 			}
-			$obs = utf8_decode($_REQUEST['obs']);
+			$obs = $_REQUEST['obs'];
 			$flag = $_REQUEST['flag'];
 			cadColetor(
 				$con, 
@@ -139,19 +151,19 @@ if($action == "equipamento"){
 		case "DESKTOP":
 		case "NOTEBOOK":
 		case "AIO":
-		    $marca  = utf8_decode($_REQUEST['marca']);
-			$modelo = utf8_decode($_REQUEST['modelo']);
-			$partNumber = utf8_decode($_REQUEST['partNumber']);
-			$patrimonio = utf8_decode($_REQUEST['patrimonio']);
+		    $marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$partNumber = $_REQUEST['partNumber'];
+			$patrimonio = $_REQUEST['patrimonio'];
 			$tempoUso = $_REQUEST['tempoUso'];
 			$valor = $_REQUEST['valor'];
-			$stat = utf8_decode($_REQUEST['stat']);
-			$numNF = utf8_decode($_REQUEST['numNF']);
-			$obs = utf8_decode($_REQUEST['obs']);
-			$hostname = utf8_decode($_REQUEST['hostname']);
-			$cpu = utf8_decode($_REQUEST['cpu']);
-			$memoria = utf8_decode($_REQUEST['memoria']);
-			$hd = utf8_decode($_REQUEST['hd']);
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
+			$obs = $_REQUEST['obs'];
+			$hostname = $_REQUEST['hostname'];
+			$cpu = $_REQUEST['cpu'];
+			$memoria = $_REQUEST['memoria'];
+			$hd = $_REQUEST['hd'];
 			$flag = $_REQUEST['flag'];
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
 			if($dateNF != ""){
@@ -179,17 +191,17 @@ if($action == "equipamento"){
 			);
 		break; 
 		case "IMPRESSORA":
-			$marca  = utf8_decode($_REQUEST['marca']);
-			$modelo = utf8_decode($_REQUEST['modelo']);
-			$patrimonio = utf8_decode($_REQUEST['patrimonio']);
+			$marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$patrimonio = $_REQUEST['patrimonio'];
 			$tempoUso = $_REQUEST['tempoUso'];
-			$stat = utf8_decode($_REQUEST['stat']);
-			$numNF = utf8_decode($_REQUEST['numNF']);
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
 			$valor = $_REQUEST['valor'];
-			$obs = utf8_decode($_REQUEST['obs']);
-			$ip = utf8_decode($_REQUEST['ip']);
-			$cartucho = utf8_decode($_REQUEST['cartucho']);
-			$local = utf8_decode($_REQUEST['local']);
+			$obs = $_REQUEST['obs'];
+			$ip = $_REQUEST['ip'];
+			$cartucho = $_REQUEST['cartucho'];
+			$local = $_REQUEST['local'];
 			$flag = $_REQUEST['flag'];
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
 			if($dateNF != ""){
@@ -218,7 +230,7 @@ if($action == "equipamento"){
 		   $patrimonio = $_REQUEST['patrimonio'];
 		   $stat = $_REQUEST['stat'];
 		   $valor = $_REQUEST['valor'];
-		   $plano = utf8_decode($_REQUEST['plano']);
+		   $plano = $_REQUEST['plano'];
 		   $obs = $_REQUEST['obs'];
 		   $flag = $_REQUEST['flag'];
 		   $tipo = $_REQUEST['tipo'];
@@ -238,20 +250,49 @@ if($action == "equipamento"){
 		  cadModem($con, $tipo);
 		break;
 		case "MONITOR":
-		  cadMonitor($con, $tipo);
+		   $marca  = $_REQUEST['marca'];
+		   $modelo = $_REQUEST['modelo'];
+		   $patrimonio = $_REQUEST['patrimonio'];
+		   $tempoUso = $_REQUEST['tempoUso'];
+		   $obs = $_REQUEST['obs'];
+		   $numNF = $_REQUEST['numNF'];
+		   $valor = $_REQUEST['valor'];
+		   $stat = $_REQUEST['stat'];
+		   $sn = $_REQUEST['sn'];
+		   $flag = $_REQUEST['flag'];
+		   $dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
+			if($dateNF != ""){
+				$dateNF = date_format($dateNF, "d/m/Y");
+			}
+		   cadMonitor(
+				$con, 
+				$tipo,
+				$marca,
+				$modelo,
+				$patrimonio,
+				$tempoUso,
+				$obs,
+				$numNF,
+				$valor,
+				$stat,
+				$sn,
+				$flag,
+				$dateNF,
+				$user
+			);
 		break;
 		case "PROJETOR":
 		case "SCANNER":
-			$marca  = utf8_decode($_REQUEST['marca']);
-			$modelo = utf8_decode($_REQUEST['modelo']);
-			$patrimonio = utf8_decode($_REQUEST['patrimonio']);
+			$marca  = $_REQUEST['marca'];
+			$modelo = $_REQUEST['modelo'];
+			$patrimonio = $_REQUEST['patrimonio'];
 			$tempoUso = $_REQUEST['tempoUso'];
-			$stat = utf8_decode($_REQUEST['stat']);
-			$numNF = utf8_decode($_REQUEST['numNF']);
+			$stat = $_REQUEST['stat'];
+			$numNF = $_REQUEST['numNF'];
 			$valor = $_REQUEST['valor'];
-			$obs = utf8_decode($_REQUEST['obs']);
-			$local = utf8_decode($_REQUEST['local']);
-			$sn = utf8_decode($_REQUEST['sn']);
+			$obs = $_REQUEST['obs'];
+			$local = $_REQUEST['local'];
+			$sn = $_REQUEST['sn'];
 			$flag = $_REQUEST['flag'];
 			$dateNF = ($_REQUEST['dateNF'] != "") ? date_create($_REQUEST['dateNF']) : "";
 			if($dateNF != ""){
@@ -293,11 +334,11 @@ if($action == "equipamento"){
 // CADASTRO DE COLABORADORES
 if($action == "usuario"){
 	$matricula = trim($_REQUEST['matricula']);
-	$nome = utf8_decode($_REQUEST['nome']);
-	$cpf = utf8_decode($_REQUEST['cpf']);
-	$setor = utf8_decode($_REQUEST['setor']);
-	$funcao = utf8_decode($_REQUEST['funcao']);
-	$gestor = utf8_decode($_REQUEST['gestor']);
+	$nome = $_REQUEST['nome'];
+	$cpf = $_REQUEST['cpf'];
+	$setor = $_REQUEST['setor'];
+	$funcao = $_REQUEST['funcao'];
+	$gestor = $_REQUEST['gestor'];
 	$flag = $_REQUEST['flag'];
 	$generic = $_REQUEST['generic'];
 	$user = $_REQUEST['user'];
@@ -436,7 +477,7 @@ if($action == "pesquisa"){
 		}elseif(!$user && $id && !$machine && !$hostname){
 			$where1 = "a.patrimonio = '".$id."'";
 		}elseif(!$user && !$id && !$machine && $hostname){
-			$where1 = "a.hostname = '".$hostname."'";
+			$where1 = "(a.hostname like '%".$hostname."%' or a.imei like '%".$hostname."%')";
 		}else{
 			$where1 = "a.tipo = '".$machine."'";	
 		}
@@ -547,10 +588,10 @@ if($action == "pesquisa"){
 					if($hostname){
 						echo "<td>".$hostname."</td>";
 					}
-					echo "<td>".utf8_encode($tipo)."</td>";
+					echo "<td>".$tipo."</td>";
 				if($tipo != "LINHAS MOVEIS"){
-					echo "<td>".utf8_encode($marca)."</td>
-						  <td>".utf8_encode($modelo)."</td>";
+					echo "<td>".$marca."</td>
+						  <td>".$modelo."</td>";
 				}		
 				   
 						
@@ -569,14 +610,14 @@ if($action == "pesquisa"){
 				
 				if($tipo != "LINHAS MOVEIS"){
 				    echo "<td>".$patrimonio."</td>
-						<td>".utf8_encode($status)."</td>
+						<td>".$status."</td>
 						<td>".$nf_compra."</td>
 						<td>".$data_nf."</td>";
 				}else{
 					echo "<td>".$patrimonio."</td>
-						  <td>".utf8_encode($status)."</td>
+						  <td>".$status."</td>
 						  <td>".$valor."</td>
-						  <td>".utf8_encode($plano)."</td>";
+						  <td>".$plano."</td>";
 				}
 				
 				echo "</tr>
@@ -600,10 +641,10 @@ if($action == "pesquisa"){
 				<tbody>
 					<tr>
 						<td>".$matricula."</td>
-						<td>".utf8_encode($nome)."</td>
-						<td>".utf8_encode($setor)."</td>
-						<td>".utf8_encode($funcao)."</td>
-						<td>".utf8_encode($gestor)."</td>
+						<td>".$nome."</td>
+						<td>".$setor."</td>
+						<td>".$funcao."</td>
+						<td>".$gestor."</td>
 					</tr>
 				</tbody>
 			</table><hr style='border-color: orange; border: 5px solid orange;'>
@@ -704,7 +745,7 @@ if($action == "exportar"){
 									  ";	
 	$tabela = "<table border='1' width='100%' >";	
 	$tabela .= "<tr>";
-	$tabela .= '<th colspan="22" style="background: #606060; color: white; text-align: center; height: 80px;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
+	$tabela .= '<th colspan="23" style="background: #606060; color: white; text-align: center; height: 80px;">INFORMAÇÕES DO EQUIPAMENTO</tr>';
 	$tabela .= '</tr>';
 	$tabela .= "<tr>";
 	$tabela .= '<td style="background: #606060; color: white; text-align: center;"><b>CÓDIGO</b></td>';
@@ -762,15 +803,15 @@ if($action == "exportar"){
 				
 			$tabela .= '<tr>';
 			$tabela .= '<td class="value">'.$codigo.'</td>';
-			$tabela .= '<td class="value">'.utf8_encode($tipo).'</td>';
-			$tabela .= '<td class="value">'.utf8_encode($marca).'</td>';
-			$tabela .= '<td class="value">'.utf8_encode($modelo).'</td>';
+			$tabela .= '<td class="value">'.$tipo.'</td>';
+			$tabela .= '<td class="value">'.$marca.'</td>';
+			$tabela .= '<td class="value">'.$modelo.'</td>';
 		
 			if($tipo == "NOTEBOOK" || $tipo == "DESKTOP" || $tipo == "AIO"){
-				  $tabela .= '<td class="value">'.utf8_encode($hostname).'</td>';				
-				  $tabela .= '<td class="value">'.utf8_encode($memoria).'</td>';				
-				  $tabela .= '<td class="value">'.utf8_encode($cpu).'</td>';				
-				  $tabela .= '<td class="value">'.utf8_encode($hd).'</td>';				
+				  $tabela .= '<td class="value">'.$hostname.'</td>';				
+				  $tabela .= '<td class="value">'.$memoria.'</td>';				
+				  $tabela .= '<td class="value">'.$cpu.'</td>';				
+				  $tabela .= '<td class="value">'.$hd.'</td>';				
 				  $tabela .= '<td class="value">'.$part_number.'</td>';
 				}elseif($tipo == "COLETOR"){
 					$tabela .= '<td class="value">'.$service_tag.'</td>';
@@ -786,7 +827,7 @@ if($action == "exportar"){
 					$tabela .= '<td class="value">'.$capinha.'</td>';
 					$tabela .= '<td class="value">'.$imei.'</td>';
 				}elseif($tipo == "LINHAS MOVEIS"){
-					$tabela .= '<td class="value">'.utf8_encode($plano).'</td></td>';
+					$tabela .= '<td class="value">'.$plano.'</td></td>';
 				}	
 			
 			$tabela .= '<td class="value">'.$patrimonio.'</td>';
@@ -795,10 +836,10 @@ if($action == "exportar"){
 			$tabela .= '<td class="value">'.$nf_compra.'</td>';
 			$tabela .= '<td class="value">'.$data_nf.'</td>';
 			$tabela .= '<td colspan="2" class="value">'.$matricula.'</td>';
-			$tabela .= '<td colspan="2" class="value">'.utf8_encode($nome).'</td>';
-			$tabela .= '<td colspan="2" class="value">'.utf8_encode($setor).'</td>';
-			$tabela .= '<td colspan="2" class="value">'.utf8_encode($funcao).'</td>';
-			$tabela .= '<td colspan="1" class="value">'.utf8_encode($gestor).'</td>';
+			$tabela .= '<td colspan="2" class="value">'.$nome.'</td>';
+			$tabela .= '<td colspan="2" class="value">'.$setor.'</td>';
+			$tabela .= '<td colspan="2" class="value">'.$funcao.'</td>';
+			$tabela .= '<td colspan="1" class="value">'.$gestor.'</td>';
 			$tabela .= '</tr>';
 					
 		}
@@ -861,29 +902,29 @@ if($action == "lista"){
 		if(mysqli_num_rows($sql)){
 			while($dados = mysqli_fetch_object($sql)){
 				$arr['tipo'] = $dados->tipo; 
-				$arr['marca'] = utf8_encode($dados->marca); 
-				$arr['modelo'] = utf8_encode($dados->modelo); 
-				$arr['partNumber'] = utf8_encode($dados->part_number); 
-				$arr['serviceTag'] = utf8_encode($dados->service_tag); 
-				$arr['patrimonio'] = utf8_encode($dados->patrimonio); 
-				$arr['stat'] = utf8_encode($dados->status); 
-				$arr['numNF'] = utf8_encode($dados->nf_compra); 
+				$arr['marca'] = $dados->marca; 
+				$arr['modelo'] = $dados->modelo; 
+				$arr['partNumber'] = $dados->part_number; 
+				$arr['serviceTag'] = $dados->service_tag; 
+				$arr['patrimonio'] = $dados->patrimonio; 
+				$arr['stat'] = $dados->status; 
+				$arr['numNF'] = $dados->nf_compra; 
 				$arr['dateNF'] = $dados->data_nf; 
-				$arr['obs'] = utf8_encode($dados->obs); 
+				$arr['obs'] = $dados->obs; 
 				$arr['flag'] = $dados->flag; 
 				$arr['valor'] = $dados->valor; 
 				$arr['tempoUso'] = $dados->tempo_uso; 
-				$arr['cpu'] = utf8_encode($dados->cpu); 
-				$arr['memoria'] = utf8_encode($dados->memoria); 
-				$arr['hd'] = utf8_encode($dados->hd); 
-				$arr['hostname'] = utf8_encode($dados->hostname); 
-				$arr['imei'] = utf8_encode($dados->imei); 
-				$arr['capinha'] = utf8_encode($dados->capinha); 
-				$arr['local'] = utf8_encode($dados->local); 
-				$arr['plano'] = utf8_encode($dados->plano); 
-				$arr['ip'] = utf8_encode($dados->ip); 
-				$arr['vinculo'] = utf8_encode($dados->vinculo); 
-				$arr['cartucho'] = utf8_encode($dados->cartucho); 
+				$arr['cpu'] = $dados->cpu; 
+				$arr['memoria'] = $dados->memoria; 
+				$arr['hd'] = $dados->hd; 
+				$arr['hostname'] = $dados->hostname; 
+				$arr['imei'] = $dados->imei; 
+				$arr['capinha'] = $dados->capinha; 
+				$arr['local'] = $dados->local; 
+				$arr['plano'] = $dados->plano; 
+				$arr['ip'] = $dados->ip; 
+				$arr['vinculo'] = $dados->vinculo; 
+				$arr['cartucho'] = $dados->cartucho; 
 					
 			}
 		}else{
@@ -896,21 +937,9 @@ if($action == "lista"){
 		$sql = mysqli_query($con,"SELECT 
 									matricula,
 									cpf,
-									REPLACE(nome,'ã','a') nome,
-									REPLACE(REPLACE(REPLACE(REPLACE(setor, 'ç', 'c'),
-											'ã',
-											'a'),
-										'é',
-										'e'),
-									'á',
-									'a') setor,
-							   REPLACE(REPLACE(REPLACE(REPLACE(funcao, 'Ç', 'C'),
-											'Ã',
-											'A'),
-										'Õ',
-										'O'),
-									'É',
-									'E') funcao,
+									nome,
+									setor,
+							        funcao,
 									terceiro,
 									generico,
 									gestor
@@ -921,13 +950,13 @@ if($action == "lista"){
 			while($dados = mysqli_fetch_object($sql)){
 				
 				$arr['matricula'] = $dados->matricula; 
-				$arr['nome'] = utf8_encode($dados->nome); 
-				$arr['cpf'] = utf8_encode($dados->cpf); 
-				$arr['setor'] = utf8_encode($dados->setor); 
-				$arr['funcao'] = utf8_encode($dados->funcao); 
+				$arr['nome'] = $dados->nome; 
+				$arr['cpf'] = $dados->cpf; 
+				$arr['setor'] = $dados->setor; 
+				$arr['funcao'] = $dados->funcao; 
 				$arr['terceiro'] = $dados->terceiro; 
 				$arr['generico'] = $dados->generico; 
-				$arr['gestor'] = utf8_encode($dados->gestor); 
+				$arr['gestor'] = $dados->gestor; 
 			}
 		}else{
 			$arr[] = '';
@@ -982,15 +1011,15 @@ if($action == "search"){
 			echo "<input type='hidden' id='rg_".$id."' value='".$matricula."' />";
 			echo "<tbody>
 				<tr>
-					<td>".utf8_encode($patrimonio)."</td>
+					<td>".$patrimonio."</td>
 					<td>".$tipo."</td>
-					<td>".utf8_encode($marca)."</td>
-					<td>".utf8_encode($modelo)."</td>
-					<td>".utf8_encode($part_number)."</td>
+					<td>".$marca."</td>
+					<td>".$modelo."</td>
+					<td>".$part_number."</td>
 					<td>".$matricula."</td>
-					<td>".utf8_encode($nome)."</td>
-					<td>".utf8_encode($setor)."</td>
-					<td>".utf8_encode($gestor)."</td>
+					<td>".$nome."</td>
+					<td>".$setor."</td>
+					<td>".$gestor."</td>
 					<td>
 					    <select class='form-control' id='status_$id' style='width: 100%'>
 							<option value=''>".strtoupper($status)."</option>
@@ -1075,7 +1104,10 @@ if($action == "todos"){
 	$perfil = $_REQUEST['perfil'];
 	$id_user = $_REQUEST['id_user'];
 	
-	$sql = mysqli_query($con,"select * from equipamentos.colaborador")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"select 
+								*,
+								(SELECT nome FROM equipamentos.gestores where usuario = a.gestor) gestor_c
+							  from equipamentos.colaborador a")or die(mysqli_error($con));
 	
 	$linhas = mysqli_num_rows($sql);
 	echo "<center><button class='total'>Total de Funcionários: ".$linhas."</button></center>";
@@ -1104,11 +1136,11 @@ if($action == "todos"){
 		echo "<tbody class='td'>
 			<tr>
 				<td>".$matricula."</td>
-				<td>".utf8_encode($nome)."</td>
-				<td>".utf8_encode($cpf)."</td>
-				<td>".utf8_encode($setor)."</td>
-				<td>".utf8_encode($funcao)."</td>
-				<td>".utf8_encode($gestor)."</td>";
+				<td>".$nome."</td>
+				<td>".$cpf."</td>
+				<td>".$setor."</td>
+				<td>".$funcao."</td>
+				<td>".$gestor_c."</td>";
 		if($terceiro == 'Y'){
 			echo "<td>SIM</td>";
 		}else{
@@ -1135,14 +1167,17 @@ if($action == "filtrar"){
 	$busca = $_REQUEST['busca'];
 	$perfil = $_REQUEST['perfil'];
 	$id_user = $_REQUEST['id_user'];
-	$setores = utf8_decode($_REQUEST['setor']);
+	$setores = $_REQUEST['setor'];
 	if($setores){
-	   $where = "and setor = '$setores'";
+	   $where = "and a.setor = '$setores'";
 	}else{
 		$where = "";
 	}
 	
-	$sql = mysqli_query($con,"select * from equipamentos.colaborador where (matricula like '%$busca%' or nome like '%$busca%' or funcao like '%$busca%' or gestor like '%$busca%' or cpf like '%$busca%') $where")or die(mysqli_error($con));
+		$sql = mysqli_query($con,"select 
+								*,
+								(SELECT nome FROM equipamentos.gestores where usuario = a.gestor) gestor_c
+							  from equipamentos.colaborador a  where (a.matricula like '%$busca%' or a.nome like '%$busca%' or a.funcao like '%$busca%' or a.gestor like '%$busca%' or a.cpf like '%$busca%') $where")or die(mysqli_error($con));
 	
 	$linhas = mysqli_num_rows($sql);
 	echo "<center><button class='total'>Total de Funcionários: ".$linhas."</button></center>";
@@ -1171,11 +1206,11 @@ if($action == "filtrar"){
 		echo "<tbody class='td'>
 			<tr>
 				<td>".$matricula."</td>
-				<td>".utf8_encode($nome)."</td>
-				<td>".utf8_encode($cpf)."</td>
-				<td>".utf8_encode($setor)."</td>
-				<td>".utf8_encode($funcao)."</td>
-				<td>".utf8_encode($gestor)."</td>";
+				<td>".$nome."</td>
+				<td>".$cpf."</td>
+				<td>".$setor."</td>
+				<td>".$funcao."</td>
+				<td>".$gestor_c."</td>";
 		if($terceiro == 'Y'){
 			echo "<td>SIM</td>";
 		}else{
@@ -1200,9 +1235,9 @@ if($action == "filtrar"){
 // Aqui exporto o relatório dos usuários cadastrado
 if($action == "relatorio"){
 	$busca = $_REQUEST['busca'];
-	$setores = utf8_decode($_REQUEST['setor']);
+	$setores = $_REQUEST['setor'];
 	if($setores){
-	   $where = "and setor = '$setores'";
+	   $where = "and a.setor = '$setores'";
 	}else{
 		$where = "";
 	}
@@ -1210,7 +1245,10 @@ if($action == "relatorio"){
 	// Nome do Arquivo do Excel que será gerado
 	$arquivo = 'ListaDeUsuarios.xls';
 	
-	$sql = mysqli_query($con,"select * from equipamentos.colaborador where (matricula like '%$busca%' or nome like '%$busca%' or funcao like '%$busca%' or gestor like '%$busca%') $where")or die(mysqli_error($con));
+	$sql = mysqli_query($con,"select 
+								*,
+								(SELECT nome FROM equipamentos.gestores where usuario = a.gestor) gestor_c
+							  from equipamentos.colaborador a  where (a.matricula like '%$busca%' or a.nome like '%$busca%' or a.funcao like '%$busca%' or a.gestor like '%$busca%' or a.cpf like '%$busca%') $where")or die(mysqli_error($con));
 	
 	$tabela = "<table border='1' width='100%'>";
 	$tabela .= "<tr>
@@ -1218,7 +1256,7 @@ if($action == "relatorio"){
 				<th style='background: green; color: white; text-align: center; height: 50px;'><b>NOME</b></th>
 				<th style='background: green; color: white; text-align: center; height: 50px;'><b>SETOR</b></th>
 				<th style='background: green; color: white; text-align: center; height: 50px;'><b>FUNÇÃO</b></th>
-				<th style='background: green; color: white; text-align: center; height: 50px;'><b>GERTOR</b></th>
+				<th style='background: green; color: white; text-align: center; height: 50px;'><b>GESTOR</b></th>
 				<th style='background: green; color: white; text-align: center; height: 50px;'><b>TERCEIRO</b></th>
 			</tr>";
 	
@@ -1228,13 +1266,13 @@ if($action == "relatorio"){
 						<td style='background: #F5F5F5; 
 	text-align: center;'>".$matricula."</td>
 						<td style='background: #F5F5F5; 
-	text-align: center;'>".utf8_encode($nome)."</td>
+	text-align: center;'>".$nome."</td>
 						<td style='background: #F5F5F5; 
-	text-align: center;'>".utf8_encode($setor)."</td>
+	text-align: center;'>".$setor."</td>
 						<td style='background: #F5F5F5; 
-	text-align: center;'>".utf8_encode($funcao)."</td>
+	text-align: center;'>".$funcao."</td>
 						<td style='background: #F5F5F5; 
-	text-align: center;''>".utf8_encode($gestor)."</td>";
+	text-align: center;''>".$gestor_c."</td>";
 		if($terceiro == 'Y'){
 			$tabela .= "<td>SIM</td>";
 		}else{
@@ -1284,6 +1322,8 @@ if($action == "selectionTipo"){
 	$equipamentos = mysqli_query($con,"SELECT 
 												a.codigo,
 												a.patrimonio,
+												case when a.imei is null then '' else a.imei end imei,
+												case when a.hostname is null then '' else a.hostname end hostname,
 												a.tipo
 											FROM
 												equipamentos.equipamentos a left join
@@ -1291,6 +1331,7 @@ if($action == "selectionTipo"){
 												on a.patrimonio = b.patrimonio
 											where b.patrimonio is null
 											and a.tipo = '".$valor."'
+											and a.status <> 'DESCARTE'
 											order by tipo asc")or die(mysqli_error($con));
 	while($result = mysqli_fetch_array($equipamentos)){
 		$arr[] = $result;
@@ -1300,6 +1341,31 @@ if($action == "selectionTipo"){
 	
 }
 
+if($action == "pesqList"){
+	$busca = $_REQUEST['busca'];
+	$sql = mysqli_query($con,"SELECT 
+									CASE
+										WHEN hostname IS NULL THEN imei
+										ELSE hostname
+									END lista,
+									patrimonio
+								FROM
+									equipamentos.equipamentos
+								WHERE (hostname like '%$busca%' OR imei like '%$busca%')  and
+								(hostname IS NOT NULL OR imei IS NOT NULL)")or die(mysqli_error($con));
+	
+	$return = array();
+	
+	while($result = mysqli_fetch_array($sql)){
+		$return[] = array(
+			'lista' => $result['lista'],
+			'patrimonio' => $result['patrimonio']
+		);
+	}
+	
+	echo json_encode($return);
+}
+
 if($action == "selection"){
 	$valor = $_REQUEST['valor'];
 	
@@ -1307,6 +1373,177 @@ if($action == "selection"){
 	
 	$result = mysqli_fetch_array($flag);
 	echo $result['flag'];
+}
+
+if($action == "saveOrder"){
+	$usuario = $_REQUEST['usuario'];
+	$equipamentos = $_REQUEST['equipamentos'];
+	$equipamento = explode(",",$equipamentos);
+    $length = count($equipamento);
+	$obs = $_REQUEST['obs'];
+	$solicitante = $_REQUEST['user'];
+	
+	for($i=0; $i < $length; $i++){
+    	$insert = mysqli_query($con,"insert into equipamentos.pedidos 
+											(
+												solicitante,
+												usuario,
+												equipamentos
+											) 
+											values 
+											(
+												'".$solicitante."',
+												'".$usuario."',
+												'".$equipamento[$i]."'
+											)")or die(mysqli_error($con));
+    }
+	
+	if($insert){
+		
+			$nome = "Caroline Vitale";
+			//$email='caroline.silva@eadiaurora.com.br';
+			$email='vinicius.santos@eadiaurora.com.br';
+			$subject = "SOLICITAÇÃO DE EQUIPAMENTOS";
+			$mensagem = "<b>Solicitante:</b> <b style='color: blue;'>".strtoupper($solicitante)."</b><br>";
+			$mensagem .= "<b>Data da Solicitação:</b>&nbsp; <strong style='color: red;'>".date("d/m/Y H:i")."</strong><br>";
+			$mensagem .= "<b>Equipamentos:</b>&nbsp; <strong style='color: blue;'>".str_replace(",",", ",$equipamentos)."</strong><br>";
+			
+			$select = mysqli_query($con,"SELECT  nome FROM equipamentos.colaborador where cpf = '$usuario'")or die(mysqli_error($con));
+			$return = mysqli_fetch_object($select);
+			
+			$mensagem .= "<b>Colaborador:</b>&nbsp; <strong style='color: blue;'>".ucwords(strtolower($return->nome))."</strong><br>";
+			
+			
+			if($obs != ""){
+				$mensagem .= "<b>Observação:</b>&nbsp; <strong style='color: blue;'>".$obs."</strong><br>";
+			}
+			
+			
+			$mensagem .= '<br><br><hr><img src="'.$base64.'" width="479" height="128" alt=""/>';
+			$mensagem .= "<hr>";
+
+			$mail=new PHPMailer(); 
+			$mail->IsSMTP(); 
+			$mail->SMTPAuth=true; 
+			//$mail->SMTPSecure = "ssl";
+			$mail->Port=587;
+			$mail->Host='smtp.office365.com';
+			$mail->Username='intranet_all_services.aurora@eadiaurora.com.br'; 
+			$mail->Password='ZNiLx+@MJo^Rf9x#VeOmY~hzLtdD]a'; 
+			$mail->SetFrom('intranet_all_services.aurora@eadiaurora.com.br','COLETA VALIDADA ');
+			$mail->AddAddress($email,$nome);
+			//$mail->AddCC('vinicius.santos@eadiaurora.com.br'); // Copia oculta
+			//$mail->AddCC('valter.junior@eadiaurora.com.br'); // Copia oculta
+			//$mail->AddCC('eduardo.baziloni@eadiaurora.com.br'); // Copia oculta
+			
+			$mail->CharSet = 'UTF-8';
+			$mail->IsHTML(true); 
+			$mail->Subject=$subject;
+			$mail->Body = "<html><body>".$mensagem."</body></html>";
+			$imprime=$nome." ".$email."<br>";
+			if($mail->Send()){// Envia o e-mail
+				echo "SOLICITAÇÃO CONCLUÍDA COM SUCESSO";
+			}else{
+				echo 'ERRO AO ENVIAR O E-MAIL: '.$mail->ErrorInfo;
+			}
+		
+		
+		
+		
+	}else{
+		echo "ERRO AO SOLICITAR ".mysqli_error($con);
+	}
+}
+
+if($action == "listOrder"){
+	$sql = mysqli_query($con,"SELECT * FROM equipamentos.pedidos where status = 'PENDENTE'")or die(mysqli_error($con));
+	
+	echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+	echo "<thead class='th'>
+			<tr>
+				<th>ID</th>
+				<th>SOLICITANTE</th>
+				<th>COLABORADOR</th>
+				<th>EQUIPAMENTO</th>
+				<th>DATA</th>
+				<th>STATUS</th>
+			</tr></thead>";
+	
+	while($result = mysqli_fetch_array($sql)){
+		extract($result);
+		
+		echo "<tbody class='td'>
+				<tr>
+				  <td>".$id."</td>
+				  <td>".$solicitante."</td>
+				  <td>".$usuario."</td>
+				  <td>".$equipamentos."</td>
+				  <td>".$data."</td>
+				  <td>
+					<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
+						<option value='".$status."'>".$status."</option>
+						<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
+						<option value='CONCLUÍDO'>CONCLUÍDO</option>
+						<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
+					</select>
+				  </td>
+				</tr>
+			  </tbody>";
+	}
+	
+	echo "</table>";
+}
+
+if($action == "listOrderAll"){
+	$sql = mysqli_query($con,"SELECT * FROM equipamentos.pedidos where date(data) between DATE_ADD(CURRENT_DATE(), INTERVAL -6 MONTH) AND CURRENT_DATE()")or die(mysqli_error($con));
+	
+	echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+	echo "<thead class='th'>
+			<tr>
+				<th>ID</th>
+				<th>SOLICITANTE</th>
+				<th>COLABORADOR</th>
+				<th>EQUIPAMENTO</th>
+				<th>DATA</th>
+				<th>STATUS</th>
+			</tr></thead>";
+	
+	while($result = mysqli_fetch_array($sql)){
+		extract($result);
+		
+		echo "<tbody class='td'>
+				<tr>
+				  <td>".$id."</td>
+				  <td>".$solicitante."</td>
+				  <td>".$usuario."</td>
+				  <td>".$equipamentos."</td>
+				  <td>".$data."</td>
+				  <td>
+					<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
+						<option value='".$status."'>".$status."</option>
+						<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
+						<option value='CONCLUÍDO'>CONCLUÍDO</option>
+						<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
+					</select>
+				  </td>
+				</tr>
+			  </tbody>";
+	}
+	
+	echo "</table>";
+}
+
+if($action == "altStatusPed"){
+	$id = $_REQUEST['id'];
+	$status = $_REQUEST['status'];
+	
+	$update = mysqli_query($con,"UPDATE `equipamentos`.`pedidos` SET `status`='".$status."' WHERE `id`= '".$id."'")or die(mysqli_error($con));
+	
+	if($update){
+		echo 1;
+	}else{
+		echo 0;
+	}
 }
 
 ?>

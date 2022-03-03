@@ -19,7 +19,7 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 
 	<div class="container">
 		<div class="row justify-content-center align-self-center" id="title">
-			<?php if($id_usuario == 158058 || $perfil == "TI_INFRA"){ ?>
+			<?php if($perfil == "TI_SISTEMAS " || $perfil == "TI_INFRA"){ ?>
 				<div class="col-md-1 text-left">
 					<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="inicio();"></i>
 					<p class='voltar'>VOLTAR</p>
@@ -47,7 +47,7 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 						$sql = mysqli_query($con,"select setor from equipamentos.colaborador group by setor order by setor asc")or die(mysqli_error($con));
 							
 						while($result = mysqli_fetch_array($sql)){
-							echo "<option value='".utf8_encode($result['setor'])."'>".utf8_encode($result['setor'])."</option>";
+							echo "<option value='".$result['setor']."'>".$result['setor']."</option>";
 						}
 					?>
 				</select>

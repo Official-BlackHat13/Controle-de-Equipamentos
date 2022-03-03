@@ -64,7 +64,7 @@ $action = $_REQUEST['action'];
 				  <?php 
 					$sqlCo = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador where generico <> 'Y' order by nome asc")or die(mysqli_error($con));
 					while($resCo = mysqli_fetch_array($sqlCo)){
-						echo "<option value='".$resCo['matricula']."'>".utf8_encode($resCo['nome'])."</option>";
+						echo "<option value='".$resCo['matricula']."'>".$resCo['nome']."</option>";
 					}
 				  ?>
 				  </select>
@@ -74,10 +74,9 @@ $action = $_REQUEST['action'];
 					<div style="display:flex">
 						<select class="form-control esqect" id="select1" multiple>
 						  <?php 
-							$con = mysqli_connect("localhost","root","","camara_fria")or die("FALHA NA COMUNICAÇÃO COM BANCO");
 							$sql = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
 							while($result = mysqli_fetch_array($sql)){
-								echo "<option value='".$result['matricula']."'>".utf8_encode($result['nome'])."</option>";
+								echo "<option value='".$result['matricula']."'>".$result['nome']."</option>";
 							}
 						  ?>
 						</select>
@@ -106,6 +105,6 @@ $action = $_REQUEST['action'];
 		</div>
 		<br>
 	</div>
-
+<script src="js/autocomplete.js"></script>
 </body>
 </html>

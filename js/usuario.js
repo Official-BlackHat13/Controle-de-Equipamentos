@@ -126,9 +126,9 @@ function autoComplete(str){
 			}else{
 				nome.value = json.nome;
 				cpf.value = json.cpf;
-				setor.value = json.setor;
+				document.getElementById(json.setor.toUpperCase()).selected = true;
 				funcao.value = json.funcao;
-				gestor.value = json.gestor;
+				document.getElementById(json.gestor.toUpperCase()).selected = true;
 				(json.terceiro == 'Y') ? document.getElementById('terceiro').checked = true : document.getElementById('terceiro').checked = false;
 				(json.generico == 'Y') ? document.getElementById('generico').checked = true : document.getElementById('generico').checked = false;
 				matricula.value = json.matricula;

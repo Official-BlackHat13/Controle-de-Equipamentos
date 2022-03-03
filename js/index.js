@@ -19,6 +19,12 @@ function redireciona(tela){
 		case 6:
 			location.href="lista_usuarios.php";
 		break;
+		case 7:
+			location.href="cad_pedido.php";
+		break;
+		case 8:
+			location.href="pedido_home.php";
+		break;
 		default:
 			alert("OPÇÃO INVÁLIDA!");
 	}

@@ -118,14 +118,29 @@ function selectionTipo(valor){
 				
 				document.getElementById('patrimonio').options.add(new Option(' -- Selecione um Equipamento -- '));
 				
-				for (var i=0; i < json.length; ++i) {								
-					document.getElementById('patrimonio').options.add(new Option(json[i].patrimonio+' - '+json[i].tipo, json[i].patrimonio));
+				for (var i=0; i < json.length; ++i) {
+					if(json[i].imei == ""){
+						if(json[i].hostname != ""){
+							document.getElementById('patrimonio').options.add(new Option(json[i].patrimonio+' - '+json[i].hostname, json[i].patrimonio));
+						}else{
+							document.getElementById('patrimonio').options.add(new Option(json[i].patrimonio+' - '+json[i].tipo, json[i].patrimonio));
+						}
+						
+					}else{
+						document.getElementById('patrimonio').options.add(new Option(json[i].patrimonio+' - '+json[i].imei, json[i].patrimonio));
+					}
+					
 				}
 				
+				
 				document.getElementById('patr').style.display = "block";
+				
+					
+				
 			}else{
 				alert("NÃO HÁ EQUIPAMENTO DESSE TIPO PARA VINCULAR");
 				document.getElementById('patr').style.display = "none";
+				document.getElementById('patrC').style.display = "none";
 			}
 		}
 	};

@@ -35,7 +35,7 @@ $action = $_REQUEST['action'];
 			  <?php 
 				$sqlMat = mysqli_query($con,"SELECT matricula, nome FROM equipamentos.colaborador order by nome asc")or die(mysqli_error($con));
 				while($resMat = mysqli_fetch_array($sqlMat)){
-					echo "<option value='".$resMat['matricula']."'>".utf8_encode($resMat['nome'])."</option>";
+					echo "<option value='".$resMat['matricula']."'>".$resMat['nome']."</option>";
 				}
 			  ?>
 			  </select>
@@ -79,14 +79,32 @@ $action = $_REQUEST['action'];
 			</div>
 			<div class="form-group col-md-4">
 			  <label class="label" for="setor"><b>Setor:</b> <b class="obrigado">*</b></label>
-			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="setor" placeholder="Digite o setor">
+			  <select class="form-control" id="setor">
+				<option value=""> -- Selecione um Setor -- </option>
+				<?php 
+					$sql1 = mysqli_query($con,"SELECT upper(setor) setor FROM equipamentos.colaborador group by setor order by setor")or die(mysqli_error($con));
+					while($result1 = mysqli_fetch_array($sql1)){
+						extract($result1);
+						echo "<option id='".$setor."' value='".$setor."'>".$setor."</option>";
+					}
+				?>
+			  </select>
 			</div>
 		</div><br>
 		
 		<div class="form-row justify-content-around align-self-center">
 			<div class="form-group col-md-4">
 			  <label class="label" for="gestor"><b>Gestor:</b> </label>
-			  <input type="text" onkeyup="maiuscula(this);" class="form-control field" id="gestor" placeholder="Digite o gestor">
+			  <select class="form-control" id="gestor">
+				 <option value=""> -- Selecione um Gestor -- </option>
+				 <?php 
+					$sql2 = mysqli_query($con,"SELECT usuario, nome FROM equipamentos.gestores order by nome")or die(mysqli_error($con));
+					while($result2 = mysqli_fetch_array($sql2)){
+						extract($result2);
+						echo "<option id='".$usuario."' value='".$usuario."'>".$nome."</option>";
+					}
+				  ?>
+			  </select>
 			</div>
 			<div class="form-group col-md-4">
 			  <label class="label" for="funcao"><b>Função:</b> <b class="obrigado">*</b> </label>

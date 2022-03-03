@@ -36,9 +36,7 @@ function carregar(tipo){
 function cadastrar(){
 	
 	var tipo = document.getElementById('tipo').value;
-	
-	//alert(tipo);
-	
+		
 	if(!tipo){
 		alert('SELECIONE UM TIPO');
 		document.getElementById('tipo').focus();
@@ -72,12 +70,12 @@ function cadastrar(){
 		case "LINHAS MOVEIS":
 			cadMoveis(tipo);
 		break;
+		case "MONITOR":
+			cadMonitor(tipo);
+		break;
     /*
 		case "MODEM":
 			cadModem(tipo);
-		break;
-		case "MONITOR":
-			cadMonitor(tipo);
 		break;
 		case "SERVIDORES":
 			cadServidores(tipo);
@@ -591,6 +589,80 @@ function cadProjetor(tipo){
 	xhttp.send();
 }
 
+// Cadastro de Projetores e Scanners
+function cadMonitor(tipo){
+	var patrimonio = document.getElementById('patrimonio').value;
+	var marca = document.getElementById('marca').value;
+	var modelo = document.getElementById('modelo').value;
+	var sn = document.getElementById('partNumber').value;
+	var stat = document.getElementById('status').value;
+	var obs = document.getElementById('obs').value;
+	var valor = document.getElementById('valor').value;
+	var numNF = document.getElementById('numNF').value;
+	var dateNF = document.getElementById('dateNF').value;
+	var tempoUso = document.getElementById('tempoUso').value;	
+	var user = document.getElementById('user').value;
+	var value = document.getElementById('flag').checked;
+	let flag;
+	var pattern = /^[0-9]*\.?[0-9]*$/;
+	var validVal = pattern.test(valor);
+	if(value == true){
+		flag = 'Y';
+	}else{
+		flag = 'N';
+	}
+		
+	if(patrimonio == "" || patrimonio == null){
+		alert("PREENCHA O NÚMERO DO PATRIMÔNIO");
+		document.getElementById('patrimonio').focus();
+		return false;
+	}
+	
+	if(marca == "" || marca == null){
+		alert("PREENCHA UMA MARCA");
+		document.getElementById('marca').focus();
+		return false;
+	}
+	
+	if(modelo == "" || modelo == null){
+		alert("PREENCHA UM MODELO");
+		document.getElementById('modelo').focus();
+		return false;
+	}
+	
+	if(sn == "" || sn == null){
+		alert("PREENCHA O SN");
+		document.getElementById('sn').focus();
+		return false;
+	}
+	
+	if(stat == "" || stat == null){
+		alert("SELECIONE UM STATUS");
+		document.getElementById('status').focus();
+		return false;
+	}
+	
+	if(validVal == false){
+		alert("PREENCHA O CAMPO VALOR APENAS COM NÚMEROS E PONTO");
+		document.getElementById('valor').focus();
+		return false;
+	}
+		
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//alert(this.responseText);
+			if(this.responseText == "1"){
+				alert("CADASTRADO COM SUCESSO");
+				location.reload();
+			}else{
+				alert("ERRO AO CADASTRAR");
+			}					
+		}
+    };
+	xhttp.open("POST", "cadastro_function.php?action=equipamento&tipo="+tipo+"&marca="+marca+"&modelo="+modelo+"&sn="+sn+"&patrimonio="+patrimonio+"&stat="+stat+"&obs="+obs+"&flag="+flag+"&numNF="+numNF+"&dateNF="+dateNF+"&tempoUso="+tempoUso+"&valor="+valor+"&user="+user, true);
+	xhttp.send();
+}
 
 // Função para autopreencher os dados da transportadora nacional
 function autoComplete(str){
@@ -621,6 +693,14 @@ function autoComplete(str){
 	if(tipo == "COLETOR"){
 		var sn = document.getElementById('sn');
 		var partNumber = document.getElementById('partNumber');
+	}
+	
+	if(tipo == "MONITOR"){
+		var marca = document.getElementById('marca');
+		var modelo = document.getElementById('modelo');
+		var partNumber = document.getElementById('partNumber');
+		var numNF = document.getElementById('numNF');
+		var dateNF = document.getElementById('dateNF');
 	}
 	
 	if(tipo == "CELULARES"){
@@ -672,6 +752,14 @@ function autoComplete(str){
 			partNumber.value = 'Carregando...';
 		}
 		
+		if(tipo == "MONITOR"){
+			marca.value = 'Carregando...';
+			modelo.value = 'Carregando...';
+			partNumber.value = 'Carregando...';
+			numNF.value = 'Carregando...';
+			dateNF.value = 'Carregando...';
+		}
+		
 		if(tipo == "CELULARES"){
 			imei.value = 'Carregando...';
 			capinha.value = 'Carregando...';
@@ -693,6 +781,7 @@ function autoComplete(str){
 	xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 			//alert(this.responseText);		
+				
 			var json = JSON.parse(this.responseText);
 			if(json.tipo == undefined){
 				patrimonio.value = "";
@@ -723,6 +812,14 @@ function autoComplete(str){
 					partNumber.value = "";
 				}
 				
+				if(tipo == "MONITOR"){
+					marca.value = '';
+					modelo.value = '';
+					partNumber.value = '';
+					numNF.value = '';
+					dateNF.value = '';
+				}
+				
 				if(tipo == "CELULARES"){
 					imei.value = "";
 					capinha.value = "";
@@ -740,12 +837,11 @@ function autoComplete(str){
 				}
 			}else{
 				
-				
 				patrimonio.value = json.patrimonio;
 				document.getElementById(json.stat.toUpperCase()).selected = true;
 				obs.value = json.obs;
 				valor.value = json.valor;
-
+				
 				if(tipo != "LINHAS MOVEIS"){
 					marca.value = json.marca;
 					modelo.value = json.modelo;
@@ -768,7 +864,18 @@ function autoComplete(str){
 					sn.value = json.serviceTag;
 					partNumber.value = json.partNumber;
 				}
+			
 				
+				if(tipo == "MONITOR"){
+					marca.value = json.marca;
+					modelo.value = json.modelo;
+					partNumber.value = json.serviceTag;
+					numNF.value = json.numNF;
+					dateNF.value = json.dateNF;
+				}
+			
+				
+			
 				if(tipo == "CELULARES"){
 					imei.value = json.imei;
 					document.getElementById(json.capinha.toUpperCase()).selected = true;

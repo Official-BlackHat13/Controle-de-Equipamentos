@@ -466,8 +466,86 @@ function cadModem($con, $tipo){
 
 }
 
-function cadMonitor($con, $tipo){
-
+function cadMonitor($con, $tipo, $marca, $modelo, $patrimonio, $tempoUso, $obs, $numNF, $valor, $stat, $sn, $flag, $dateNF, $user){
+	$sql = mysqli_query($con,"SELECT  
+									CASE
+										WHEN (select count(*) from equipamentos.equipamentos where patrimonio = '".$patrimonio."') = 1 then 
+										(select MID(codigo,9) from equipamentos.equipamentos where patrimonio = '".$patrimonio."')
+										WHEN COUNT(*) = 0 THEN  1 
+										ELSE count(*) + 1 
+									END qtd
+								FROM
+									equipamentos.equipamentos
+								WHERE
+									tipo = '".$tipo."'")or die(mysqli_error($con));
+	$resSql = mysqli_fetch_array($sql);
+	$id = $resSql['qtd'];
+	$codigo = substr($tipo, 0, 8).$id;
+	
+	$insert = mysqli_query($con,"insert into equipamentos.equipamentos 
+										(
+											codigo,
+											tipo,
+											marca,
+											modelo,
+											patrimonio,
+											status,
+											nf_compra,
+											data_nf,
+											obs,
+											flag,
+											tempo_uso,
+											service_tag,
+											valor,
+											user
+										)
+										values 
+										(
+											'".$codigo."',
+											'".$tipo."',
+											'".$marca."',
+											'".$modelo."',
+											'".$patrimonio."',
+											'".$stat."',
+											'".$numNF."',
+											'".$dateNF."',
+											'".$obs."',
+											'".$flag."',
+											'".$tempoUso."',
+											'".$sn."',
+											'".$valor."',
+											'".$user."'
+										) on duplicate key update
+										codigo = '".$codigo."',
+										tipo = '".$tipo."',
+										marca = '".$marca."',
+										modelo = '".$modelo."',
+										status = '".$stat."',
+										nf_compra = '".$numNF."',
+										data_nf = '".$dateNF."',
+										obs = '".$obs."',
+										flag = '".$flag."',
+										tempo_uso = '".$tempoUso."',
+										service_tag = '".$sn."',
+										local = null,
+										valor = '".$valor."',
+										imei = null,
+										capinha = null,
+										ip = null,
+										hostname = null,
+										cpu = null,
+										memoria = null,
+										part_number = null,
+										hd = null,
+										user = '".$user."'")or die(mysqli_error($con));
+										
+	if($insert){
+		echo '1';
+	}else{
+		echo '0';
+	}	
+	
+	mysqli_close($con);
 }
 
 

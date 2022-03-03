@@ -2,6 +2,9 @@
 function listar(){
 	var perfil = document.getElementById('perfil').value;
 	var id_user = document.getElementById('id_user').value;
+	
+	document.getElementById('retorno').innerHTML = "<br><center><img src='img/load.gif' /></center>";
+	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -26,6 +29,8 @@ function filtrar(){
 	var setor = document.getElementById('setor').value;
 	var perfil = document.getElementById('perfil').value;
 	var id_user = document.getElementById('id_user').value;
+	
+	document.getElementById('retorno').innerHTML = "<br><center><img src='img/load.gif' /></center>";
 	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {

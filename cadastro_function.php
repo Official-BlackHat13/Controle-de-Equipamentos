@@ -861,6 +861,7 @@ if($action == "exportar"){
 	 header('Content-Type: application/x-msexcel');
 	 header ("Content-Disposition: attachment; filename=\"{$arquivo}\"");
 	 echo $tabela;
+	 mysqli_close($con);
 }
 
 // RETORNA OS DADOS DO COLABORADOR CADASTRADO
@@ -971,8 +972,12 @@ if($action == "lista"){
 // Puxar os dados do vinculo
 if($action == "search"){
 	$patrimonio = $_REQUEST['patrimonio'];
+	$tipoSelected = $_REQUEST['tipo'];
 	
-	$sql = mysqli_query($con,"SELECT * FROM
+	$sql = mysqli_query($con,"SELECT 
+								*,
+								(SELECT nome FROM equipamentos.gestores where usuario =  c.gestor limit 1) chefe 
+							  FROM
 									equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
 									on a.patrimonio = b.patrimonio inner join
 									equipamentos.colaborador c
@@ -994,9 +999,15 @@ if($action == "search"){
 						<th>PATRIMÔNIO</th>
 						<th>TIPO</th>
 						<th>MARCA</th>
-						<th>MODELO</th>
-						<th>PN / SN / Service Tag</th>
-						<th>MATRICULA</th>
+						<th>MODELO</th>";
+					if($tipoSelected == 'CELULARES'){
+						echo "<th>IMEI</th>";
+					}elseif($tipoSelected == 'DESKTOP' || $tipoSelected == 'NOTEBOOK' || $tipoSelected == 'AIO'){
+						echo "<th>HOSTNAME</th>";
+					}else{
+						echo "<th>PN / SN / Service Tag</th>";
+					}  
+					echo "<th>MATRICULA</th>
 						<th>NOME</th>
 						<th>SETOR</th>
 						<th>GESTOR</th>
@@ -1014,13 +1025,19 @@ if($action == "search"){
 					<td>".$patrimonio."</td>
 					<td>".$tipo."</td>
 					<td>".$marca."</td>
-					<td>".$modelo."</td>
-					<td>".$part_number."</td>
-					<td>".$matricula."</td>
-					<td>".$nome."</td>
+					<td>".$modelo."</td>";
+				if($tipoSelected == 'CELULARES'){
+					echo "<td>".$imei."</td>";
+				}elseif($tipoSelected == 'DESKTOP' || $tipoSelected == 'NOTEBOOK' || $tipoSelected == 'AIO'){
+					echo "<td>".$hostname."</td>";
+				}else{
+					echo "<td>".$part_number."</td>";
+				}  
+			  echo "<td>".$matricula."</td>
+					<td>".substr($nome,0,15)."</td>
 					<td>".$setor."</td>
-					<td>".$gestor."</td>
-					<td>
+					<td>".$chefe."</td>
+					<td width='13%'>
 					    <select class='form-control' id='status_$id' style='width: 100%'>
 							<option value=''>".strtoupper($status)."</option>
 							<option value='PARA DOAÇÃO'>PARA DOAÇÃO</option>
@@ -1057,7 +1074,9 @@ if($action == "listDesviculo"){
 	$sqlEq = mysqli_query($con,"SELECT 
 													a.codigo,
 													a.patrimonio,
-													a.tipo
+													a.tipo,
+													a.hostname,
+													a.imei
 												FROM
 													equipamentos.equipamentos a inner join equipamentos.equipamentos_usuario b
 													on a.patrimonio = b.patrimonio inner join
@@ -1073,6 +1092,7 @@ if($action == "listDesviculo"){
 					}
 					
 					echo json_encode($arr);
+					mysqli_close($con);
 }
 
 // Aqui desvinculo o Equipamento do usuário
@@ -1097,6 +1117,7 @@ if($action == "desvincular"){
 	}else{
 		echo "0";
 	}
+	mysqli_close($con);
 }
 
 // Aqui lista todos os usuários
@@ -1122,7 +1143,7 @@ if($action == "todos"){
 				<th>FUNÇÃO</th>
 				<th>GESTOR</th>
 				<th>TERCEIRO</th>";
-				if($perfil == 'TI' && $id_user != 158058){
+				if($perfil == "TI_DESENV" || $perfil == "TI_INFRA" || $perfil == "COORDENAÇÃO_TI"){
 					echo "<th>REMOVER</th>";
 				}
 		echo "</tr>
@@ -1146,7 +1167,7 @@ if($action == "todos"){
 		}else{
 			echo "<td>NÃO</td>";
 		}
-		if($perfil == 'TI' && $id_user != 158058){		
+		if($perfil == "TI_DESENV" || $perfil == "TI_INFRA" || $perfil == "COORDENAÇÃO_TI"){		
 			    echo "<td>
 						<button class='btn btn-danger' onclick='excluir(".$id.");'>
 							<i class='fa fa-trash' aria-hidden='true'></i>
@@ -1192,7 +1213,7 @@ if($action == "filtrar"){
 				<th>FUNÇÃO</th>
 				<th>GESTOR</th>
 				<th>TERCEIRO</th>";
-				if($perfil == "TI" && $id_user != 158058){
+				if($perfil == "TI_DESENV" || $perfil == "TI_INFRA" || $perfil == "COORDENAÇÃO_TI"){
 					echo "<th>REMOVER</th>";
 				}
 		echo "</tr>
@@ -1216,7 +1237,8 @@ if($action == "filtrar"){
 		}else{
 			echo "<td>NÃO</td>";
 		}	
-		if($perfil == "TI" && $id_user != 158058){
+		
+		if($perfil == "TI_DESENV" || $perfil == "TI_INFRA" || $perfil == "COORDENAÇÃO_TI"){
 			 echo "<td>
 						<button class='btn btn-danger' onclick='excluir(".$id.");'>
 							<i class='fa fa-trash' aria-hidden='true'></i>
@@ -1312,7 +1334,7 @@ if($action == "excluir"){
 	}else{
 		echo "2";
 	}
-		
+	mysqli_close($con);	
 }
 
 if($action == "selectionTipo"){
@@ -1338,7 +1360,7 @@ if($action == "selectionTipo"){
 	}					
 
 	echo json_encode($arr);
-	
+	mysqli_close($con);
 }
 
 if($action == "pesqList"){
@@ -1364,6 +1386,8 @@ if($action == "pesqList"){
 	}
 	
 	echo json_encode($return);
+	
+	mysqli_close($con);
 }
 
 if($action == "selection"){
@@ -1373,6 +1397,8 @@ if($action == "selection"){
 	
 	$result = mysqli_fetch_array($flag);
 	echo $result['flag'];
+	
+	mysqli_close($con);
 }
 
 if($action == "saveOrder"){
@@ -1400,6 +1426,7 @@ if($action == "saveOrder"){
 	
 	if($insert){
 		
+		
 			$nome = "Caroline Vitale";
 			//$email='caroline.silva@eadiaurora.com.br';
 			$email='vinicius.santos@eadiaurora.com.br';
@@ -1408,7 +1435,7 @@ if($action == "saveOrder"){
 			$mensagem .= "<b>Data da Solicitação:</b>&nbsp; <strong style='color: red;'>".date("d/m/Y H:i")."</strong><br>";
 			$mensagem .= "<b>Equipamentos:</b>&nbsp; <strong style='color: blue;'>".str_replace(",",", ",$equipamentos)."</strong><br>";
 			
-			$select = mysqli_query($con,"SELECT  nome FROM equipamentos.colaborador where cpf = '$usuario'")or die(mysqli_error($con));
+			$select = mysqli_query($con,"SELECT  nome FROM equipamentos.colaborador where matricula = '$usuario'")or die(mysqli_error($con));
 			$return = mysqli_fetch_object($select);
 			
 			$mensagem .= "<b>Colaborador:</b>&nbsp; <strong style='color: blue;'>".ucwords(strtolower($return->nome))."</strong><br>";
@@ -1430,7 +1457,7 @@ if($action == "saveOrder"){
 			$mail->Host='smtp.office365.com';
 			$mail->Username='intranet_all_services.aurora@eadiaurora.com.br'; 
 			$mail->Password='ZNiLx+@MJo^Rf9x#VeOmY~hzLtdD]a'; 
-			$mail->SetFrom('intranet_all_services.aurora@eadiaurora.com.br','COLETA VALIDADA ');
+			$mail->SetFrom('intranet_all_services.aurora@eadiaurora.com.br','SOLICITAÇÃO DE EQUIPAMENTOS ');
 			$mail->AddAddress($email,$nome);
 			//$mail->AddCC('vinicius.santos@eadiaurora.com.br'); // Copia oculta
 			//$mail->AddCC('valter.junior@eadiaurora.com.br'); // Copia oculta
@@ -1446,91 +1473,264 @@ if($action == "saveOrder"){
 			}else{
 				echo 'ERRO AO ENVIAR O E-MAIL: '.$mail->ErrorInfo;
 			}
-		
-		
-		
-		
+
 	}else{
 		echo "ERRO AO SOLICITAR ".mysqli_error($con);
 	}
+	mysqli_close($con);
 }
 
 if($action == "listOrder"){
-	$sql = mysqli_query($con,"SELECT * FROM equipamentos.pedidos where status = 'PENDENTE'")or die(mysqli_error($con));
+	$sql = "SELECT 
+				*, 
+				count(*) linhas,
+				(SELECT nome FROM equipamentos.colaborador where matricula = usuario limit 1) colaborador
+			FROM equipamentos.pedidos where status = 'PENDENTE' group by id";
 	
-	echo "<table id='tb_listagem' class='table table-striped table-hover'>";
-	echo "<thead class='th'>
-			<tr>
-				<th>ID</th>
-				<th>SOLICITANTE</th>
-				<th>COLABORADOR</th>
-				<th>EQUIPAMENTO</th>
-				<th>DATA</th>
-				<th>STATUS</th>
-			</tr></thead>";
+	$pesquisa1 = mysqli_query($con,$sql)or die(mysqli_error($con));
 	
-	while($result = mysqli_fetch_array($sql)){
-		extract($result);
-		
-		echo "<tbody class='td'>
+	$rows = mysqli_fetch_object($pesquisa1);
+	
+	if($rows->linhas > 0){
+		echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+		echo "<thead class='th'>
 				<tr>
-				  <td>".$id."</td>
-				  <td>".$solicitante."</td>
-				  <td>".$usuario."</td>
-				  <td>".$equipamentos."</td>
-				  <td>".$data."</td>
-				  <td>
-					<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
-						<option value='".$status."'>".$status."</option>
-						<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
-						<option value='CONCLUÍDO'>CONCLUÍDO</option>
-						<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
-					</select>
-				  </td>
-				</tr>
-			  </tbody>";
+					<th>ID</th>
+					<th>SOLICITANTE</th>
+					<th>COLABORADOR</th>
+					<th>EQUIPAMENTO</th>
+					<th>DATA</th>
+					<th>STATUS</th>
+				</tr></thead>";
+		
+		$pesquisa2 = mysqli_query($con,$sql)or die(mysqli_error($con));
+		while($result = mysqli_fetch_array($pesquisa2)){
+			extract($result);
+			
+			echo "<tbody class='td'>
+					<tr>
+					  <td>".$id."</td>
+					  <td>".$solicitante."</td>
+					  <td>".$colaborador."</td>
+					  <td>".$equipamentos."</td>
+					  <td>".date_format(date_create($data), "d-m-Y H:i:s")."</td>
+					  <td>
+						<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
+							<option value='".$status."'>".$status."</option>
+							<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
+							<option value='CONCLUÍDO'>CONCLUÍDO</option>
+							<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
+						</select>
+					  </td>
+					</tr>
+				  </tbody>";
+		}
+		
+		echo "</table>";
+	}else{
+		echo "<br><br><center>
+				<div class='alert alert-warning' role='alert'>
+					<i class='fa fa-exclamation-triangle'></i> <b>NÃO FOI ENCONTRADA NENHUMA SOLICITAÇÃO</b>
+				</div>
+			  </center>";
 	}
-	
-	echo "</table>";
+	mysqli_close($con);
 }
 
 if($action == "listOrderAll"){
-	$sql = mysqli_query($con,"SELECT * FROM equipamentos.pedidos where date(data) between DATE_ADD(CURRENT_DATE(), INTERVAL -6 MONTH) AND CURRENT_DATE()")or die(mysqli_error($con));
+	$sql = "SELECT 
+				*, 
+				count(*) linhas,
+				(SELECT nome FROM equipamentos.colaborador where matricula = usuario limit 1) colaborador 
+			FROM equipamentos.pedidos where date(data) between DATE_ADD(CURRENT_DATE(), INTERVAL -6 MONTH) AND CURRENT_DATE() group by id";
 	
-	echo "<table id='tb_listagem' class='table table-striped table-hover'>";
-	echo "<thead class='th'>
-			<tr>
-				<th>ID</th>
-				<th>SOLICITANTE</th>
-				<th>COLABORADOR</th>
-				<th>EQUIPAMENTO</th>
-				<th>DATA</th>
-				<th>STATUS</th>
-			</tr></thead>";
-	
-	while($result = mysqli_fetch_array($sql)){
-		extract($result);
-		
-		echo "<tbody class='td'>
+	$pesquisa1 = mysqli_query($con,$sql)or die(mysqli_error($con));
+	$rows = mysqli_fetch_object($pesquisa1);
+	if($rows->linhas > 0){
+		echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+		echo "<thead class='th'>
 				<tr>
-				  <td>".$id."</td>
-				  <td>".$solicitante."</td>
-				  <td>".$usuario."</td>
-				  <td>".$equipamentos."</td>
-				  <td>".$data."</td>
-				  <td>
-					<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
-						<option value='".$status."'>".$status."</option>
-						<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
-						<option value='CONCLUÍDO'>CONCLUÍDO</option>
-						<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
-					</select>
-				  </td>
-				</tr>
-			  </tbody>";
+					<th>ID</th>
+					<th>SOLICITANTE</th>
+					<th>COLABORADOR</th>
+					<th>EQUIPAMENTO</th>
+					<th>DATA</th>
+					<th>STATUS</th>
+				</tr></thead>";
+		
+			$pesquisa2 = mysqli_query($con,$sql)or die(mysqli_error($con));
+			while($result = mysqli_fetch_array($pesquisa2)){
+				extract($result);
+				
+				echo "<tbody class='td'>
+						<tr>
+						  <td>".$id."</td>
+						  <td>".$solicitante."</td>
+						  <td>".$colaborador."</td>
+						  <td>".$equipamentos."</td>
+						  <td>".date_format(date_create($data), "d-m-Y H:i:s")."</td>
+						  <td>
+							<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
+								<option value='".$status."'>".$status."</option>
+								<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
+								<option value='CONCLUÍDO'>CONCLUÍDO</option>
+								<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
+							</select>
+						  </td>
+						</tr>
+					  </tbody>";
+			}
+		
+		echo "</table>";
+	}else{
+		echo "<br><br><center>
+				<div class='alert alert-warning' role='alert'>
+					<i class='fa fa-exclamation-triangle'></i> <b>NÃO FOI ENCONTRADA NENHUMA SOLICITAÇÃO</b>
+				</div>
+			  </center>";
+	}
+	mysqli_close($con);
+}
+
+if($action == "filtrarPedido"){
+	$busca = $_REQUEST['busca'];
+	$item = $_REQUEST['item'];
+	
+	if($busca == "" && $item == ""){
+		$where = "";
+	}elseif($busca == "" && $item != ""){
+		$where = " and equipamentos = '".$item."'";
+	}else{
+		$where = " and (solicitante like '%$busca%' or b.nome like '%$busca%')";
 	}
 	
-	echo "</table>";
+	$sql = "SELECT 
+				*, 
+				COUNT(*) linhas
+			FROM
+				equipamentos.pedidos a, equipamentos.colaborador b 
+			WHERE
+				status = 'PENDENTE'
+				and a.usuario = b.matricula
+				 $where
+			GROUP BY id";
+	
+	$pesquisa1 = mysqli_query($con,$sql)or die(mysqli_error($con));
+	$rows = mysqli_fetch_object($pesquisa1);
+	if($rows->linhas > 0){
+		echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+		echo "<thead class='th'>
+				<tr>
+					<th>ID</th>
+					<th>SOLICITANTE</th>
+					<th>COLABORADOR</th>
+					<th>EQUIPAMENTO</th>
+					<th>DATA</th>
+					<th>STATUS</th>
+				</tr></thead>";
+		
+			$pesquisa2 = mysqli_query($con,$sql)or die(mysqli_error($con));
+			while($result = mysqli_fetch_array($pesquisa2)){
+				extract($result);
+				
+				echo "<tbody class='td'>
+						<tr>
+						  <td>".$id."</td>
+						  <td>".$solicitante."</td>
+						  <td>".$nome."</td>
+						  <td>".$equipamentos."</td>
+						  <td>".date_format(date_create($data), "d-m-Y H:i:s")."</td>
+						  <td>
+							<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
+								<option value='".$status."'>".$status."</option>
+								<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
+								<option value='CONCLUÍDO'>CONCLUÍDO</option>
+								<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
+							</select>
+						  </td>
+						</tr>
+					  </tbody>";
+			}
+		
+		echo "</table>";
+	}else{
+		echo "<br><br><center>
+				<div class='alert alert-warning' role='alert'>
+					<i class='fa fa-exclamation-triangle'></i> <b>NÃO FOI ENCONTRADA NENHUMA SOLICITAÇÃO</b>
+				</div>
+			  </center>";
+	}
+	mysqli_close($con);
+}
+
+if($action == "filtrarPedidoAll"){
+	$busca = $_REQUEST['busca'];
+	$item = $_REQUEST['item'];
+	
+	if($busca == "" && $item == ""){
+		$where = "";
+	}elseif($busca == "" && $item != ""){
+		$where = " and a.equipamentos = '".$item."'";
+	}else{
+		$where = " and (a.solicitante like '%$busca%' or b.nome like '%$busca%' or a.status like '%$busca%' )";
+	}
+	
+	$sql = "SELECT 
+				*, 
+				COUNT(*) linhas
+			FROM
+				equipamentos.pedidos a, equipamentos.colaborador b 
+			WHERE
+				 a.usuario = b.matricula
+				 $where
+			GROUP BY id";
+	
+	$pesquisa1 = mysqli_query($con,$sql)or die(mysqli_error($con));
+	$rows = mysqli_fetch_object($pesquisa1);
+	if($rows->linhas > 0){
+		echo "<table id='tb_listagem' class='table table-striped table-hover'>";
+		echo "<thead class='th'>
+				<tr>
+					<th>ID</th>
+					<th>SOLICITANTE</th>
+					<th>COLABORADOR</th>
+					<th>EQUIPAMENTO</th>
+					<th>DATA</th>
+					<th>STATUS</th>
+				</tr></thead>";
+		
+			$pesquisa2 = mysqli_query($con,$sql)or die(mysqli_error($con));
+			while($result = mysqli_fetch_array($pesquisa2)){
+				extract($result);
+				
+				echo "<tbody class='td'>
+						<tr>
+						  <td>".$id."</td>
+						  <td>".$solicitante."</td>
+						  <td>".$nome."</td>
+						  <td>".$equipamentos."</td>
+						  <td>".date_format(date_create($data), "d-m-Y H:i:s")."</td>
+						  <td>
+							<select class='form-control' id='status_".$id."' onchange='altStatus(".$id.");'>
+								<option value='".$status."'>".$status."</option>
+								<option value='NÃO NECESSÁRIO'>NÃO NECESSÁRIO</option>
+								<option value='CONCLUÍDO'>CONCLUÍDO</option>
+								<option value='SOLICITADA COMPRA'>SOLICITADA COMPRA</option>
+							</select>
+						  </td>
+						</tr>
+					  </tbody>";
+			}
+		
+		echo "</table>";
+	}else{
+		echo "<br><br><center>
+				<div class='alert alert-warning' role='alert'>
+					<i class='fa fa-exclamation-triangle'></i> <b>NÃO FOI ENCONTRADA NENHUMA SOLICITAÇÃO</b>
+				</div>
+			  </center>";
+	}
+	mysqli_close($con);
 }
 
 if($action == "altStatusPed"){
@@ -1544,6 +1744,9 @@ if($action == "altStatusPed"){
 	}else{
 		echo 0;
 	}
+	mysqli_close($con);
 }
+
+
 
 ?>

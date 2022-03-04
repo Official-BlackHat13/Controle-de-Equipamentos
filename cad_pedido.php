@@ -69,10 +69,10 @@ $action = $_REQUEST['action'];
 				<option value=""> -- Selecione um Colaborador -- </option>
 				<?php 
 					$usuario = '31131826';
-					$sql = mysqli_query($con,"SELECT cpf, upper(nome) nome FROM equipamentos.colaborador where gestor = '".$usuario."' order by nome")or die(mysqli_error($con));
+					$sql = mysqli_query($con,"SELECT matricula, upper(nome) nome FROM equipamentos.colaborador where gestor = '".$usuario."' order by nome")or die(mysqli_error($con));
 					while($result = mysqli_fetch_array($sql)){
 						extract($result);
-						echo "<option value='".$cpf."'>".$nome."</option>";
+						echo "<option value='".$matricula."'>".$nome."</option>";
 					}
 				?>
 			  </select>

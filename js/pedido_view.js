@@ -1,8 +1,5 @@
 // Função para listar todos os pedidos pendentes
-function listar(){
-	var perfil = document.getElementById('perfil').value;
-	var id_user = document.getElementById('id_user').value;
-	
+function listar(){	
 	document.getElementById('retorno').innerHTML = "<br><center><img src='img/load.gif' /></center>";
 	
 	var xhttp = new XMLHttpRequest();
@@ -18,10 +15,7 @@ function listar(){
 
 
 // Função para listar todos os pedidos nos últimos 6 meses
-function listarAll(){
-	var perfil = document.getElementById('perfil').value;
-	var id_user = document.getElementById('id_user').value;
-	
+function listarAll(){	
 	document.getElementById('retorno').innerHTML = "<br><center><img src='img/load.gif' /></center>";
 	
 	var xhttp = new XMLHttpRequest();
@@ -32,6 +26,42 @@ function listarAll(){
 		}
 	};
 	xhttp.open("POST", "cadastro_function.php?action=listOrderAll", true);
+	xhttp.send();
+}
+
+// Função para filtrar o dado pesquisado
+function filtrar(){
+	var busca = document.getElementById('filtro').value;
+	var item = document.getElementById('equipamento').value;
+	
+	document.getElementById('retorno').innerHTML = "<br><center><img src='img/load.gif' /></center>";
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		    //alert(this.responseText);
+			document.getElementById('retorno').innerHTML = this.responseText;
+		}
+	};
+	xhttp.open("POST", "cadastro_function.php?action=filtrarPedido&busca="+busca+"&item="+item, true);
+	xhttp.send();
+}
+
+// Função para filtrar o dado pesquisado
+function filtrarAll(){
+	var busca = document.getElementById('filtro').value;
+	var item = document.getElementById('equipamento').value;
+	
+	document.getElementById('retorno').innerHTML = "<br><center><img src='img/load.gif' /></center>";
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		    //alert(this.responseText);
+			document.getElementById('retorno').innerHTML = this.responseText;
+		}
+	};
+	xhttp.open("POST", "cadastro_function.php?action=filtrarPedidoAll&busca="+busca+"&item="+item, true);
 	xhttp.send();
 }
 

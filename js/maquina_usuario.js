@@ -107,6 +107,8 @@ function vincular(){
 // Função para verificar se o equipamento é compartilhado
 function selectionTipo(valor){
 	
+	document.getElementById('patrimonio').disabled = true;
+	document.getElementById('matricula').disabled = true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -134,13 +136,16 @@ function selectionTipo(valor){
 				
 				
 				document.getElementById('patr').style.display = "block";
-				
+				document.getElementById('patrimonio').disabled = false;
+				document.getElementById('matricula').disabled = false;
 					
 				
 			}else{
 				alert("NÃO HÁ EQUIPAMENTO DESSE TIPO PARA VINCULAR");
 				document.getElementById('patr').style.display = "none";
+				document.getElementById('colab').style.display = "none";
 				document.getElementById('patrC').style.display = "none";
+				
 			}
 		}
 	};

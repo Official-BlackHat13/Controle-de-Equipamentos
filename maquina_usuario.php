@@ -108,3 +108,6 @@ $action = $_REQUEST['action'];
 <script src="js/autocomplete.js"></script>
 </body>
 </html>
+<?php 
+ mysqli_close($con);
+?>

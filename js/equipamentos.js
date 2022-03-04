@@ -838,7 +838,7 @@ function autoComplete(str){
 			}else{
 				
 				patrimonio.value = json.patrimonio;
-				document.getElementById(json.stat.toUpperCase()).selected = true;
+				
 				obs.value = json.obs;
 				valor.value = json.valor;
 				
@@ -869,7 +869,7 @@ function autoComplete(str){
 				if(tipo == "MONITOR"){
 					marca.value = json.marca;
 					modelo.value = json.modelo;
-					partNumber.value = json.serviceTag;
+					partNumber.value = json.partNumber;
 					numNF.value = json.numNF;
 					dateNF.value = json.dateNF;
 				}
@@ -899,7 +899,7 @@ function autoComplete(str){
 					document.getElementById('status').disabled = false;
 				}
 			
-				
+				document.getElementById(json.stat.toUpperCase().trim()).selected = true;
 				(json.flag == 'Y') ? document.getElementById('flag').checked = true : document.getElementById('flag').checked = false;
 				document.getElementById('patrimonio').disabled = true;
 			}		

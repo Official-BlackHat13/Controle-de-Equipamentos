@@ -51,6 +51,7 @@ function salvarPedido(){
 		return false;
 	}
 	
+	document.getElementById("voltar").disabled = true;
 	document.getElementById("cadastrar").disabled = true;
 	document.getElementById("cadastrar").value = "    Aguarde...   ";
 	

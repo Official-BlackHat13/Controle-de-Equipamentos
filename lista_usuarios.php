@@ -19,7 +19,7 @@ $con = mysqli_connect("localhost","adminwebsorocaba","VmtefuQffnq6T6US","equipam
 
 	<div class="container">
 		<div class="row justify-content-center align-self-center" id="title">
-			<?php if($perfil == "TI_SISTEMAS " || $perfil == "TI_INFRA"){ ?>
+			<?php if($perfil == "TI_SISTEMAS "){ ?>
 				<div class="col-md-1 text-left">
 					<i class="fa fa-arrow-circle-left fa-2x" id="back" onclick="inicio();"></i>
 					<p class='voltar'>VOLTAR</p>

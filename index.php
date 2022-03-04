@@ -34,7 +34,7 @@ include('../controle.php');
 		
 		<div class="col-md-3 text-center">
 			<div class="btn-group">
-				<?php if($perfil == "TI_DESENV" || $perfil == "COORDENAÇÃO_TI"){ ?>
+				<?php if($perfil == "TI_DESENV" || $perfil == "COORDENAÇÃO_TI" || $perfil == "TI_INFRA"){ ?>
 				<button onclick="redireciona(2);">
 					<i class="fa fa-users fa-2x"></i><br><br>
 					COLABORADORES
